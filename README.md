@@ -1,5 +1,6 @@
 # IssueFinder
 [![Build Status](https://travis-ci.org/vdbaan/IssueFinder.svg?branch=master)](https://travis-ci.org/vdbaan/IssueFinder)
+[![License](https://img.shields.io/badge/license-AGPL-brightgreen.svg)](https://github.com/vdbaan/IssueFinder/blob/master/LICENSE)
 
 This tool has been created out of frustration that NessieViewer is/was not available for *nix systems. 
 Some of the functionality has been added as a result of various requests. 
