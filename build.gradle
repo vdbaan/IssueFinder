@@ -1,0 +1,45 @@
+/**
+ * Copyright (C) 2017 S. van der Baan
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'distribution'
+
+version='0.1.0'
+
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.8'
+    compile 'net.java.dev.glazedlists:glazedlists_java15:1.9.1'
+    compile 'com.miglayout:miglayout-swing:5.0'
+    compile 'org.slf4j:slf4j-api:1.7.22'
+
+    testCompile 'junit:junit:4.12'
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
+    manifest {
+        attributes 'Main-Class':' net.vdbaan.issuefinder.App',
+                   'version':project.version
+    }
+}
