@@ -1,5 +1,5 @@
 # IssueFinder
-[![Build Status](https://travis-ci.org/vdbaan/issuefinder.svg?branch=masterhttps://travis-ci.org/vdbaan/IssueFinder.svg?branch=master)](https://travis-ci.org/vdbaan/IssueFinder)
+[![Build Status](https://travis-ci.org/vdbaan/IssueFinder.svg?branch=master)](https://travis-ci.org/vdbaan/IssueFinder)
 
 This tool has been created out of frustration that NessieViewer is/was not available for *nix systems. 
 Some of the functionality has been added as a result of various requests. 
