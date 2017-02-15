@@ -45,7 +45,7 @@ Currently it is able to parse the following formats:
   - TestSSL (json format)
 
 ## Changelog
-1.0.0 - Initial release
+0.1.0 - Initial release
 
 ## TODO
 1. Swing threading is not optimal, especially in regards to filtering (as I said, I'm still learning)
