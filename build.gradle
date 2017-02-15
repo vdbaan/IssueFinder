@@ -43,3 +43,8 @@ jar {
                    'version':project.version
     }
 }
+
+test {
+    // Until generic (Metasploitable) test are uploaded
+    exclude '**/*ParserTest'
+}
