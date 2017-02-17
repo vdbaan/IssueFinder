@@ -46,5 +46,5 @@ jar {
 
 test {
     // Until generic (Metasploitable) test are uploaded
-    exclude '**/*Parser*Test*'
+    exclude '**/*Test*'
 }
