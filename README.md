@@ -49,6 +49,7 @@ Currently it is able to parse the following formats:
 
 ## Changelog
 0.1.1 - Fixed swing threading in regard to filtering
+
 0.1.0 - Initial release
 
 ## TODO
