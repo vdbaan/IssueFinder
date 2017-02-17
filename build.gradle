@@ -19,7 +19,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'distribution'
 
-version='0.1.0'
+version='0.1.1'
 
 
 repositories {
@@ -46,5 +46,5 @@ jar {
 
 test {
     // Until generic (Metasploitable) test are uploaded
-    exclude '**/*Parser*Test*'
+//    exclude '**/*Parser*Test*'
 }

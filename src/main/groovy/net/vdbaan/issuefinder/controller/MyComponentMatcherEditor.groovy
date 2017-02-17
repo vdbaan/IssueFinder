@@ -28,18 +28,61 @@ import javax.swing.JTextField
 import javax.swing.event.CaretEvent
 import javax.swing.event.CaretListener
 
-class IssueSelector extends AbstractMatcherEditor implements Matcher<Finding>, CaretListener {
+class IssueSelector extends AbstractMatcherEditor implements  CaretListener {
 
 
     String filter
     JTextField editor
+    String text
 
     IssueSelector(JTextField editor, String filter) {
+        this(editor,filter,"")
+    }
+    IssueSelector(JTextField editor, String filter, String text) {
         this.editor = editor
         editor.addCaretListener(this)
         this.filter = filter
+        this.text = text
     }
 
+    private void refilter(CaretEvent event) {
+        if (editor.text == null || editor.text.length() == 0) {
+                fireMatchAll()
+        } else {
+            if (editor.text != text) {
+                Matcher newMatcher = new FindingMatcher(filter,editor.text)
+                fireChanged(newMatcher)
+            }
+        }
+    }
+
+    @Override
+    void caretUpdate(CaretEvent e) {
+        refilter(e)
+    }
+}
+
+class FindingMatcher implements Matcher<Finding> {
+    String filter
+    String text
+    FindingMatcher(String filter, String text) {
+        this.filter = filter
+        this.text = text
+    }
+    @Override
+    boolean matches(Finding item) {
+
+        switch (filter) {
+            case 'scanner': return test(item.scanner, text)
+            case 'ip': return test(item.ip, text)
+            case 'port': return test(item.port, text)
+            case 'service': return test(item.service, text)
+            case 'plugin': return test(item.plugin, text)
+            case 'risk': return test(item.severity.toString(), text)
+            case 'description': return test(item.summary, text)
+            default: return true
+        }
+    }
 
     private boolean test(String item, String test) {
         if (test.contains(",")) {
@@ -56,36 +99,5 @@ class IssueSelector extends AbstractMatcherEditor implements Matcher<Finding>, C
             return result
         } else
             return item.contains(test)
-    }
-
-    private void refilter(CaretEvent event) {
-        Matcher newMatcher = new IssueSelector(editor, filter)
-//        fireChanged(newMatcher)
-        swingThreadSource.getReadWriteLock().readLock().lock()
-        try {
-            fireChanged(newMatcher)
-        } finally {
-            swingThreadSource.getReadWriteLock().readLock().unlock()
-        }
-    }
-
-    @Override
-    boolean matches(Finding item) {
-
-        switch (filter) {
-            case 'scanner': return test(item.scanner, editor.text)
-            case 'ip': return test(item.ip, editor.text)
-            case 'port': return test(item.port, editor.text)
-            case 'service': return test(item.service, editor.text)
-            case 'plugin': return test(item.plugin, editor.text)
-            case 'risk': return test(item.severity.toString(), editor.text)
-            case 'description': return test(item.summary, editor.text)
-            default: return true
-        }
-    }
-
-    @Override
-    void caretUpdate(CaretEvent e) {
-        refilter(e)
     }
 }
