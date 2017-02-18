@@ -33,11 +33,15 @@ class NessusParserTest {
 
     @Test
     void testNessusFile() {
-        Parser p = Parser.getParser(new File("testdata/Nessus.nessus").text)
-        assert p instanceof NessusParser
-        List result = p.parse()
-        assertFalse(result.isEmpty())
-        assert result[0] instanceof Finding
+
+        File testFile = new File("testdata/Nessus.nessus")
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testfile.text)
+            assert p instanceof NessusParser
+            List result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
     }
 }
 
@@ -53,11 +57,14 @@ class NmapParserTest {
 
     @Test
     void testNmapFile() {
-        Parser p = Parser.getParser(new File("testdata/Nmap.xml").text)
-        assert p instanceof NMapParser
-        List result = p.parse()
-        assertFalse(result.isEmpty())
-        assert result[0] instanceof Finding
+        File testFile = new File("testdata/Nmap.xml")
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testfile.text)
+            assert p instanceof NMapParser
+            List result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
     }
 }
 
@@ -77,10 +84,38 @@ class TestSSLParserTest {
 
     @Test
     void testJSonFile() {
-        Parser p = Parser.getParser(new File("testdata/testssl.json").text)
-        assert p instanceof TestSSLParser
+        File testFile = new File("testdata/testssl-3-25.json")
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testfile.text)
+            assert p instanceof TestSSLParser
+            List<Finding> result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
+    }
+}
+
+class NiktoParserTest {
+
+    @Test
+    void testEmptyNmap() {
+        Parser p = Parser.getParser('<niktoscan></niktoscan>')
+        assert p instanceof NiktoParser
         List<Finding> result = p.parse()
-        assertFalse(result.isEmpty())
-        assert result[0] instanceof Finding
+
+        // Nikto Parser, by default adds scaninfo to the result
+        assertTrue(result.size() == 1)
+    }
+
+    @Test
+    void testNiktoFile() {
+        File testFile = new File("testdata/Nikto.xml")
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testfile.text)
+            assert p instanceof NiktoParser
+            List result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
     }
 }

@@ -17,6 +17,8 @@
 
 package net.vdbaan.issuefinder.controller
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.EventList
 import net.vdbaan.issuefinder.model.Finding
 import org.junit.Before
 
@@ -40,9 +42,12 @@ class MCTestCustomMatcher {
     void testCustomMatcher1() {
         JTextField f = new JTextField("80")
         IssueSelector m = new IssueSelector(f,"port")
+        m.caretUpdate(null)
         int count = 0
         findings.each { finding ->
-            if (m.matches(finding)) count ++
+            if (m.getMatcher().matches(finding)){
+                count += 1
+            }
         }
         assert(count == 2)
         count = 0
@@ -52,11 +57,31 @@ class MCTestCustomMatcher {
     void testCustomMatcher2() {
         JTextField f = new JTextField("80,443")
         IssueSelector m = new IssueSelector(f,"port")
+        m.caretUpdate(null)
         int count = 0
         findings.each { finding ->
-            if (m.matches(finding)) count ++
+            if (m.getMatcher().matches(finding)) {
+                count += 1
+            }
         }
         assert(count == 3)
         count = 0
+    }
+}
+
+class MCTestLoader {
+    @Test
+    void testLoadFile() {
+        IssuesLoader loader = new IssuesLoader();
+        EventList<Finding> findingEventList = new BasicEventList<Finding>()
+        MC mc = new MC() {
+            void doneLoading() {
+                //
+            }
+        }
+        List<String> test = ['testdata/Nmap.xml']
+        loader.load(test,findingEventList,mc)
+        loader.run()
+        assert(findingEventList.size() > 0)
     }
 }

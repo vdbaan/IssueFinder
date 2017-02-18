@@ -41,14 +41,13 @@ class NetsparkerParser extends Parser {
 
 
     List<Finding> parse() {
-        println('start')
         List<Finding> result = new ArrayList<>()
         content.target.each { scan ->
             String summary = "Target URL: " + scan.url + '\n' + 'Scan time : ' + scan.scantime + '\n'
             result << new Finding(scanner, 'none', 'generic', 'none', 'scaninfo', Finding.Severity.INFO, summary)
         }
 
-        def url = new URL(xml.target.url.toString())
+        def url = new URL(content.target.url.toString())
         int port = url.port
         String service = url.protocol.toUpperCase()
         if (port == -1) {
@@ -58,7 +57,7 @@ class NetsparkerParser extends Parser {
                 port = 80
             }
         }
-        xml.vulnerability.each { vuln ->
+        content.vulnerability.each { vuln ->
             String plugin = vuln.type
             Finding.Severity severity = calcSeverity(''+vuln.severity)
             String summary = 'URL: ' + vuln.url + '\n'

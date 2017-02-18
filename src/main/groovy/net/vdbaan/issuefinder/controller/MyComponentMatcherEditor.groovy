@@ -21,8 +21,6 @@ package net.vdbaan.issuefinder.controller
 import ca.odell.glazedlists.matchers.AbstractMatcherEditor
 import ca.odell.glazedlists.matchers.Matcher
 import net.vdbaan.issuefinder.model.Finding
-import net.vdbaan.issuefinder.model.Finding
-import net.vdbaan.issuefinder.model.Finding.Severity
 
 import javax.swing.JTextField
 import javax.swing.event.CaretEvent
@@ -45,20 +43,17 @@ class IssueSelector extends AbstractMatcherEditor implements  CaretListener {
         this.text = text
     }
 
-    private void refilter(CaretEvent event) {
+
+    @Override
+    void caretUpdate(CaretEvent e) {
         if (editor.text == null || editor.text.length() == 0) {
-                fireMatchAll()
+            fireMatchAll()
         } else {
             if (editor.text != text) {
                 Matcher newMatcher = new FindingMatcher(filter,editor.text)
                 fireChanged(newMatcher)
             }
         }
-    }
-
-    @Override
-    void caretUpdate(CaretEvent e) {
-        refilter(e)
     }
 }
 

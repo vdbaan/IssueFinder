@@ -106,15 +106,15 @@ frame(id: 'mainFrame',
             dividerLocation: 0.25) {
         scrollPane(id: 'topSplit') {
             table(id: 'mainTable',
-                    selectionMode: ListSelectionModel.MULTIPLE_INTERVAL_SELECTION) {
+                    selectionMode: ListSelectionModel.MULTIPLE_INTERVAL_SELECTION,
+                    autoResizeMode:JTable.AUTO_RESIZE_LAST_COLUMN) {
                 tableModel() {
-                    propertyColumn(header: 'Scanner', propertyName: 'scanner',
-                            preferredWidth: 100, maxWidth: 100)
-                    propertyColumn(header: 'Ip', propertyName: 'ip', preferredWidth: 150, maxWidth: 150)
-                    propertyColumn(header: 'Port', propertyName: 'port', preferredWidth: 200, maxWidth: 200)
-                    propertyColumn(header: 'Service', propertyName: 'service', preferredWidth: 350, maxWidth: 350)
-                    propertyColumn(header: 'Plugin', propertyName: 'plugin')
-                    propertyColumn(header: 'Risk', propertyName: 'severity', preferredWidth: 100, maxWidth: 100)
+                    propertyColumn(header: 'Scanner', propertyName: 'scanner', preferredWidth: 100, )
+                    propertyColumn(header: 'Ip', propertyName: 'ip', preferredWidth: 150)
+                    propertyColumn(header: 'Port', propertyName: 'port', preferredWidth: 200)
+                    propertyColumn(header: 'Service', propertyName: 'service', preferredWidth: 350)
+                    propertyColumn(header: 'Plugin', propertyName: 'plugin', preferredWidth: 550)
+                    propertyColumn(header: 'Risk', propertyName: 'severity', preferredWidth: 100)
                 }
             }
         }

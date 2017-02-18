@@ -43,7 +43,7 @@ abstract class Parser {
         if (NiktoParser.identify(file)) return new NiktoParser(file)
         if (TestSSLParser.identify(file)) return new TestSSLParser(file)
 
-        throw RuntimeException("Parser not found")
+        throw RuntimeException("Parser not found for file: "+file)
     }
 
     abstract List<Finding> parse()
