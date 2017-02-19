@@ -114,7 +114,7 @@ class MC implements ListEventListener<Finding> {
                     copyIps.closure = {
                         swing.doLater {
                             Set<String> ips = new TreeSet<>()
-                            filteredFindings.each { ips << it?.ip }
+                            filteredFindings.each { ips << it.ip }
                             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard()
                             clpbrd.setContents(new StringSelection(ips.join("\n")), null)
                         }
@@ -124,9 +124,7 @@ class MC implements ListEventListener<Finding> {
                             Set<String> ips = new TreeSet<>()
                             filteredFindings.each { f ->
                                 String port = f.port.split('/')[0]
-                                if (port == '0' || port == 'generic') {
-                                    // ignore
-                                } else {
+                                if (port.isNumber() && port != '0') {
                                     ips << f.ip + ":" + port
                                 }
                             }
@@ -178,12 +176,6 @@ class MC implements ListEventListener<Finding> {
         }
     }
 
-    void setStatus(String statusText) {
-        swing.doLater {
-            statusLabel.text = "Done"
-        }
-    }
-
     void doneLoading() {
         swing.doLater {
             statusLabel.text = "Done"
@@ -224,24 +216,16 @@ class IssuesLoader implements Runnable {
     }
 
     private parseFile(File file) {
+        List<Finding> result = Parser.getParser(file.text).parse()
         loadList.getReadWriteLock().writeLock().lock()
         try {
-            List<Finding> result = Parser.getParser(file.text).parse()
             loadList.addAll(result)
-        } catch (Exception e) {
         } finally {
             loadList.getReadWriteLock().writeLock().unlock()
         }
     }
-    private parseFile(String file) {
-        parseFile(new File(file))
-    }
-
     void run() {
-        int counter = 0
         files.each { file ->
-            counter += 1
-            mc.setStatus(sprintf("Importing file %d of %d",counter, files.size()))
             parseFile(file)
         }
         mc.doneLoading()

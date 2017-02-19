@@ -21,15 +21,12 @@ package net.vdbaan.issuefinder.view
 import ca.odell.glazedlists.SortedList
 import ca.odell.glazedlists.swing.AdvancedTableModel
 import ca.odell.glazedlists.swing.TableComparatorChooser
-import net.vdbaan.issuefinder.model.Finding
-import net.vdbaan.issuefinder.view.component.Colour
 import groovy.swing.SwingBuilder
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.view.component.Colour
 
 import javax.swing.BorderFactory
 import javax.swing.ImageIcon
-import javax.swing.JButton
 import javax.swing.JFileChooser
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -37,7 +34,6 @@ import javax.swing.JPopupMenu
 import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableCellRenderer
-import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
 import java.awt.GridBagLayout
