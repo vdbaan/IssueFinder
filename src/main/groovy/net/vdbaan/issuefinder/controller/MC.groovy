@@ -117,6 +117,7 @@ class MC implements ListEventListener<Finding> {
                         swing.doLater {
                             Set<String> ips = new TreeSet<>()
                             filteredFindings.each { ips << it.ip }
+                            ips.remove('none') // FIXME due to NetSparkerParser
                             def sorted = ips.sort {a,b ->
                                 def ip1 = a.split("\\.")
                                 def ip2 = b.split("\\.")
@@ -134,7 +135,8 @@ class MC implements ListEventListener<Finding> {
                             filteredFindings.each { f ->
                                 String port = f.port.split('/')[0]
                                 if (port.isNumber() && port != '0') {
-                                    ips << f.ip + ":" + port
+                                    if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
+                                        ips << f.ip + ":" + port
                                 }
                             }
                             def sorted = ips.sort {a,b ->
@@ -245,6 +247,7 @@ class MC implements ListEventListener<Finding> {
         swing.doLater {
             HashSet<String> ips = new HashSet<>()
             filteredFindings.each { ips << it.ip }
+            ips.remove('none') // FIXME due to NetSparkerParser
             ipLabel.text = ips.size()
         }
     }
