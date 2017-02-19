@@ -7,11 +7,11 @@ Some of the functionality has been added as a result of various requests.
 The result is an easy tool that can read various formats and show the issues in a table format. This allows you to
 sort specific columns. When an issue is selected, more information will be visible in the description pane.
 
-[![](/vdbaan/IssueFinder/wiki/images/if-main.png)] 
+[![](https://raw.githubusercontent.com/vdbaan/IssueFinder/master/wiki/images/if-main.png)] 
 
 You can add reports either through the commandline as arguments, or through the file menu by opening them.
 The 'New' menu option resets the application.
-[![](/vdbaan/IssueFinder/wiki/images/if-menu.png)] 
+[![](https://raw.githubusercontent.com/vdbaan/IssueFinder/master/wiki/images/if-menu.png)] 
 
 This tool has been created in Groovy as a learning exercise.  
 
