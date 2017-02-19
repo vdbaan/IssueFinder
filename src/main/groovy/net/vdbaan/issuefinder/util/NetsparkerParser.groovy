@@ -19,7 +19,6 @@
 package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
-import net.vdbaan.issuefinder.model.Finding
 
 
 class NetsparkerParser extends Parser {
@@ -51,11 +50,7 @@ class NetsparkerParser extends Parser {
         int port = url.port
         String service = url.protocol.toUpperCase()
         if (port == -1) {
-            if (service == 'HTTPS') {
-                port = 443
-            } else {
-                port = 80
-            }
+            port = service == 'HTTPS'?443:80
         }
         content.vulnerability.each { vuln ->
             String plugin = vuln.type

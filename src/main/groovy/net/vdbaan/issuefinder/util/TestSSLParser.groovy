@@ -48,9 +48,18 @@ class TestSSLParser extends Parser {
     @Override
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
-        result.add(buildClients())
-        result.add(buildCiphers())
-        result.add(order())
+        boolean buildClients = false, buildCiphers = false, buildOrder = false
+        content.each {issue ->
+            if(issue.id.startsWith('order')) buildOrder = true
+            if(issue.id.startsWith('client_')) buildClients = true
+            if(issue.id.startsWith('cipher_')) buildCiphers = true
+        }
+        if(buildClients)
+            result.add(buildClients())
+        if(buildCiphers)
+            result.add(buildCiphers())
+        if(buildOrder)
+            result.add(order())
         content.each { issue ->
             if (!issue.id.startsWith('order') && !issue.id.startsWith('client_') && !issue.id.startsWith('cipher_')) {
                 def f = new Finding(scanner, issue.ip, issue.port, "none", issue.id, calcRisk(issue.severity), issue.finding)
@@ -83,7 +92,7 @@ class TestSSLParser extends Parser {
             if(issue.id.startsWith('order')) {
                 summary += "\n"
                 summary += issue.finding
-                ip = issue.ip
+                ip = issue.ip.split('/')[1]
                 port = issue.port
             }
         }

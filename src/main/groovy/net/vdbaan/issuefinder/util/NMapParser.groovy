@@ -79,13 +79,17 @@ class NMapParser extends Parser{
     }
 
     private Finding summary(xml, String ip, String protocol) {
-        String summary = xml.runstats.finished.@summary
-        if (summary == "") {
-            summary = "Scan Execution Stats"
-            summary += "\nCompleted: " + xml.runstats.finished.@timestr
-            summary += "\nDuration : " + xml.runstats.finished.@elapsed
-            summary += " seconds"
-        }
+        String summary = xml.runstats.finished.@summary ?:
+                "Scan Execution Stats" +
+                        "\nCompleted: " + xml.runstats.finished.@timestr +
+                        "\nDuration : " + xml.runstats.finished.@elapsed +
+                        " seconds"
+//        if (summary == "") {
+//            summary = "Scan Execution Stats"
+//            summary += "\nCompleted: " + xml.runstats.finished.@timestr
+//            summary += "\nDuration : " + xml.runstats.finished.@elapsed
+//            summary += " seconds"
+//        }
 
         return new Finding(scanner, ip, "generic/" + protocol, "none", "NMap summary", Finding.Severity.INFO, summary)
     }
