@@ -115,8 +115,15 @@ class MC implements ListEventListener<Finding> {
                         swing.doLater {
                             Set<String> ips = new TreeSet<>()
                             filteredFindings.each { ips << it.ip }
+                            def sorted = ips.sort {a,b ->
+                                def ip1 = a.split("\\.")
+                                def ip2 = b.split("\\.")
+                                def uip1 = String.format("%3s.%3s.%3s.%3s",ip1[0],ip1[1],ip1[2],ip1[3])
+                                def uip2 = String.format("%3s.%3s.%3s.%3s",ip2[0],ip2[1],ip2[2],ip2[3])
+                                uip1 <=> uip2
+                            }
                             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard()
-                            clpbrd.setContents(new StringSelection(ips.join("\n")), null)
+                            clpbrd.setContents(new StringSelection(sorted.join("\n")), null)
                         }
                     }
                     copyIpPorts.closure = {
@@ -128,8 +135,15 @@ class MC implements ListEventListener<Finding> {
                                     ips << f.ip + ":" + port
                                 }
                             }
+                            def sorted = ips.sort {a,b ->
+                                def ip1 = a.split(":")[0].split("\\.")
+                                def ip2 = b.split(":")[0].split("\\.")
+                                def uip1 = String.format("%03d.%03d.%03d.%03d.%05d",ip1[0] as int,ip1[1] as int,ip1[2] as int,ip1[3] as int,(a.split(":")[1]) as int)
+                                def uip2 = String.format("%03d.%03d.%03d.%03d.%05d",ip2[0] as int,ip2[1] as int,ip2[2] as int,ip2[3] as int,(b.split(":")[1]) as int)
+                                uip1 <=> uip2
+                            }
                             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard()
-                            clpbrd.setContents(new StringSelection(ips.join("\n")), null)
+                            clpbrd.setContents(new StringSelection(sorted.join("\n")), null)
                         }
                     }
                 }
@@ -216,10 +230,13 @@ class IssuesLoader implements Runnable {
     }
 
     private parseFile(File file) {
-        List<Finding> result = Parser.getParser(file.text).parse()
+
         loadList.getReadWriteLock().writeLock().lock()
         try {
+            List<Finding> result = Parser.getParser(file.text).parse()
             loadList.addAll(result)
+        } catch(Exception e) {
+            // pass (for now)
         } finally {
             loadList.getReadWriteLock().writeLock().unlock()
         }
