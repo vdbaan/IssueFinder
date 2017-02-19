@@ -38,8 +38,11 @@ You can right click on a table entry which allows you to:
 These will fill the specific selected filter.
 
 #### IP overview
-In the right bottom corner there is an indication of the amount of unique IPs that are visible in the table. Right
-clicking on that allows you to copy the following to the clipboard:
+In the right bottom corner there is an indication of the amount of unique IPs that are visible in the table. 
+
+![](https://raw.githubusercontent.com/vdbaan/IssueFinder/master/wiki/images/if-ips.png)
+
+Right-clicking on that allows you to copy the following to the clipboard:
 - Unique IPs
 - Unique IP/Port
 
