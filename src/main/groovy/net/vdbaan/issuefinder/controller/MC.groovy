@@ -194,7 +194,6 @@ class MC implements ListEventListener<Finding> {
         if(!filter.accept(fileName)) {
             fileName = new File(fileName.getAbsolutePath().concat(filter.@extensions[0]))
         }
-        println "Saving as " + fileName
         if(fileName.path.endsWith('xml')) {
             exportAsXML(fileName)
         } else if(fileName.path.endsWith('csv')) {
@@ -216,6 +215,16 @@ class MC implements ListEventListener<Finding> {
         }
         fileName.write(xml)
     }
+
+    void exportAsCSV(File fileName) {
+        fileName.withWriter { out ->
+            out.writeLine('"Scanner","ip","port","service","plugin","severity"')
+            filteredFindings.each { f ->
+                out.writeLine("\"${f.scanner}\",\"${f.ip}\",\"${f.port}\",\"${f.service}\",\"${f.plugin}\",\"${f.severity}\"")
+            }
+        }
+    }
+
     void openFiles(List<String> files) {
         swing.doLater {
             if (files.size() == 0) return
