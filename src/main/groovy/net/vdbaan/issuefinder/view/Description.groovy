@@ -39,6 +39,12 @@ actions {
             accelerator: 'ctrl O',
             shortDescription: 'Open a File'
     )
+    action(id: 'exportAction',
+            name: 'Export as..',
+            mnemonic: 'E',
+            accelerator: 'ctrl shift S',
+            shortDescription: 'Export to a file'
+    )
     action(id: 'exitAction',
             name: 'Exit',
             mnemonic: 'x',
@@ -89,6 +95,8 @@ frame(id: 'mainFrame',
         menu('File', mnemonic: 'F') {
             menuItem(newAction)
             menuItem(openAction)
+            separator()
+            menuItem(exportAction)
             separator()
             menuItem(exitAction)
         }

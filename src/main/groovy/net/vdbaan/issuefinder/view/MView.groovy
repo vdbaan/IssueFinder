@@ -28,6 +28,7 @@ import net.vdbaan.issuefinder.view.component.Colour
 import javax.swing.BorderFactory
 import javax.swing.ImageIcon
 import javax.swing.JFileChooser
+import javax.swing.filechooser.FileFilter
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JPopupMenu
@@ -146,6 +147,22 @@ class MView {
         return chooser
     }
 
+    JFileChooser createSaveFileChooser() {
+        def saver = new JFileChooser() {
+            void showChooser(Closure saveClosure) {
+                if(showSaveDialog(swing.mainFrame) == APPROVE_OPTION) {
+                    saveClosure()
+                }
+            }
+        }
+        saver.setDialogTitle('Save file as ...')
+        FileFilter type1 = new ExtensionFilter("XML Files", ".xml")
+        FileFilter type2 = new ExtensionFilter("CSV Files", ".csv")
+        saver.setFileFilter(type1)
+        saver.addChoosableFileFilter(type2)
+
+        return saver
+    }
     JPopupMenu createPopup() {
         return swing.popupMenu() {
             menuItem(action:swing.filterOnIpAction)
@@ -162,3 +179,35 @@ class MView {
     }
 }
 
+class ExtensionFilter extends FileFilter {
+    private List<String> extensions
+
+    private String description
+
+     ExtensionFilter(String description, String extension) {
+        this(description, [extension])
+    }
+
+     ExtensionFilter(String description, List<String> extensions) {
+        this.description = description
+        this.extensions = extensions.clone()
+    }
+
+     boolean accept(File file) {
+        if (file.isDirectory()) {
+            return true
+        }
+        String path = file.getAbsolutePath()
+        extensions.each { ext ->
+             if (path.endsWith(ext)&& (path.charAt(path.length() - ext.length()) == '.')) {
+                 return true
+             }
+         }
+
+        return false
+    }
+
+    String getDescription() {
+        return (description == null ? extensions[0] : description);
+    }
+}

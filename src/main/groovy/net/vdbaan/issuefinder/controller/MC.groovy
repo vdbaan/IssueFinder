@@ -25,6 +25,7 @@ import ca.odell.glazedlists.gui.TableFormat
 import ca.odell.glazedlists.matchers.CompositeMatcherEditor
 import ca.odell.glazedlists.swing.AdvancedTableModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
+import groovy.xml.MarkupBuilder
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.util.Parser
 import net.vdbaan.issuefinder.view.MView
@@ -70,6 +71,7 @@ class MC implements ListEventListener<Finding> {
 
             openAction.closure = { onOpen() }
             newAction.closure = { onNew() }
+            exportAction.closure = {onExport()}
 
             compositeFilter.matcherEditors << new IssueSelector(scannerFilter,"scanner")
             compositeFilter.matcherEditors << new IssueSelector(ipFilter,"ip")
@@ -181,6 +183,39 @@ class MC implements ListEventListener<Finding> {
         }
     }
 
+    void onExport() {
+        // filteredFindings
+        main.createSaveFileChooser().with {
+            showChooser({ saveAs(selectedFile,fileFilter) })
+        }
+    }
+
+    void saveAs(File fileName, javax.swing.filechooser.FileFilter filter) {
+        if(!filter.accept(fileName)) {
+            fileName = new File(fileName.getAbsolutePath().concat(filter.@extensions[0]))
+        }
+        println "Saving as " + fileName
+        if(fileName.path.endsWith('xml')) {
+            exportAsXML(fileName)
+        } else if(fileName.path.endsWith('csv')) {
+            exportAsCSV(fileName)
+        }
+
+    }
+
+    void exportAsXML(File fileName) {
+        def xml = new MarkupBuilder()
+        xml.findings {
+            filteredFindings.each { f ->
+                finding(scanner:f.scanner,ip:f.ip,port:f.port,service:f.service) {
+                    plugin(""+f.plugin)
+                    severity(""+f.severity)
+                    summary(""+f.summary)
+                }
+            }
+        }
+        fileName.write(xml)
+    }
     void openFiles(List<String> files) {
         swing.doLater {
             if (files.size() == 0) return
