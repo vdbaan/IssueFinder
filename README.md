@@ -59,6 +59,10 @@ Currently it is able to parse the following formats:
   - TestSSL (json format)
 
 ## Changelog
+1.0.1 - Added Autocompletion to scanner, plugin and risk filter on request of @anantshri
+
+1.0.0 - Fixed some bugs, made first real release
+
 0.1.1 - Fixed swing threading in regard to filtering
 
 0.1.0 - Initial release
