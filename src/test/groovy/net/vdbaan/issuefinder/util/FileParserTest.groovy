@@ -36,7 +36,7 @@ class NessusParserTest {
 
         File testFile = new File("testdata/Nessus.nessus")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof NessusParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -59,7 +59,7 @@ class NmapParserTest {
     void testNmapFile() {
         File testFile = new File("testdata/Nmap.xml")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof NMapParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -84,9 +84,9 @@ class TestSSLParserTest {
 
     @Test
     void testJSonFile() {
-        File testFile = new File("testdata/testssl-3-25.json")
+        File testFile = new File("testdata/testssl-4-4848.json")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof TestSSLParser
             List<Finding> result = p.parse()
             assertFalse(result.isEmpty())
@@ -111,8 +111,36 @@ class NiktoParserTest {
     void testNiktoFile() {
         File testFile = new File("testdata/Nikto.xml")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof NiktoParser
+            List result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
+    }
+}
+
+class NetsparkerParserTest {
+
+    @Test
+    void testEmptyNetSparker() {
+        Parser p = Parser.getParser('<netsparker>\t<target>\n' +
+                '\t\t<url>http://192.168.56.101/</url>\n' +
+                '\t\t<scantime>1436</scantime>\n' +
+                '\t</target></netsparker>')
+        assert p instanceof NetsparkerParser
+        List<Finding> result = p.parse()
+        assertTrue(result.size() == 1)
+        assert result[0] instanceof Finding
+    }
+
+    @Test
+    void testNetsparkerFile() {
+
+        File testFile = new File("testdata/Netsparker.xml")
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testFile.text)
+            assert p instanceof NetsparkerParser
             List result = p.parse()
             assertFalse(result.isEmpty())
             assert result[0] instanceof Finding

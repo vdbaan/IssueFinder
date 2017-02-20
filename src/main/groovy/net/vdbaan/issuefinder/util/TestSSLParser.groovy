@@ -48,17 +48,17 @@ class TestSSLParser extends Parser {
     @Override
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
-        boolean buildClients = false, buildCiphers = false, buildOrder = false
+        boolean doClients = false, doCiphers = false, doOrder = false
         content.each {issue ->
-            if(issue.id.startsWith('order')) buildOrder = true
-            if(issue.id.startsWith('client_')) buildClients = true
-            if(issue.id.startsWith('cipher_')) buildCiphers = true
+            if(issue.id.startsWith('order')) doOrder = true
+            if(issue.id.startsWith('client_')) doClients = true
+            if(issue.id.startsWith('cipher_')) doCiphers = true
         }
-        if(buildClients)
+        if(doClients)
             result.add(buildClients())
-        if(buildCiphers)
+        if(doCiphers)
             result.add(buildCiphers())
-        if(buildOrder)
+        if(doOrder)
             result.add(order())
         content.each { issue ->
             if (!issue.id.startsWith('order') && !issue.id.startsWith('client_') && !issue.id.startsWith('cipher_')) {

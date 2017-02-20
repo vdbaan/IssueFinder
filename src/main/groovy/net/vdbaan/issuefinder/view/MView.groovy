@@ -127,8 +127,8 @@ class MView {
 
     void hideLoading() {
         swing.edt {
-            mainFrame.enable(true)
-            glass.setVisible(false)
+            mainFrame?.enable(true)
+            glass?.setVisible(false)
         }
     }
 
@@ -198,13 +198,14 @@ class ExtensionFilter extends FileFilter {
             return true
         }
         String path = file.getAbsolutePath()
+        def result = false
         extensions.each { ext ->
              if (path.endsWith(ext)&& (path.charAt(path.length() - ext.length()) == '.')) {
-                 return true
+                 result = true
              }
          }
 
-        return false
+        return result
     }
 
     String getDescription() {
