@@ -24,7 +24,6 @@ class NessusParser extends Parser {
     static String IDENTIFIER = "NessusClientData_v2"
     static String scanner = "Nessus"
 
-
     NessusParser(content) {
         this.content = xmlslurper.parseText(content)
     }

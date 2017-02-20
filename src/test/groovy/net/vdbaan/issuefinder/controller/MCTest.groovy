@@ -20,11 +20,13 @@ package net.vdbaan.issuefinder.controller
 import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.EventList
 import net.vdbaan.issuefinder.model.Finding
+import net.vdbaan.issuefinder.view.ExtensionFilter
 import org.junit.Before
 
 import org.junit.Test
 
 import javax.swing.JTextField
+import javax.swing.filechooser.FileFilter
 
 class MCTestCustomMatcher {
     List<Finding> findings
@@ -72,16 +74,79 @@ class MCTestCustomMatcher {
 class MCTestLoader {
     @Test
     void testLoadFile() {
-        IssuesLoader loader = new IssuesLoader();
-        EventList<Finding> findingEventList = new BasicEventList<Finding>()
-        MC mc = new MC() {
-            void doneLoading() {
-                //
+        File testFile = new File('testdata/Nmap.xml')
+        if(testFile.exists()) {
+            IssuesLoader loader = new IssuesLoader()
+            EventList<Finding> findingEventList = new BasicEventList<Finding>()
+            MC mc = new MC() {
+                void doneLoading() {
+                    //
+                }
             }
+            loader.load([testFile], findingEventList, mc)
+            loader.run()
+            assert (findingEventList.size() > 0)
         }
-        List<String> test = ['testdata/Nmap.xml']
-        loader.load(test,findingEventList,mc)
-        loader.run()
-        assert(findingEventList.size() > 0)
+    }
+}
+
+class MCExportTest {
+    @Test
+    void testXML() {
+        File testFile = new File('testdata/Nmap.xml')
+
+        if(testFile.exists()) {
+            MC mc = new MC()
+            IssuesLoader loader = new IssuesLoader()
+            EventList<Finding> findingEventList = new BasicEventList<Finding>()
+            loader.load([testFile], findingEventList, mc)
+            loader.run()
+            mc.@filteredFindings = findingEventList
+            File tmpOut = File.createTempFile('tmp','.xml')
+//            tmpOut.deleteOnExit()
+            mc.exportAsXML(tmpOut)
+            XmlSlurper xmlslurper = new XmlSlurper()
+            xmlslurper.parse(tmpOut)
+
+        }
+    }
+
+    @Test
+    void testCSV() {
+        File testFile = new File('testdata/Nmap.xml')
+
+        if(testFile.exists()) {
+            String xml = testFile.text
+            MC mc = new MC()
+            IssuesLoader loader = new IssuesLoader()
+            EventList<Finding> findingEventList = new BasicEventList<Finding>()
+            loader.load([testFile], findingEventList, mc)
+            loader.run()
+            mc.@filteredFindings = findingEventList
+            File tmpOut = File.createTempFile('tmp','.csv')
+            tmpOut.deleteOnExit()
+            mc.exportAsCSV(tmpOut)
+        }
+    }
+
+    @Test
+    void testOnExport() {
+        File testFile = new File('testdata/Nmap.xml')
+
+        if(testFile.exists()) {
+            MC mc = new MC()
+            IssuesLoader loader = new IssuesLoader()
+            EventList<Finding> findingEventList = new BasicEventList<Finding>()
+            loader.load([testFile], findingEventList, mc)
+            loader.run()
+            mc.@filteredFindings = findingEventList
+            File tmpOut = File.createTempFile('tmp','.xml')
+//            tmpOut.deleteOnExit()
+            mc.saveAs(tmpOut,new ExtensionFilter("XML Files", ".xml"))
+            XmlSlurper xmlslurper = new XmlSlurper()
+            xmlslurper.parse(tmpOut)
+            File tmpOut2 = File.createTempFile('tmp','.csv')
+            mc.saveAs(tmpOut,new ExtensionFilter("CSV Files", ".csv"))
+        }
     }
 }
