@@ -83,16 +83,16 @@ class FindingMatcher implements Matcher<Finding> {
         if (test.contains(",")) {
             boolean result = false
             test.split(",").each { val ->
-                result |= item.contains(val)
+                result |= item.contains(val.trim())
             }
             // test for negative searches
             test.split(",").each { val ->
                 if (val.startsWith("-") && val.length() > 1) {
-                    result &= (!item.contains(val.substring(1)))
+                    result &= (!item.contains(val.substring(1).trim()))
                 }
             }
             return result
         } else
-            return item.contains(test)
+            return item.contains(test.trim())
     }
 }

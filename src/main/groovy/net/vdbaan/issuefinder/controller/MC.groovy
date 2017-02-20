@@ -25,12 +25,14 @@ import ca.odell.glazedlists.gui.TableFormat
 import ca.odell.glazedlists.matchers.CompositeMatcherEditor
 import ca.odell.glazedlists.swing.AdvancedTableModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
+import com.example.myapp.console.Autocomplete
 import groovy.xml.MarkupBuilder
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.util.Parser
 import net.vdbaan.issuefinder.view.MView
 import groovy.swing.SwingBuilder
 
+import javax.swing.KeyStroke
 import java.awt.*
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
@@ -156,6 +158,32 @@ class MC implements ListEventListener<Finding> {
         }
     }
 
+    def COMMIT_ACTION = "commit"
+    void setupAutoComplete() {
+        swing.doLater {
+            SortedSet<String> risks = new TreeSet<>()
+            filteredFindings.each { risks << it.severity.name() }
+            setupAutoComplete(riskFilter, risks.asList())
+
+            SortedSet<String> plugins = new TreeSet<>()
+            filteredFindings.each { plugins << it.plugin }
+            setupAutoComplete(pluginFilter, plugins.asList())
+
+            SortedSet<String> services = new TreeSet<>()
+            filteredFindings.each { services << it.service }
+            setupAutoComplete(serviceFilter, services.asList())
+        }
+    }
+
+    void setupAutoComplete(filter,list) {
+            filter.setFocusTraversalKeysEnabled(false)
+
+            Autocomplete autoComplete = new Autocomplete(filter, list)
+            filter.getDocument().addDocumentListener(autoComplete)
+            filter.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION)
+            filter.getActionMap().put(COMMIT_ACTION, autoComplete.getCommitAction())
+    }
+
     void display(ArrayList<Finding> findings) {
         swing.doLater {
             summaryText.text = ""
@@ -240,6 +268,7 @@ class MC implements ListEventListener<Finding> {
         swing.doLater {
             statusLabel.text = "Done"
             main.hideLoading()
+            setupAutoComplete()
         }
     }
     @Override
