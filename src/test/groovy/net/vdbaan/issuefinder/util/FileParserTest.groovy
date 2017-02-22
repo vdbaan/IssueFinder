@@ -36,7 +36,7 @@ class NessusParserTest {
 
         File testFile = new File("testdata/Nessus.nessus")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof NessusParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -59,7 +59,7 @@ class NmapParserTest {
     void testNmapFile() {
         File testFile = new File("testdata/Nmap.xml")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof NMapParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -84,9 +84,9 @@ class TestSSLParserTest {
 
     @Test
     void testJSonFile() {
-        File testFile = new File("testdata/testssl-3-25.json")
+        File testFile = new File("testdata/testssl-4-4848.json")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof TestSSLParser
             List<Finding> result = p.parse()
             assertFalse(result.isEmpty())
@@ -111,7 +111,7 @@ class NiktoParserTest {
     void testNiktoFile() {
         File testFile = new File("testdata/Nikto.xml")
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testfile.text)
+            Parser p = Parser.getParser(testFile.text)
             assert p instanceof NiktoParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -119,6 +119,7 @@ class NiktoParserTest {
         }
     }
 }
+
 
 class ArachniParserTest {
     @Test

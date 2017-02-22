@@ -42,13 +42,14 @@ class NiktoParser extends Parser{
         String ip = content.scandetails.@targetip
         String port = content.scandetails.@targetport
         result += scanInfo(content, ip, port)
-        content.item.each { item ->
-            String desc = cdata(item.description)
+        content.scandetails.item.each { item ->
+            String desc = item.description.toString()
             String plugin = item.@id
             plugin += ":" + desc
-            summary = "METHOD: " + item.@method
+            def summary = "METHOD: " + item.@method
             summary += "\nOSVDB-" + item.@osvdbid
             summary += "\nURI: " + cdata(item.uri)
+
             result << new Finding(scanner, ip, port, "web", plugin, Finding.Severity.INFO, summary)
         }
         return result
@@ -69,6 +70,7 @@ class NiktoParser extends Parser{
 
     private String cdata(String text) {
         int txtlen = text.length()
+        println text
         return text.subSequence(9, txtlen - 2)
     }
 }

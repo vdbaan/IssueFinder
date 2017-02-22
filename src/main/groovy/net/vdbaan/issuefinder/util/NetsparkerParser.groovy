@@ -46,6 +46,7 @@ class NetsparkerParser extends Parser {
             result << new Finding(scanner, 'none', 'generic', 'none', 'scaninfo', Finding.Severity.INFO, summary)
         }
 
+        println  content.target.url
         def url = new URL(content.target.url.toString())
         int port = url.port
         String service = url.protocol.toUpperCase()

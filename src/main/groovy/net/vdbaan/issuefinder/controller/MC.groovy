@@ -221,7 +221,7 @@ class MC implements ListEventListener<Finding> {
     }
 
     void saveAs(File fileName, javax.swing.filechooser.FileFilter filter) {
-        if(!filter.accept(fileName)) {
+        if(! filter.accept(fileName)) {
             fileName = new File(fileName.getAbsolutePath().concat(filter.@extensions[0]))
         }
         if(fileName.path.endsWith('xml')) {
@@ -233,17 +233,18 @@ class MC implements ListEventListener<Finding> {
     }
 
     void exportAsXML(File fileName) {
-        def xml = new MarkupBuilder()
-        xml.findings {
-            filteredFindings.each { f ->
-                finding(scanner:f.scanner,ip:f.ip,port:f.port,service:f.service) {
-                    plugin(""+f.plugin)
-                    severity(""+f.severity)
-                    summary(""+f.summary)
+        fileName.withWriter { out ->
+            def xml = new MarkupBuilder(out)
+            xml.findings {
+                filteredFindings.each { f ->
+                    finding(scanner: f.scanner, ip: f.ip, port: f.port, service: f.service) {
+                        plugin("" + f.plugin)
+                        severity("" + f.severity)
+                        summary("" + f.summary)
+                    }
                 }
             }
         }
-        fileName.write(xml)
     }
 
     void exportAsCSV(File fileName) {
