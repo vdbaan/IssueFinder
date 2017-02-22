@@ -98,7 +98,7 @@ class TestSSLParserTest {
 class NiktoParserTest {
 
     @Test
-    void testEmptyNmap() {
+    void testEmptyNikto() {
         Parser p = Parser.getParser('<niktoscan></niktoscan>')
         assert p instanceof NiktoParser
         List<Finding> result = p.parse()
@@ -120,27 +120,43 @@ class NiktoParserTest {
     }
 }
 
-class NetsparkerParserTest {
 
+class ArachniParserTest {
     @Test
-    void testEmptyNetSparker() {
-        Parser p = Parser.getParser('<netsparker>\t<target>\n' +
-                '\t\t<url>http://192.168.56.101/</url>\n' +
-                '\t\t<scantime>1436</scantime>\n' +
-                '\t</target></netsparker>')
-        assert p instanceof NetsparkerParser
+    void testEmptyArachni() {
+        Parser p = Parser.getParser('<report><sitemap><entry url="http://127.0.0.1/" code="200"/></sitemap><issues/></report>')
+        assert p instanceof ArachniParser
         List<Finding> result = p.parse()
-        assertTrue(result.size() == 1)
-        assert result[0] instanceof Finding
+        assertTrue(result.isEmpty())
     }
 
     @Test
-    void testNetsparkerFile() {
+    void testArachniFile() {
+        File testFile = new File("testdata/2017-02-21 10_47_30+0000.xml")
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testfile.text)
+            assert p instanceof ArachniParser
+            List result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
+    }
+}
 
-        File testFile = new File("testdata/Netsparker.xml")
+class BurpParserTest {
+    @Test
+    void testEmptyBurp() {
+        Parser p = Parser.getParser('<issues burpVersion="1.7.17" exportTime="Tue Feb 21 14:27:01 GMT 2017" />')
+        assert p instanceof BurpParser
+        List<Finding> result = p.parse()
+        assertTrue(result.isEmpty())
+    }
+    @Test
+    void testBurpFile() {
+        File testFile = new File("testdata/burp.xml")
         if(testFile.exists()) {
             Parser p = Parser.getParser(testFile.text)
-            assert p instanceof NetsparkerParser
+            assert p instanceof BurpParser
             List result = p.parse()
             assertFalse(result.isEmpty())
             assert result[0] instanceof Finding

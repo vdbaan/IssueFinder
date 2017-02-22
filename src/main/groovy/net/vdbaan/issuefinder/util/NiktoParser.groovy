@@ -48,7 +48,8 @@ class NiktoParser extends Parser{
             plugin += ":" + desc
             def summary = "METHOD: " + item.@method
             summary += "\nOSVDB-" + item.@osvdbid
-            summary += "\nURI: " + item.uri.toString()
+            summary += "\nURI: " + cdata(item.uri)
+
             result << new Finding(scanner, ip, port, "web", plugin, Finding.Severity.INFO, summary)
         }
         return result

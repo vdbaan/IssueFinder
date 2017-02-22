@@ -41,7 +41,10 @@ abstract class Parser {
         if (NMapParser.identify(file)) return new NMapParser(file)
         if (NetsparkerParser.identify(file)) return new NetsparkerParser(file)
         if (NiktoParser.identify(file)) return new NiktoParser(file)
+        if (ArachniParser.identify(file)) return new ArachniParser(file)
+        if (BurpParser.identify(file)) return new BurpParser(file)
         if (TestSSLParser.identify(file)) return new TestSSLParser(file)
+        if (SSLyzeParser.identify(file)) return new SSLyzeParser(file)
 
         throw RuntimeException("Parser not found for file: "+file)
     }
