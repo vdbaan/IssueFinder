@@ -80,6 +80,8 @@ actions {
             name: 'Filter on Service')
     action(id: 'filterOnPluginAction',
             name: 'Filter on Plugin')
+    action(id:'modifyEntryAction',
+            name: 'Modify Entry(s)...')
     action(id: 'copyIps',
             name: 'Copy Unique IPs')
     action(id: 'copyIpPorts',
@@ -157,6 +159,25 @@ frame(id: 'mainFrame',
         label("Application started", id: 'statusLabel')
         label("0", id: 'ipLabel')
         label("unique IPs")
+    }
+}
+
+optionPane(id:'editPane') {
+    panel(id:'editPanel',
+            border: emptyBorder(5),
+            layout: new MigLayout('','[][grow]','')) {
+        label("Scanner:", constraints: 'right')
+        textField(id: 'scannerEdit', columns: 15, constraints: 'grow,wrap')
+        label("IP:", constraints: 'right')
+        textField(id: 'ipEdit', columns: 15, constraints: 'grow,wrap')
+        label("Port:", constraints: 'right')
+        textField(id: 'portEdit', columns: 15, constraints: 'grow,wrap')
+        label("Service:", constraints: 'right')
+        textField(id: 'serviceEdit', columns: 15, constraints: 'grow,wrap')
+        label("Plugin:", constraints: 'right')
+        textField(id: 'pluginEdit', columns: 15, constraints: 'grow,wrap')
+        label("Risk:", constraints: 'right')
+        textField(id: 'severityEdit', columns: 15, constraints: 'grow,wrap')
     }
 }
 

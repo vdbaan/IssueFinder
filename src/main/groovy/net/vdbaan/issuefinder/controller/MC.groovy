@@ -32,6 +32,7 @@ import net.vdbaan.issuefinder.util.Parser
 import net.vdbaan.issuefinder.view.MView
 import groovy.swing.SwingBuilder
 
+import javax.swing.JOptionPane
 import javax.swing.KeyStroke
 import java.awt.*
 import java.awt.datatransfer.Clipboard
@@ -109,6 +110,7 @@ class MC implements ListEventListener<Finding> {
                     filterOnPortAction.closure = { portFilter.text = f.port }
                     filterOnServiceAction.closure = { serviceFilter.text = f.service }
                     filterOnPluginAction.closure = { pluginFilter.text = f.plugin }
+                    modifyEntryAction.closure = {onEntry()}
 
                 }
             } as MouseListener)
@@ -196,6 +198,43 @@ class MC implements ListEventListener<Finding> {
         main.createOpenFileChooser().with {
             showChooser({ openFiles(Arrays.asList(selectedFiles)) })
 
+        }
+    }
+
+    void onEntry() {
+        swing.doLater {
+            int ret = JOptionPane.showConfirmDialog(mainFrame, editPanel, "Edit finding(s)", JOptionPane.OK_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE);
+            if(ret == JOptionPane.OK_OPTION) {
+                def min =  mainTable.selectionModel.minSelectionIndex
+                def max = mainTable.selectionModel.maxSelectionIndex
+                (min..max).each {pos ->
+                    if (mainTable.selectionModel.isSelectedIndex(pos)) {
+                        filteredFindings.get(pos).scanner = scannerEdit.text?: filteredFindings.get(pos).scanner
+                        filteredFindings.get(pos).ip = ipEdit.text?: filteredFindings.get(pos).ip
+                        filteredFindings.get(pos).port = portEdit.text?: filteredFindings.get(pos).port
+                        filteredFindings.get(pos).service = serviceEdit.text?: filteredFindings.get(pos).service
+                        filteredFindings.get(pos).severity = getSeverity(severityEdit.text)?: filteredFindings.get(pos).severity
+                    }
+                }
+                mainTable.model.fireTableDataChanged()
+                scannerEdit.text = null
+                ipEdit.text = null
+                portEdit.text = null
+                serviceEdit.text = null
+                severityEdit.text = null
+            }
+        }
+    }
+
+    private Finding.Severity getSeverity(text) {
+        switch(text?.toUpperCase()){
+            case 'CRITICAL':return Finding.Severity.CRITICAL
+            case 'HIGH':return Finding.Severity.HIGH
+            case 'MEDIUM':return Finding.Severity.MEDIUM
+            case 'LOW':return Finding.Severity.LOW
+            case 'INFO':return Finding.Severity.INFO
+            case 'UNKNOWN':return Finding.Severity.UNKNOWN
+            default: return null
         }
     }
 
