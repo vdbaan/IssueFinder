@@ -53,7 +53,9 @@ class NMapParser extends Parser{
                 String service = port.service.@name
                 String product = port.service.@product
                 String summary = ""
-                result += new Finding(scanner, hostIp, portnr + "/" + protocol + " (" + state + ")", service + " (" + product + ")", "NMap port information", Finding.Severity.INFO, summary)
+                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/" + protocol + " (" + state + ")",
+                                       service:service + " (" + product + ")", plugin:"NMap port information",
+                                       severity:Finding.Severity.INFO, summary:summary])
             }
         }
         return result
@@ -66,7 +68,8 @@ class NMapParser extends Parser{
         summary += "\nScan type      : " + xml.scaninfo.@type
         summary += "\nNmap command   : " + xml.@args
 
-        return new Finding(scanner, ip, "generic/" + protocol, "none", "NMap scaninfo", Finding.Severity.INFO, summary)
+        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
+                            plugin:"NMap scaninfo", severity:Finding.Severity.INFO, summary:summary])
     }
 
     private Finding runStats(xml, String ip, String protocol) {
@@ -75,7 +78,8 @@ class NMapParser extends Parser{
         summary += "\nUp     : " + xml.runstats.hosts.@up
         summary += "\nDown   : " + xml.runstats.hosts.@down
 
-        return new Finding(scanner, ip, "generic/" + protocol, "none", "NMap stats", Finding.Severity.INFO, summary)
+        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
+                            plugin:"NMap stats", severity:Finding.Severity.INFO, summary:summary])
     }
 
     private Finding summary(xml, String ip, String protocol) {
@@ -84,13 +88,8 @@ class NMapParser extends Parser{
                         "\nCompleted: " + xml.runstats.finished.@timestr +
                         "\nDuration : " + xml.runstats.finished.@elapsed +
                         " seconds"
-//        if (summary == "") {
-//            summary = "Scan Execution Stats"
-//            summary += "\nCompleted: " + xml.runstats.finished.@timestr
-//            summary += "\nDuration : " + xml.runstats.finished.@elapsed
-//            summary += " seconds"
-//        }
 
-        return new Finding(scanner, ip, "generic/" + protocol, "none", "NMap summary", Finding.Severity.INFO, summary)
+        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
+                            plugin:"NMap summary", severity:Finding.Severity.INFO, summary:summary])
     }
 }

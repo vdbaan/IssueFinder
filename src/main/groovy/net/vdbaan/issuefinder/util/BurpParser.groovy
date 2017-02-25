@@ -19,9 +19,6 @@ package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
 
-/**
- * Created by steven on 18/12/15.
- */
 class BurpParser extends Parser{
     static IDENTIFIER = "issues"
     static scanner = "Burp"
@@ -47,10 +44,9 @@ class BurpParser extends Parser{
             def ip = (issue.host.@ip?:url.getHost()) as String
             def port = url.getPort() as String
             def service = url.protocol.toUpperCase()
-            def plugin = issue.name as String
-            def severity = calc(issue.severity, issue.confidence)
-            def summary = buildSummary(issue)
-            result << new Finding(scanner, ip, port, service, plugin, severity, buildSummary(issue))
+            result << new Finding([scanner:scanner, ip:ip, port:port, service:service,
+                                   plugin:issue.name as String, severity:calc(issue.severity, issue.confidence),
+                                   summary:buildSummary(issue)])
         }
         return result
     }

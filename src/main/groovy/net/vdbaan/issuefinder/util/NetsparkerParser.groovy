@@ -43,7 +43,8 @@ class NetsparkerParser extends Parser {
         List<Finding> result = new ArrayList<>()
         content.target.each { scan ->
             String summary = "Target URL: " + scan.url + '\n' + 'Scan time : ' + scan.scantime + '\n'
-            result << new Finding(scanner, 'none', 'generic', 'none', 'scaninfo', Finding.Severity.INFO, summary)
+            result << new Finding([scanner:scanner, ip:'none', port:'generic', service:'none', plugin:'scaninfo',
+                                   severity:Finding.Severity.INFO, summary:summary])
         }
 
         println  content.target.url
@@ -61,7 +62,8 @@ class NetsparkerParser extends Parser {
             summary += 'Extra Information (' + vuln.extrainformation.info.@name + '):'
             summary += vuln.extrainformation.info + '\n'
             summary += 'Classification:\n' + classification(vuln.classification)
-            result << new Finding(scanner, url.host, '' + port, service, plugin, severity, summary)
+            result << new Finding([scanner:scanner, ip:url.host, port:'' + port, service:service, plugin:plugin,
+                                   severity:severity, summary:summary])
 
         }
         return result
