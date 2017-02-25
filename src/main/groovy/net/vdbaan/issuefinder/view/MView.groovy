@@ -169,6 +169,8 @@ class MView {
             menuItem(action:swing.filterOnPortAction)
             menuItem(action:swing.filterOnServiceAction)
             menuItem(action:swing.filterOnPluginAction)
+            separator()
+            menuItem(action:swing.modifyEntryAction)
         }
     }
     JPopupMenu createStatusPopup() {

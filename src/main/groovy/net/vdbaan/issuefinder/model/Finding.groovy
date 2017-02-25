@@ -23,19 +23,21 @@ class Finding {
         CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
     }
 
-    String scanner
-    String ip
-    String hostName
-    String port
-    String service
-    String plugin
-    Severity severity
-    String summary
+    String scanner= ''
+    String ip= ''
+    String hostName= ''
+    String port= ''
+    String service= ''
+    String plugin = ''
+    Severity severity = Severity.UNKNOWN
+    String summary = ''
+    String baseCVSS = '0.0'
+    Boolean exploitable = false
 
     @Override
     String toString() {
-        return String.format("scanner:%s, source:%s:%s (%s), plugin:%s, risk:%s",
-                scanner, ip, port, service, plugin, severity)
+        return String.format("scanner:%s, source:%s:%s (%s), plugin:%s, risk:%s cvss:%s, exploitable:%b",
+                scanner, ip, port, service, plugin, severity,baseCVSS,exploitable)
     }
 
     String fullDescription() {
