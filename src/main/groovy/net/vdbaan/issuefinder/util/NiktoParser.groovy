@@ -50,7 +50,8 @@ class NiktoParser extends Parser{
             summary += "\nOSVDB-" + item.@osvdbid
             summary += "\nURI: " + cdata(item.uri)
 
-            result << new Finding(scanner, ip, port, "web", plugin, Finding.Severity.INFO, summary)
+            result << new Finding([scanner:scanner, ip:ip, port:port, service:"web", plugin:plugin,
+                                   severity:Finding.Severity.INFO, summary:summary])
         }
         return result
     }
@@ -65,7 +66,8 @@ class NiktoParser extends Parser{
         summary += "\nItems found  : " + xml.statistics.@itemsfound
         //Finding (scanner,ip, port,service,plugin,severity,summary)
 
-        new Finding(scanner, ip, "generic/" + port, "none", "scaninfo", Finding.Severity.INFO, summary)
+        new Finding([scanner:scanner, ip:ip, port:"generic/" + port, service:"none", plugin:"scaninfo",
+                     severity:Finding.Severity.INFO, summary:summary])
     }
 
     private String cdata(String text) {

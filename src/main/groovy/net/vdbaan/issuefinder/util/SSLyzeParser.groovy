@@ -101,14 +101,18 @@ class SSLyzeParser  extends Parser{
         // scanner, ip, port, service, plugin, severity, summary
         def ip = target.@ip as String
         def port = target.@port as String
-        results << new Finding(scanner, ip, port, 'ssl', target.heartbleed.@title as String,
-                target.heartbleed.openSslHeartbleed.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,'')
-        results << new Finding(scanner, ip, port, 'ssl', target.fallback.@title as String,
-                target.fallback.tlsFallbackScsv.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,'')
-        results << new Finding(scanner, ip, port, 'ssl', target.openssl_ccs.@title as String,
-                target.openssl_ccs.openSslCcsInjection.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,'')
-        results << new Finding(scanner, ip, port, 'ssl', target.reneg.@title as String,
-                target.reneg.sessionRenegotiation.@isSecure == 'False'?Finding.Severity.HIGH:Finding.Severity.INFO,'')
+        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.heartbleed.@title as String,
+                                severity:target.heartbleed.openSslHeartbleed.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,
+                                summary:''])
+        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.fallback.@title as String,
+                                severity:target.fallback.tlsFallbackScsv.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,
+                                summary:''])
+        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.openssl_ccs.@title as String,
+                                severity:target.openssl_ccs.openSslCcsInjection.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,
+                                summary:''])
+        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.reneg.@title as String,
+                                severity:target.reneg.sessionRenegotiation.@isSecure == 'False'?Finding.Severity.HIGH:Finding.Severity.INFO,
+                                summary:''])
 //        <compression title="Deflate Compression">
 //        <compressionMethod isSupported="False" type="DEFLATE"/>
 //        </compression>
@@ -138,6 +142,7 @@ class SSLyzeParser  extends Parser{
         }
         summary += rejected?:'None'
 
-        return new Finding(scanner,ip as String,port as String,service,plugin as String,severity,summary)
+        return new Finding([scanner:scanner,ip:ip as String,port:port as String,service:service,
+                            plugin:plugin as String,severity:severity,summary:summary])
     }
 }
