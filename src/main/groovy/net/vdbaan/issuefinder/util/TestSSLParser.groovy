@@ -62,8 +62,8 @@ class TestSSLParser extends Parser {
             result.add(order())
         content.each { issue ->
             if (!issue.id.startsWith('order') && !issue.id.startsWith('client_') && !issue.id.startsWith('cipher_')) {
-                def f = new Finding(scanner, issue.ip, issue.port, "none", issue.id, calcRisk(issue.severity), issue.finding)
-                result += f
+                result << new Finding([scanner:scanner, ip:issue.ip, port:issue.port, service:"none", plugin:issue.id,
+                                       severity:calcRisk(issue.severity), summary:issue.finding])
             }
         }
         return result
@@ -96,7 +96,8 @@ class TestSSLParser extends Parser {
                 port = issue.port
             }
         }
-        return new Finding(scanner, ip, "generic/SSL"  , "none", "TestSSL Cipher order info", Finding.Severity.INFO, summary)
+        return new Finding([scanner:scanner, ip:ip, port:"generic/SSL"  , service:"none",
+                            plugin:"TestSSL Cipher order info", severity:Finding.Severity.INFO, summary:summary])
     }
 
     private Finding buildClients() {
@@ -110,7 +111,8 @@ class TestSSLParser extends Parser {
                 port = issue.port
             }
         }
-        return new Finding(scanner, ip, "generic/SSL"  , "none", "TestSSL Client info", Finding.Severity.INFO, summary)
+        return new Finding([scanner:scanner, ip:ip, port:"generic/SSL"  , service:"none",
+                            plugin:"TestSSL Client info", severity:Finding.Severity.INFO, summary:summary])
     }
 
     private Finding buildCiphers() {
@@ -124,6 +126,7 @@ class TestSSLParser extends Parser {
                 port = issue.port
             }
         }
-        return new Finding(scanner, ip, "generic/SSL"  , "none", "TestSSL Cipher info", Finding.Severity.INFO, summary)
+        return new Finding([scanner:scanner, ip:ip, port:"generic/SSL"  , service:"none",
+                            plugin:"TestSSL supported Ciphers", severity:Finding.Severity.INFO, summary:summary])
     }
 }

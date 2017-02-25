@@ -19,9 +19,6 @@ package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
 
-/**
- * Created by steven on 20/02/17.
- */
 class ArachniParser  extends Parser {
 
     static String IDENTIFIER = "report"
@@ -52,9 +49,9 @@ class ArachniParser  extends Parser {
         }
         content.issues.issue.each { issue ->
             // scanner, ip, port, service, plugin, severity, summary
-            def plugin = issue.check.name + " v"+issue.check.version
-            def severity = calc(issue.severity)
-            result << new Finding(scanner, ip, port, service, plugin, severity, buildSummary(issue))
+            result << new Finding([scanner:scanner, ip:ip, port:port,
+                                   service:service, plugin:issue.check.name + " v"+issue.check.version,
+                                   severity:calc(issue.severity), summary:buildSummary(issue)])
         }
         return result
     }

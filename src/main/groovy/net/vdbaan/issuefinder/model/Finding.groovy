@@ -25,6 +25,7 @@ class Finding {
 
     String scanner
     String ip
+    String hostName
     String port
     String service
     String plugin
@@ -37,19 +38,11 @@ class Finding {
                 scanner, ip, port, service, plugin, severity)
     }
 
-    Finding(String scanner, String hostName, String port, String service, String plugin, Severity risk, String summary) {
-        this.scanner = scanner
-        this.ip = hostName
-        this.port = port
-        this.service = service
-        this.plugin = plugin
-        this.severity = risk
-        this.summary = summary
-    }
-
     String fullDescription() {
         return String.format("scanner: %s\nsource: %s:%s\nservice: %s\nplugin: %s\nrisk: %s\n"+
                 "=============================================\n"+"summary:\n%s\n",
                 scanner, ip, port, service, plugin, severity, summary)
     }
 }
+
+

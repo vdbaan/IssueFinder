@@ -79,7 +79,9 @@ class NessusParser extends Parser {
                 summary << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
                 summary << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
 
-                result += new Finding(scanner, hostName, portnr + "/" + protocol + " (open)", service, plugin + ":" + pluginName, severity, summary.toString())
+                result << new Finding([scanner:scanner, ip:hostName, port:portnr + "/" + protocol + " (open)",
+                                       service:service, plugin:plugin + ":" + pluginName,
+                                       severity:severity, summary:summary.toString()])
             }
         }
         return result
