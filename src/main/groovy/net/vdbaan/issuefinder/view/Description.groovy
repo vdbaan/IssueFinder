@@ -168,6 +168,8 @@ optionPane(id:'editPane') {
             layout: new MigLayout('','[][grow]','')) {
         label("Scanner:", constraints: 'right')
         textField(id: 'scannerEdit', columns: 15, constraints: 'grow,wrap')
+        label("Hostname:", constraints: 'right')
+        textField(id: 'hostnameEdit', columns: 15, constraints: 'grow,wrap')
         label("IP:", constraints: 'right')
         textField(id: 'ipEdit', columns: 15, constraints: 'grow,wrap')
         label("Port:", constraints: 'right')

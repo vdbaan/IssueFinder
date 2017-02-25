@@ -210,6 +210,7 @@ class MC implements ListEventListener<Finding> {
                 (min..max).each {pos ->
                     if (mainTable.selectionModel.isSelectedIndex(pos)) {
                         filteredFindings.get(pos).scanner = scannerEdit.text?: filteredFindings.get(pos).scanner
+                        filteredFindings.get(pos).hostName = hostnameEdit.text?:filteredFindings.get(pos).hostName
                         filteredFindings.get(pos).ip = ipEdit.text?: filteredFindings.get(pos).ip
                         filteredFindings.get(pos).port = portEdit.text?: filteredFindings.get(pos).port
                         filteredFindings.get(pos).service = serviceEdit.text?: filteredFindings.get(pos).service
@@ -218,6 +219,7 @@ class MC implements ListEventListener<Finding> {
                 }
                 mainTable.model.fireTableDataChanged()
                 scannerEdit.text = null
+                hostnameEdit.text = null
                 ipEdit.text = null
                 portEdit.text = null
                 serviceEdit.text = null

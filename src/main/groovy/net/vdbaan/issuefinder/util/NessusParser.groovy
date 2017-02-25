@@ -81,10 +81,10 @@ class NessusParser extends Parser {
 
                 result << new Finding([scanner:scanner, ip:hostName, port:portnr + "/" + protocol + " (open)",
                                        service:service, plugin:plugin + ":" + pluginName,
+                                       exploitable:item.exploit_available == 'true', baseCVSS:item.cvss_base_score?:'0.0',
                                        severity:severity, summary:summary.toString()])
             }
         }
         return result
     }
-
 }
