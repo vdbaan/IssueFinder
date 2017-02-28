@@ -94,12 +94,6 @@ class NessusParser extends Parser {
             [it.name(),it.childNodes()?convertToMap(it):it.text()]
         }
     }
-    static void main(String... args) {
-        def p = new NessusParser(new File('testdata/Nessus.nessus').text)
-        p.parse().each { f ->
-            println f
-        }
-    }
 }
 
 

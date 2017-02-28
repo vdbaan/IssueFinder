@@ -60,7 +60,8 @@ Currently it is able to parse the following formats:
 
 ## Changelog
 1.2.0 - Added edit functionality.
-Added CVSS Base score and exploitable to findings. Made more 'groovy'esk changed to the code. 
+Added CVSS Base score and exploitable to findings. Display the port in 'gnmap format'. Made more 'groovy'esk changed to the code.
+ Started smalling down the jar file by removing unneeded classes.
 
 1.1.0 - Added the following parsers:
 - Arachni
