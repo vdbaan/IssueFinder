@@ -44,7 +44,7 @@ class BurpParser extends Parser{
             def ip = (issue.host.@ip?:url.getHost()) as String
             def port = url.getPort() as String
             def service = url.protocol.toUpperCase()
-            result << new Finding([scanner:scanner, ip:ip, port:port, service:service,
+            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:service,
                                    plugin:issue.name as String, severity:calc(issue.severity, issue.confidence),
                                    summary:buildSummary(issue)])
         }

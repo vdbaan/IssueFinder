@@ -40,7 +40,10 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.8'
+    compile 'org.codehaus.groovy:groovy:2.4.8'
+    compile 'org.codehaus.groovy:groovy-xml:2.4.8'
+    compile 'org.codehaus.groovy:groovy-json:2.4.8'
+    compile 'org.codehaus.groovy:groovy-swing:2.4.8'
     compile 'net.java.dev.glazedlists:glazedlists_java15:1.9.1'
     compile 'com.miglayout:miglayout-swing:5.0'
     compile 'org.slf4j:slf4j-api:1.7.22'

@@ -49,7 +49,7 @@ class ArachniParser  extends Parser {
         }
         content.issues.issue.each { issue ->
             // scanner, ip, port, service, plugin, severity, summary
-            result << new Finding([scanner:scanner, ip:ip, port:port,
+            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp',
                                    service:service, plugin:issue.check.name + " v"+issue.check.version,
                                    severity:calc(issue.severity), summary:buildSummary(issue)])
         }

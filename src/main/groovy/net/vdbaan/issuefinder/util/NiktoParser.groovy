@@ -50,7 +50,7 @@ class NiktoParser extends Parser{
             summary += "\nOSVDB-" + item.@osvdbid
             summary += "\nURI: " + cdata(item.uri)
 
-            result << new Finding([scanner:scanner, ip:ip, port:port, service:"web", plugin:plugin,
+            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:"web", plugin:plugin,
                                    severity:Finding.Severity.INFO, summary:summary])
         }
         return result

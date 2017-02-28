@@ -62,7 +62,7 @@ class TestSSLParser extends Parser {
             result.add(order())
         content.each { issue ->
             if (!issue.id.startsWith('order') && !issue.id.startsWith('client_') && !issue.id.startsWith('cipher_')) {
-                result << new Finding([scanner:scanner, ip:issue.ip, port:issue.port, service:"none", plugin:issue.id,
+                result << new Finding([scanner:scanner, ip:issue.ip, port:issue.port+'/open/tcp', service:"none", plugin:issue.id,
                                        severity:calcRisk(issue.severity), summary:issue.finding])
             }
         }

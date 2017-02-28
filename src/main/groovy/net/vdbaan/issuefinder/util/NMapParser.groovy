@@ -53,7 +53,7 @@ class NMapParser extends Parser{
                 String service = port.service.@name
                 String product = port.service.@product
                 String summary = ""
-                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/" + protocol + " (" + state + ")",
+                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/" + state + "/" + protocol,
                                        service:service + " (" + product + ")", plugin:"NMap port information",
                                        severity:Finding.Severity.INFO, summary:summary])
             }
@@ -69,7 +69,7 @@ class NMapParser extends Parser{
         summary += "\nNmap command   : " + xml.@args
 
         return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
-                            plugin:"NMap scaninfo", severity:Finding.Severity.INFO, summary:summary])
+                            plugin:"NMap scan info", severity:Finding.Severity.INFO, summary:summary])
     }
 
     private Finding runStats(xml, String ip, String protocol) {

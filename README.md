@@ -59,9 +59,13 @@ Currently it is able to parse the following formats:
   - TestSSL (json format)
 
 ## Changelog
+1.2.0 - Added edit functionality.
+Added CVSS Base score and exploitable to findings. Made more 'groovy'esk changed to the code. 
+
 1.1.0 - Added the following parsers:
 - Arachni
 - Burp
+
 Fixed the Nikto parser
 
 1.0.1 - Added Autocompletion to scanner, plugin and risk filter on request of [@anantshri](https://twitter.com/anantshri). Used code from [Scott Robinson](http://stackabuse.com/example-adding-autocomplete-to-jtextfield/)
