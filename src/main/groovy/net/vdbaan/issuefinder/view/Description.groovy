@@ -146,6 +146,10 @@ frame(id: 'mainFrame',
                 textField(id: 'riskFilter', columns: 15, constraints: 'grow,wrap')
                 label("Description:", constraints: 'right')
                 textField(id: 'descFilter', columns: 15, constraints: 'grow,wrap')
+                label("CVSS Base score:", constraints: 'right')
+                textField(id: 'cvssFilter', columns: 15, constraints: 'grow,wrap')
+                label("Exploitable:", constraints: 'right')
+                checkBox(id: 'exploitFilter', constraints: 'grow,wrap')
             }
             scrollPane(border: new TitledBorder("Description: ")) {
                 textArea(id: 'summaryText')

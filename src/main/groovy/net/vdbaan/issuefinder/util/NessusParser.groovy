@@ -67,6 +67,7 @@ class NessusParser extends Parser {
                 summary << "Description          : $item.description\n"
                 summary << "Solution             : $item.solution\n"
                 summary << "RiskFactor           : $item.risk_factor\n"
+                summary << "Exploit available    : $item.exploit_available\n"
                 summary << "Ease of exploit      : $item.exploitability_ease\n"
                 summary << "Patch available since: $item.patch_publication_date\n"
                 summary << "CVSS base vector     : $item.cvss_vector\n"
@@ -79,7 +80,7 @@ class NessusParser extends Parser {
                 summary << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
                 summary << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
 
-                result << new Finding([scanner:scanner, ip:hostName, port:portnr + "/" + protocol + " (open)",
+                result << new Finding([scanner:scanner, ip:hostName, port:portnr + "/open/" + protocol,
                                        service:service, plugin:plugin + ":" + pluginName,
                                        exploitable:item.exploit_available == 'true', baseCVSS:item.cvss_base_score?:'0.0',
                                        severity:severity, summary:summary.toString()])
@@ -87,4 +88,18 @@ class NessusParser extends Parser {
         }
         return result
     }
+
+    def convertToMap(nodes) {
+        nodes.children().collectEntries {
+            [it.name(),it.childNodes()?convertToMap(it):it.text()]
+        }
+    }
+    static void main(String... args) {
+        def p = new NessusParser(new File('testdata/Nessus.nessus').text)
+        p.parse().each { f ->
+            println f
+        }
+    }
 }
+
+

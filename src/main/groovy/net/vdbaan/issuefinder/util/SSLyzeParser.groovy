@@ -101,16 +101,16 @@ class SSLyzeParser  extends Parser{
         // scanner, ip, port, service, plugin, severity, summary
         def ip = target.@ip as String
         def port = target.@port as String
-        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.heartbleed.@title as String,
+        results << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:'ssl', plugin:target.heartbleed.@title as String,
                                 severity:target.heartbleed.openSslHeartbleed.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,
                                 summary:''])
-        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.fallback.@title as String,
+        results << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:'ssl', plugin:target.fallback.@title as String,
                                 severity:target.fallback.tlsFallbackScsv.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,
                                 summary:''])
-        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.openssl_ccs.@title as String,
+        results << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:'ssl', plugin:target.openssl_ccs.@title as String,
                                 severity:target.openssl_ccs.openSslCcsInjection.@isVulnerable == 'True'?Finding.Severity.HIGH:Finding.Severity.INFO,
                                 summary:''])
-        results << new Finding([scanner:scanner, ip:ip, port:port, service:'ssl', plugin:target.reneg.@title as String,
+        results << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:'ssl', plugin:target.reneg.@title as String,
                                 severity:target.reneg.sessionRenegotiation.@isSecure == 'False'?Finding.Severity.HIGH:Finding.Severity.INFO,
                                 summary:''])
 //        <compression title="Deflate Compression">

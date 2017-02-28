@@ -83,7 +83,8 @@ class MC implements ListEventListener<Finding> {
             compositeFilter.matcherEditors << new IssueSelector(pluginFilter,"plugin")
             compositeFilter.matcherEditors << new IssueSelector(riskFilter,"risk")
             compositeFilter.matcherEditors << new IssueSelector(descFilter,"description")
-
+            compositeFilter.matcherEditors << new IssueSelector(cvssFilter,"cvssbasescore")
+            compositeFilter.matcherEditors << new IssueSelector(exploitFilter,"exploitable")
 
             mainTable.selectionModel.addListSelectionListener({ e ->
                 if (e.isAdjusting) return

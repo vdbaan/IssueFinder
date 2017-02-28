@@ -22,23 +22,30 @@ import ca.odell.glazedlists.matchers.AbstractMatcherEditor
 import ca.odell.glazedlists.matchers.Matcher
 import net.vdbaan.issuefinder.model.Finding
 
+import javax.swing.JCheckBox
 import javax.swing.JTextField
 import javax.swing.event.CaretEvent
 import javax.swing.event.CaretListener
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.text.NumberFormat
 
-class IssueSelector extends AbstractMatcherEditor implements  CaretListener {
+class IssueSelector extends AbstractMatcherEditor implements CaretListener, ActionListener {
 
+    def filter
+    def editor
+    def text
 
-    String filter
-    JTextField editor
-    String text
-
-    IssueSelector(JTextField editor, String filter) {
+    IssueSelector( editor,  filter) {
         this(editor,filter,"")
     }
-    IssueSelector(JTextField editor, String filter, String text) {
+
+    IssueSelector( editor,  filter,  text) {
         this.editor = editor
-        editor.addCaretListener(this)
+        if(editor instanceof JTextField)
+            editor.addCaretListener(this)
+        else
+            editor.addActionListener(this)
         this.filter = filter
         this.text = text
     }
@@ -55,12 +62,22 @@ class IssueSelector extends AbstractMatcherEditor implements  CaretListener {
             }
         }
     }
+
+    @Override
+    void actionPerformed(ActionEvent e) {
+        if(e.getSource().isSelected()) {
+            Matcher newMatcher = new FindingMatcher(filter, editor.text)
+            fireChanged(newMatcher)
+        } else {
+            fireMatchAll()
+        }
+    }
 }
 
 class FindingMatcher implements Matcher<Finding> {
     String filter
     String text
-    FindingMatcher(String filter, String text) {
+    FindingMatcher( filter,  text) {
         this.filter = filter
         this.text = text
     }
@@ -75,11 +92,26 @@ class FindingMatcher implements Matcher<Finding> {
             case 'plugin': return test(item.plugin, text)
             case 'risk': return test(item.severity.toString(), text)
             case 'description': return test(item.summary, text)
+            case 'cvssbasescore':return atleast(item.baseCVSS,text)
+            case 'exploitable': return item.exploitable
             default: return true
         }
     }
 
-    private boolean test(String item, String test) {
+    def parser = NumberFormat.getInstance()
+    private boolean atleast(item, test) {
+        if(test == null || test.length() == 0)
+            return true
+        if(item == null || item.length() == 0)
+            return false
+
+        def val = parser.parse(item.trim()).floatValue()
+        def v2 = parser.parse(test.trim()).floatValue()
+        return val >= v2
+    }
+
+    private boolean test( item,  test) {
+
         if (test.contains(",")) {
             boolean result = false
             test.split(",").each { val ->
