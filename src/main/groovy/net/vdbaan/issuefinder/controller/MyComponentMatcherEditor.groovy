@@ -86,7 +86,7 @@ class FindingMatcher implements Matcher<Finding> {
 
         switch (filter) {
             case 'scanner': return test(item.scanner, text)
-            case 'ip': return test(item.ip, text)
+            case 'ip': return test(String.format('%s (%s)',item.ip,item.hostName), text)
             case 'port': return test(item.port, text)
             case 'service': return test(item.service, text)
             case 'plugin': return test(item.plugin, text)

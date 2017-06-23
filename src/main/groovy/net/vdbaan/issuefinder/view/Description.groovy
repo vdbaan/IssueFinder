@@ -113,10 +113,12 @@ frame(id: 'mainFrame',
     splitPane(constraints: BorderLayout.CENTER,
             orientation: JSplitPane.VERTICAL_SPLIT,
             id: 'mainSplit',
-            dividerLocation: 0.25) {
+            dividerLocation: 0.05,
+            enabled: false) {
         scrollPane(id: 'topSplit') {
             table(id: 'mainTable',
                     selectionMode: ListSelectionModel.MULTIPLE_INTERVAL_SELECTION,
+                    autoCreateRowSorter: false,
                     autoResizeMode:JTable.AUTO_RESIZE_LAST_COLUMN) {
                 tableModel() {
                     propertyColumn(header: 'Scanner', propertyName: 'scanner', preferredWidth: 100, )
@@ -159,10 +161,10 @@ frame(id: 'mainFrame',
     panel(id: 'statusPanel',
             constraints: BorderLayout.SOUTH,
             border: BorderFactory.createLoweredBevelBorder(),
-            layout: new MigLayout('', '15[grow][]15', '')) {
+            layout: new MigLayout('', '15[grow][][]15', '')) {
         label("Application started", id: 'statusLabel')
-        label("0", id: 'ipLabel')
-        label("unique IPs")
+        label("0 findings", id:'rowLabel')
+        label("      0 unique IPs", id: 'ipLabel') // FIXME: Should organise this via MigLayout
     }
 }
 

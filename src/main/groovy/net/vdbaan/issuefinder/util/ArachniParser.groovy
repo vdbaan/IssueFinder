@@ -25,16 +25,11 @@ class ArachniParser  extends Parser {
     static String scanner = "Arachni"
 
     ArachniParser(content) {
-        this.content = xmlslurper.parseText(content)
+        this.content = content
     }
 
     static boolean identify(contents) {
-        try {
-            def xml = xmlslurper.parseText(contents)
-            return IDENTIFIER.equalsIgnoreCase(xml.name())
-        } catch(Exception e) {
-            return false
-        }
+        return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {

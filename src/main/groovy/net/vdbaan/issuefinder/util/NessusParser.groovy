@@ -25,22 +25,23 @@ class NessusParser extends Parser {
     static String scanner = "Nessus"
 
     NessusParser(content) {
-        this.content = xmlslurper.parseText(content)
+        this.content = content
     }
 
     static boolean identify(contents) {
-        try {
-            def xml = xmlslurper.parseText(contents)
-            return IDENTIFIER.equalsIgnoreCase(xml.name())
-        } catch(Exception e) {
-            return false
-        }
+        return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
+
 
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
         content.Report.ReportHost.each { host ->
-            String hostName = host.@name
+
+            def IPTag = host.HostProperties.tag.find {it.@name == 'host-ip'}
+            String hostIp = IPTag
+            def FQDNTag = host.HostProperties.tag.find {it.@name == 'host-fqdn'}
+            String hostName = FQDNTag?: hostIp
+
             for (item in host.ReportItem) {
                 String portnr = item.@port
                 String protocol = item.@protocol
@@ -80,7 +81,7 @@ class NessusParser extends Parser {
                 summary << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
                 summary << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
 
-                result << new Finding([scanner:scanner, ip:hostName, port:portnr + "/open/" + protocol,
+                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/open/" + protocol, hostName: hostName,
                                        service:service, plugin:plugin + ":" + pluginName,
                                        exploitable:item.exploit_available == 'true', baseCVSS:item.cvss_base_score?:'0.0',
                                        severity:severity, summary:summary.toString()])

@@ -20,11 +20,21 @@ package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
 import groovy.json.JsonSlurper
+import org.apache.commons.pool2.BasePooledObjectFactory
+import org.apache.commons.pool2.PooledObject
+import org.apache.commons.pool2.impl.GenericObjectPool
+import org.apache.commons.pool2.PooledObjectFactory
+import org.apache.commons.pool2.impl.DefaultPooledObject
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
+
+import javax.xml.parsers.SAXParser
+import javax.xml.parsers.SAXParserFactory
 
 abstract class Parser {
 
     def content
 
+    static XmlParserPool parserPool = new XmlParserPool(1000)
     static XmlSlurper xmlslurper
     static JsonSlurper jsonSlurper
 
@@ -37,19 +47,74 @@ abstract class Parser {
     }
 
     static Parser getParser(file) {
-        if (NessusParser.identify(file)) return new NessusParser(file)
-        if (NMapParser.identify(file)) return new NMapParser(file)
-        if (NetsparkerParser.identify(file)) return new NetsparkerParser(file)
-        if (NiktoParser.identify(file)) return new NiktoParser(file)
-        if (ArachniParser.identify(file)) return new ArachniParser(file)
-        if (BurpParser.identify(file)) return new BurpParser(file)
-        if (TestSSLParser.identify(file)) return new TestSSLParser(file)
-        if (SSLyzeParser.identify(file)) return new SSLyzeParser(file)
+        try {
+            def parser = parserPool.borrowObject()
+            def content = new XmlSlurper(parser).parseText(file)
 
-        throw RuntimeException("Parser not found for file: "+file)
+            parserPool.returnObject(parser)
+            if (NessusParser.identify(content)) return new NessusParser(content)
+            if (NMapParser.identify(content)) return new NMapParser(content)
+            if (NetsparkerParser.identify(content)) return new NetsparkerParser(content)
+            if (NiktoParser.identify(content)) return new NiktoParser(content)
+            if (ArachniParser.identify(content)) return new ArachniParser(content)
+            if (BurpParser.identify(content)) return new BurpParser(content)
+            if (SSLyzeParser.identify(content)) return new SSLyzeParser(content)
+        }catch(Exception e) {
+            println e.getMessage()
+            try {
+                def json = jsonSlurper.parseText(file)
+                if (TestSSLParser.identify(json)) return new TestSSLParser(json)
+            } catch(Exception e2) {
+                println e2.getMessage()
+                return null
+            }
+        }
+
+
+//        throw RuntimeException("Parser not found for file: "+file)
     }
 
     abstract List<Finding> parse()
 
     static boolean identify(content){ return false}
+}
+
+class XmlParserPoolableObjectFactory extends BasePooledObjectFactory {
+    private SAXParserFactory parserFactory
+
+    XmlParserPoolableObjectFactory() {
+        parserFactory = SAXParserFactory.newInstance()
+        parserFactory.setValidating(false)
+        parserFactory.setNamespaceAware(false)
+        parserFactory.setXIncludeAware(false)
+        parserFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
+        parserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+    }
+    Object create() throws Exception {
+        return parserFactory.newSAXParser()
+    }
+
+    @Override
+    PooledObject wrap(Object obj) {
+        return new DefaultPooledObject(obj)
+    }
+// Other methods left empty
+}
+
+class XmlParserPool {
+    private final GenericObjectPool pool;
+
+    XmlParserPool(int maxActive) {
+        def gen = new GenericObjectPoolConfig()
+        gen.setBlockWhenExhausted(true)
+        gen.setMaxTotal(maxActive)
+        gen.setMaxWaitMillis(0)
+        pool = new GenericObjectPool(new XmlParserPoolableObjectFactory(), gen)
+    }
+    Object borrowObject() throws Exception {
+        return pool.borrowObject()
+    }
+    void returnObject(Object obj) throws Exception {
+        pool.returnObject(obj)
+    }
 }

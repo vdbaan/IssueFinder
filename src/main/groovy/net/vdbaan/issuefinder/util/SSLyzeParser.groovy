@@ -28,16 +28,11 @@ class SSLyzeParser  extends Parser{
     static service = 'ssl'
 
     SSLyzeParser(content) {
-        this.content = xmlslurper.parseText(content)
+        this.content = content
     }
 
     static boolean identify(contents) {
-        try {
-            def xml = xmlslurper.parseText(contents)
-            return IDENTIFIER.equalsIgnoreCase(xml.name()) && (xml.@'SSLyzeVersion' != null)
-        } catch(Exception e) {
-            return false
-        }
+        return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {

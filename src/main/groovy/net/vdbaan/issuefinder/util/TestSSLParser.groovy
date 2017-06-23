@@ -23,17 +23,14 @@ class TestSSLParser extends Parser {
     static String scanner = "TestSSL"
 
     TestSSLParser(content) {
-        this.content = jsonSlurper.parseText(content)
+        this.content = content
     }
 
     static boolean identify(contents) {
         try {
-            def json = jsonSlurper.parseText(contents)
-            // test if there is an entry with the following keys:
-            // id,ip,port,severity,finding
-            if(json instanceof List) {
-                if (json[0] instanceof Map) {
-                    Map m = json[0]
+            if(contents instanceof List) {
+                if (contents[0] instanceof Map) {
+                    Map m = contents[0]
                     if (m.size() == 5 && m.containsKey('finding') && m.containsKey('ip')
                             && m.containsKey('port') && m.containsKey('severity') && m.containsKey('finding'))
                         return true

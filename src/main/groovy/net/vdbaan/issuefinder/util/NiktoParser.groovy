@@ -25,48 +25,45 @@ class NiktoParser extends Parser{
     static String scanner = "Nikto"
 
     NiktoParser(content) {
-        this.content = xmlslurper.parseText(content)
+        this.content = content.niktoscan
     }
 
     static boolean identify(contents) {
-        try {
-            def xml = xmlslurper.parseText(contents)
-            return IDENTIFIER.equalsIgnoreCase(xml.name())
-        } catch(Exception e) {
-            return false
-        }
+        return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
         String ip = content.scandetails.@targetip
+        String hostName = content.scandetails.@targethostname
         String port = content.scandetails.@targetport
-        result += scanInfo(content, ip, port)
+        result += scanInfo(content, ip, hostName, port)
+
         content.scandetails.item.each { item ->
             String desc = item.description.toString()
             String plugin = item.@id
-            plugin += ":" + desc
+            plugin += ": " + desc
             def summary = "METHOD: " + item.@method
             summary += "\nOSVDB-" + item.@osvdbid
-            summary += "\nURI: " + cdata(item.uri)
+            summary += "\nURI: " + item.uri
 
-            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:"web", plugin:plugin,
+            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:"web", plugin:plugin,hostName: hostName,
                                    severity:Finding.Severity.INFO, summary:summary])
         }
         return result
     }
 
-    private Finding scanInfo(xml, String ip, String port) {
+    private Finding scanInfo(xml, String ip, String hostName, String port) {
         String summary = "Nikto options: " + xml.@options
-        summary += "\nHostname     : " + xml.scandetails.@targethostname
         summary += "\nBanner       : " + xml.scandetails.@targetbanner
+        summary += "\nVersion      : " + xml.scandetails.@version
         summary += "\nStart time   : " + xml.scandetails.@starttime
-        summary += "\nEnd time     : " + xml.statistics.@endtime
-        summary += "\nItems tested : " + xml.statistics.@itemstested
-        summary += "\nItems found  : " + xml.statistics.@itemsfound
+        summary += "\nEnd time     : " + xml.scandetails.statistics.@endtime
+        summary += "\nItems tested : " + xml.scandetails.statistics.@itemstested
+        summary += "\nItems found  : " + xml.scandetails.statistics.@itemsfound
         //Finding (scanner,ip, port,service,plugin,severity,summary)
 
-        new Finding([scanner:scanner, ip:ip, port:"generic/" + port, service:"none", plugin:"scaninfo",
+        new Finding([scanner:scanner, ip:ip, port:"generic/" + port, service:"none", plugin:"scaninfo",hostName: hostName,
                      severity:Finding.Severity.INFO, summary:summary])
     }
 

@@ -25,16 +25,11 @@ class NMapParser extends Parser{
     static String scanner = "NMap"
 
     NMapParser(content) {
-        this.content = xmlslurper.parseText(content)
+        this.content = content
     }
 
     static boolean identify(contents) {
-        try {
-            def xml = xmlslurper.parseText(contents)
-            return IDENTIFIER.equalsIgnoreCase(xml.name())
-        } catch(Exception e) {
-            return false
-        }
+            return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {
@@ -42,10 +37,13 @@ class NMapParser extends Parser{
         content.host.each { host ->
             def hostNode = host.address.find { it.@addrtype == 'ipv4' }
             String hostIp = hostNode.@addr
+            hostNode = host.hostnames.hostname.find {it.@type == 'user'}
+            String hostName = (hostNode.@name)
+            hostName = hostName ?: hostIp
             String protocol = content.scaninfo.@protocol
-            result += scanInfo(content, hostIp, protocol)
-            result += runStats(content, hostIp, protocol)
-            result += summary(content, hostIp, protocol)
+            result += scanInfo(content, hostIp,hostName, protocol)
+            result += runStats(content, hostIp,hostName, protocol)
+            result += summary(content, hostIp,hostName, protocol)
             host.ports.port.each { port ->
                 String portnr = port.@portid
                 protocol = port.@protocol
@@ -53,7 +51,7 @@ class NMapParser extends Parser{
                 String service = port.service.@name
                 String product = port.service.@product
                 String summary = ""
-                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/" + state + "/" + protocol,
+                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/" + state + "/" + protocol, hostName: hostName,
                                        service:service + " (" + product + ")", plugin:"NMap port information",
                                        severity:Finding.Severity.INFO, summary:summary])
             }
@@ -61,35 +59,35 @@ class NMapParser extends Parser{
         return result
     }
 
-    private Finding scanInfo(xml, String ip, String protocol) {
+    private Finding scanInfo(xml, String ip, String hostName, String protocol) {
         String summary = "Protocol       : " + protocol
         summary += "\nNumber of ports: " + xml.scaninfo.@numservices
         summary += "\nPorts scanned  : " + xml.scaninfo.@services
         summary += "\nScan type      : " + xml.scaninfo.@type
         summary += "\nNmap command   : " + xml.@args
 
-        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
+        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",hostName: hostName,
                             plugin:"NMap scan info", severity:Finding.Severity.INFO, summary:summary])
     }
 
-    private Finding runStats(xml, String ip, String protocol) {
+    private Finding runStats(xml, String ip, String hostName,String protocol) {
         String summary = "Number of hosts"
         summary += "\nScanned: " + xml.runstats.hosts.@total
         summary += "\nUp     : " + xml.runstats.hosts.@up
         summary += "\nDown   : " + xml.runstats.hosts.@down
 
-        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
+        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",hostName: hostName,
                             plugin:"NMap stats", severity:Finding.Severity.INFO, summary:summary])
     }
 
-    private Finding summary(xml, String ip, String protocol) {
+    private Finding summary(xml, String ip, String hostName,String protocol) {
         String summary = xml.runstats.finished.@summary ?:
                 "Scan Execution Stats" +
                         "\nCompleted: " + xml.runstats.finished.@timestr +
                         "\nDuration : " + xml.runstats.finished.@elapsed +
                         " seconds"
 
-        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",
+        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",hostName: hostName,
                             plugin:"NMap summary", severity:Finding.Severity.INFO, summary:summary])
     }
 }

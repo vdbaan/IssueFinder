@@ -39,30 +39,35 @@ import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.StringSelection
 import java.awt.event.MouseListener
 import java.util.List
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 
 class MC implements ListEventListener<Finding> {
 
+    int WARNING_LEVEL = 100000
     SwingBuilder swing = new SwingBuilder()
     MView main
     IssuesLoader loader = new IssuesLoader()
     private EventList<Finding> findingEventList = new BasicEventList<Finding>()
     CompositeMatcherEditor<Finding> compositeFilter
-    FilterList<Finding> filteredFindings
+    EventList<Finding> threadProxyList
+
 
 
     MC() {
         findingEventList.getReadWriteLock().readLock().lock()
         try {
             compositeFilter = new CompositeMatcherEditor()
-            EventList<Finding> threadProxyList = GlazedListsSwing.swingThreadProxyList(findingEventList)
-            SortedList<Finding> sortedFindings = new SortedList<Finding>(threadProxyList, new FindingComparator())
-            filteredFindings = new FilterList<>(sortedFindings, compositeFilter)
+            FilterList<Finding> filteredFindings = new FilterList<>(findingEventList, compositeFilter)
+            SortedList<Finding> sortedFindings   = new SortedList<Finding>(filteredFindings,null)
 
-
+            threadProxyList = GlazedListsSwing.swingThreadProxyList(sortedFindings)
             AdvancedTableModel<Finding> findingTableModel =
-                    GlazedListsSwing.eventTableModelWithThreadProxyList(filteredFindings, new FindingTableFormat())
+                    GlazedListsSwing.eventTableModelWithThreadProxyList(threadProxyList, new FindingTableFormat())
             main = new MView(swing, sortedFindings, findingTableModel)
-            filteredFindings.addListEventListener(this)
+            threadProxyList.addListEventListener(this)
+
         } finally {
             findingEventList.getReadWriteLock().readLock().unlock()
         }
@@ -90,15 +95,15 @@ class MC implements ListEventListener<Finding> {
                 if (e.isAdjusting) return
                 int min = e.source.minSelectionIndex
                 int max = e.source.maxSelectionIndex
-                int size = filteredFindings.size()
+                int size = threadProxyList.size()
                 List<Finding> result = new ArrayList<>()
-                filteredFindings.getReadWriteLock().readLock().lock()
+                threadProxyList.getReadWriteLock().readLock().lock()
                 for (int i = min; i <= max; i++) {
                     if (i >= size) break
                     if (e.source.isSelectedIndex(i))
-                        result << filteredFindings.get(i)
+                        result << threadProxyList.get(i)
                 }
-                filteredFindings.getReadWriteLock().readLock().unlock()
+                threadProxyList.getReadWriteLock().readLock().unlock()
                 display(result)
             })
 
@@ -121,7 +126,7 @@ class MC implements ListEventListener<Finding> {
                     copyIps.closure = {
                         swing.doLater {
                             Set<String> ips = new TreeSet<>()
-                            filteredFindings.each { ips << it.ip }
+                            threadProxyList.each { ips << it.ip }
                             ips.remove('none') // FIXME due to NetSparkerParser
                             def sorted = ips.sort {a,b ->
                                 def ip1 = a.split("\\.")
@@ -137,7 +142,7 @@ class MC implements ListEventListener<Finding> {
                     copyIpPorts.closure = {
                         swing.doLater {
                             Set<String> ips = new TreeSet<>()
-                            filteredFindings.each { f ->
+                            threadProxyList.each { f ->
                                 String port = f.port.split('/')[0]
                                 if (port.isNumber() && port != '0') {
                                     if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
@@ -165,15 +170,15 @@ class MC implements ListEventListener<Finding> {
     void setupAutoComplete() {
         swing.doLater {
             SortedSet<String> risks = new TreeSet<>()
-            filteredFindings.each { risks << it.severity.name() }
+            threadProxyList.each { risks << it.severity.name() }
             setupAutoComplete(riskFilter, risks.asList())
 
             SortedSet<String> plugins = new TreeSet<>()
-            filteredFindings.each { plugins << it.plugin }
+            threadProxyList.each { plugins << it.plugin }
             setupAutoComplete(pluginFilter, plugins.asList())
 
             SortedSet<String> services = new TreeSet<>()
-            filteredFindings.each { services << it.service }
+            threadProxyList.each { services << it.service }
             setupAutoComplete(serviceFilter, services.asList())
         }
     }
@@ -210,12 +215,12 @@ class MC implements ListEventListener<Finding> {
                 def max = mainTable.selectionModel.maxSelectionIndex
                 (min..max).each {pos ->
                     if (mainTable.selectionModel.isSelectedIndex(pos)) {
-                        filteredFindings.get(pos).scanner = scannerEdit.text?: filteredFindings.get(pos).scanner
-                        filteredFindings.get(pos).hostName = hostnameEdit.text?:filteredFindings.get(pos).hostName
-                        filteredFindings.get(pos).ip = ipEdit.text?: filteredFindings.get(pos).ip
-                        filteredFindings.get(pos).port = portEdit.text?: filteredFindings.get(pos).port
-                        filteredFindings.get(pos).service = serviceEdit.text?: filteredFindings.get(pos).service
-                        filteredFindings.get(pos).severity = getSeverity(severityEdit.text)?: filteredFindings.get(pos).severity
+                        threadProxyList.get(pos).scanner = scannerEdit.text?: filteredFindings.get(pos).scanner
+                        threadProxyList.get(pos).hostName = hostnameEdit.text?:filteredFindings.get(pos).hostName
+                        threadProxyList.get(pos).ip = ipEdit.text?: filteredFindings.get(pos).ip
+                        threadProxyList.get(pos).port = portEdit.text?: filteredFindings.get(pos).port
+                        threadProxyList.get(pos).service = serviceEdit.text?: filteredFindings.get(pos).service
+                        threadProxyList.get(pos).severity = getSeverity(severityEdit.text)?: filteredFindings.get(pos).severity
                     }
                 }
                 mainTable.model.fireTableDataChanged()
@@ -278,7 +283,7 @@ class MC implements ListEventListener<Finding> {
         fileName.withWriter { out ->
             def xml = new MarkupBuilder(out)
             xml.findings {
-                filteredFindings.each { f ->
+                threadProxyList.each { f ->
                     finding(scanner: f.scanner, ip: f.ip, port: f.port, service: f.service) {
                         plugin("" + f.plugin)
                         severity("" + f.severity)
@@ -292,21 +297,32 @@ class MC implements ListEventListener<Finding> {
     void exportAsCSV(File fileName) {
         fileName.withWriter { out ->
             out.writeLine('"Scanner","ip","port","service","plugin","severity"')
-            filteredFindings.each { f ->
+            threadProxyList.each { f ->
                 out.writeLine("\"${f.scanner}\",\"${f.ip}\",\"${f.port}\",\"${f.service}\",\"${f.plugin}\",\"${f.severity}\"")
             }
         }
     }
 
+    static int filesDone
+    static int filesTotal
     void openFiles(List<String> files) {
         swing.doLater {
             if (files.size() == 0) return
+            filesTotal = files.size()
+            filesDone = 0
             main.showLoading()
-            statusLabel.text = "Importing files"
+            statusLabel.text = String.format("Importing files %d/%d",filesDone,filesTotal)
             loader.load(files, findingEventList,this)
         }
     }
 
+    void fileDone() {
+        swing.doLater {
+            filesDone += 1
+            statusLabel.text = String.format("Importing files %d/%d",filesDone,filesTotal)
+        }
+
+    }
     void doneLoading() {
         swing.doLater {
             statusLabel.text = "Done"
@@ -314,13 +330,21 @@ class MC implements ListEventListener<Finding> {
             setupAutoComplete()
         }
     }
+
+    void warnToManyRows() {
+        swing.doLater {
+            main.showWarning()
+        }
+    }
+
     @Override
     void listChanged(ListEvent<Finding> listChanges) {
         swing.doLater {
             HashSet<String> ips = new HashSet<>()
-            filteredFindings.each { ips << it.ip }
+            threadProxyList.each { ips << it.ip }
             ips.remove('none') // FIXME due to NetSparkerParser
-            ipLabel.text = ips.size()
+            ipLabel.text = String.format(' %6d unique IPs',ips.size())
+            rowLabel.text = String.format('%d findings',threadProxyList.size())
         }
     }
 }
@@ -349,24 +373,42 @@ class IssuesLoader implements Runnable {
     }
 
     private parseFile(File file) {
-
+        if (file == null) return
+        def parser = Parser.getParser(file.text)
+        if (parser == null) {
+            println "No parser found for: "+file.getName()
+            return
+        }
+        List<Finding> result = parser.parse()
         loadList.getReadWriteLock().writeLock().lock()
         try {
-            List<Finding> result = Parser.getParser(file.text).parse()
             loadList.addAll(result)
+//            println String.format("Added: %8d, new size: %8d rows",result.size(),loadList.size())
+            if (loadList.size() > mc.WARNING_LEVEL) {
+                mc.warnToManyRows()
+            }
         } catch(Exception e) {
             // pass (for now)
         } finally {
             loadList.getReadWriteLock().writeLock().unlock()
         }
+        mc.fileDone()
     }
     void run() {
-        files.each { file ->
-            parseFile(file)
+
+        int numCores = Runtime.getRuntime().availableProcessors()
+        def threadPool = Executors.newFixedThreadPool(numCores)
+        try {
+            List<Future> futures = files.collect(){ file ->
+                threadPool.submit({->
+                    parseFile file } as Callable)
+            }
+            futures.each{it.get()}
+        } finally {
+            threadPool.shutdown()
         }
         mc.doneLoading()
     }
-
 }
 
 class FindingTableFormat implements TableFormat<Finding> {
@@ -386,7 +428,7 @@ class FindingTableFormat implements TableFormat<Finding> {
     Object getColumnValue(Finding finding, int column) {
         switch (column) {
             case 0: return finding.scanner
-            case 1: return finding.ip
+            case 1: return String.format('%s (%s)',finding.ip,finding.hostName)
             case 2: return finding.port
             case 3: return finding.service
             case 4: return finding.plugin

@@ -18,7 +18,7 @@
 
 package net.vdbaan.issuefinder.view
 
-import ca.odell.glazedlists.SortedList
+import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.swing.AdvancedTableModel
 import ca.odell.glazedlists.swing.TableComparatorChooser
 import groovy.swing.SwingBuilder
@@ -28,6 +28,8 @@ import net.vdbaan.issuefinder.view.component.Colour
 import javax.swing.BorderFactory
 import javax.swing.ImageIcon
 import javax.swing.JFileChooser
+import javax.swing.JOptionPane
+import javax.swing.UIManager
 import javax.swing.filechooser.FileFilter
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -43,9 +45,10 @@ import java.awt.GridBagLayout
 class MView {
     SwingBuilder swing
 
-    MView(SwingBuilder swing, SortedList<Finding> sortedFindings, AdvancedTableModel<Finding> findingTableModel) {
+    MView(SwingBuilder swing, EventList<Finding> sortedFindings, AdvancedTableModel<Finding> findingTableModel) {
         this.swing = swing
-        swing.lookAndFeel('nimbus')
+//        swing.lookAndFeel('nimbus')
+        swing.lookAndFeel(UIManager.getSystemLookAndFeelClassName())
         swing.edt {
             build(Description)
             mainTable.setModel(findingTableModel)
@@ -122,6 +125,19 @@ class MView {
             }
             glass.setVisible(true)
             mainFrame.enable(false)
+        }
+    }
+
+    boolean didShowWarning = false
+    void showWarning() {
+        if (!didShowWarning) {
+            didShowWarning = true
+            swing.edt {
+                JOptionPane.showMessageDialog(mainFrame,
+                        "Too many entries to sort smoothly, use filters to reduce.",
+                        "Size warning",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 
