@@ -49,10 +49,12 @@ fabric.properties
 # IntelliJ project files
 .idea
 *.iml
-out
+
 gen### Gradle template
 .gradle
-/build/
+build
+backup
+testdata
 
 # Ignore Gradle GUI config
 gradle-app.setting

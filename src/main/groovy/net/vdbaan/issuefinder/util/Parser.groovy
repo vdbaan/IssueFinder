@@ -23,12 +23,12 @@ import groovy.json.JsonSlurper
 import org.apache.commons.pool2.BasePooledObjectFactory
 import org.apache.commons.pool2.PooledObject
 import org.apache.commons.pool2.impl.GenericObjectPool
-import org.apache.commons.pool2.PooledObjectFactory
 import org.apache.commons.pool2.impl.DefaultPooledObject
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 
-import javax.xml.parsers.SAXParser
 import javax.xml.parsers.SAXParserFactory
+
+//import javax.xml.parsers.SAXParserFactory
 
 abstract class Parser {
 
@@ -102,7 +102,7 @@ class XmlParserPoolableObjectFactory extends BasePooledObjectFactory {
 }
 
 class XmlParserPool {
-    private final GenericObjectPool pool;
+    private final GenericObjectPool pool
 
     XmlParserPool(int maxActive) {
         def gen = new GenericObjectPoolConfig()

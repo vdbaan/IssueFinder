@@ -1,0 +1,52 @@
+.CRITICAL {
+-fx-background-color: #d9534f;
+}
+.CRITICAL:odd {
+-fx-background-color: #ca4440;
+}
+
+.HIGH {
+-fx-background-color: #f0ad4e;
+}
+.HIGH:odd {
+-fx-background-color: #e19e3f;
+}
+
+.MEDIUM {
+-fx-background-color: #5bc0de;
+}
+.MEDIUM:odd {
+-fx-background-color: #4cb1cf;
+}
+
+.LOW {
+-fx-background-color: #5cb85c;
+}
+.LOW:odd {
+-fx-background-color: #4da94d;
+}
+selected {
+-fx-background-color: blue ;
+-fx-text-background-color: yellow ;
+}
+
+/*
+.INFO {
+-fx-background-color: #ffffff;
+}
+.INFO:odd {
+-fx-background-color: #f5f5f5;
+}
+*/
+
+.cell:empty {
+-fx-text-background-color: white ;
+}
+
+.text-input-wrong {
+  -fx-control-inner-background: #d9534f;
+}
+
+.table-row-cell:selected {
+   -fx-background-color: steelblue;
+}
