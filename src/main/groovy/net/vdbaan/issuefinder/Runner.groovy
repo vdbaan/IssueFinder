@@ -3,8 +3,7 @@ package net.vdbaan.issuefinder
 class Runner {
     static void main(String... args) {
         testJavaFX()
-        MainApp app = new MainApp()
-        app.run(args)
+        MainApp.startup(args)
     }
 
     static void testJavaFX() {

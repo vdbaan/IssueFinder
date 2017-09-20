@@ -62,8 +62,8 @@ class FXMLController implements Initializable {
     def setup(MainApp mainApp) {
         this.mainApp = mainApp
 
-        String css = getClass().getResource('/style.css')
-        mainTable.getScene().getStylesheets().add(css)
+//        String css = getClass().getResource('/style.css')
+//        mainTable.getScene().getStylesheets().add(css)
 
         // 1. Wrap the ObservableList in a FilteredList (initially display all data).
         filteredData = new FilteredList<>(masterData, { f -> true })

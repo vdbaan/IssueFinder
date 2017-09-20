@@ -1,7 +1,5 @@
 package net.vdbaan.issuefinder.model
 
-import groovy.transform.Canonical
-import groovyx.javafx.beans.FXBindable
 
 
 /**
@@ -14,16 +12,16 @@ class Finding {
         CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
     }
 
-    @FXBindable String scanner= ''
-    @FXBindable String ip= ''
-    @FXBindable String hostName= ''
-    @FXBindable String port= ''
-    @FXBindable String service= ''
-    @FXBindable String plugin = ''
-    @FXBindable Severity severity = Severity.UNKNOWN
-    @FXBindable String summary = ''
-    @FXBindable String baseCVSS = '0.0'
-    @FXBindable Boolean exploitable = false
+    String scanner= ''
+    String ip= ''
+    String hostName= ''
+    String port= ''
+    String service= ''
+    String plugin = ''
+    Severity severity = Severity.UNKNOWN
+    String summary = ''
+    String baseCVSS = '0.0'
+    Boolean exploitable = false
 
     @Override
     String toString() {

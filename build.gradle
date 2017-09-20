@@ -47,7 +47,7 @@ dependencies {
 //    compile 'org.codehaus.groovy:groovy-xml:2.4.8'
 //    compile 'org.codehaus.groovy:groovy-json:2.4.8'
     compile 'org.apache.commons:commons-pool2:2.4.2'
-    compile 'org.groovyfx:groovyfx:8.0.0'
+//    compile 'org.groovyfx:groovyfx:8.0.0'
 //    compile group: 'org.apache.commons', name: 'commons-pool2', version: '2.4.2'
 //    compile 'org.codehaus.groovy:groovy-swing:2.4.8'
 //    compile 'net.java.dev.glazedlists:glazedlists_java15:1.9.1'
@@ -74,7 +74,6 @@ jar {
 
     }
 }
-
 test {
     // Until generic (Metasploitable) test are uploaded
     exclude '**/*Test*'
