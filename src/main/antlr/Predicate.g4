@@ -30,7 +30,6 @@ AND   : '&&' | 'AND';
 OR    : '||' | 'OR';
 NOT   : '!';
 
- //SCANNER("SCANNER"),IP("IP"),PORT("PORT"),SERVICE("SERVICE"),RISK("RISK"),EXPLOITABLE("EXPLOITABLE"),DESCRIPTION("DESCRIPTION")
 column
     : SCANNER
     | IP
@@ -107,7 +106,6 @@ fragment Z: [zZ];
 
 SQUOTE: '\'' -> skip;
 DQUOTE: '"' -> skip;
-//CHAR : ~[ \t\r\n"']+ ; // // match any chars except space tab, newline, double and single quote
 
 CHAR: [a-zA-Z/\\.0-9:;]+;
 WS : [ \t\n\r]+ -> skip ; // skip spaces, tabs, newlines, \r (Windows)

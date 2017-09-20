@@ -1,3 +1,19 @@
+/*
+ *  Copyright (C) 2017  S. van der Baan
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.vdbaan.issuefinder.filter
 
 
@@ -17,7 +33,6 @@ class FindingPredicateParserRuntimeException extends RuntimeException {
 
 class FindingPredicateParser {
     static void main(String[] args) {
-//        String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE 'http'))) || (RISK IN [HIGH,LOW])";
         String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE 'http')) || (RISK BETWEEN (LOW,CRITICAL)))"
         FindingPredicateParser fpp = new FindingPredicateParser()
         println fpp.parse(txt)
@@ -48,16 +63,6 @@ class FindingPredicateParser {
 }
 
 class FindingPredicateVisitor extends PredicateBaseVisitor {
-    /*
-    expr AND expr              # andExpr
-    | expr OR expr               # orExpr
-    | LPAREN expr RPAREN         # enclosedExpr
-    | NOT expr                   # notExpr
-    | column operator STRING     # assign
-    | column rangeOperator RANGE # range
-    | column groupOperator GROUP # group
-    | NOT column                 # notColumn
-     */
 
     @Override
     Object visitAndExpr(PredicateParser.AndExprContext ctx) {
