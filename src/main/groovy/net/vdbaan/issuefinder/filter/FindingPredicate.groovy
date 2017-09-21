@@ -23,7 +23,8 @@ import java.util.function.Predicate
 
 enum ColumnName {
     SCANNER("SCANNER"), IP("IP"), PORT("PORT"), SERVICE("SERVICE"), RISK("RISK"),
-    EXPLOITABLE("EXPLOITABLE"), DESCRIPTION("DESCRIPTION"), PLUGIN('PLUGIN')
+    EXPLOITABLE("EXPLOITABLE"), DESCRIPTION("DESCRIPTION"), PLUGIN('PLUGIN'),
+    STATUS("STATUS"), PROTOCOL("PROTOCOL"), HOSTNAME("HOSTNAME")
     private String value
     private static final Map<String, ColumnName> ENUM_MAP
 
@@ -61,6 +62,9 @@ enum ColumnName {
             case RISK: return f.severity.toString()
             case EXPLOITABLE: return f.exploitable
             case DESCRIPTION: return f.fullDescription()
+            case STATUS: return f.portStatus
+            case PROTOCOL: return f.protocol
+            case HOSTNAME: return f.hostName
         }
     }
 }
@@ -120,23 +124,23 @@ class FindingPredicate implements Predicate<Finding> {
             rValue = rValue.toString().toUpperCase()
         }
         switch (operation) {
-            case LogicalOperation.AND:return ((FindingPredicate) lValue).and((FindingPredicate) rValue).test(f)
+            case LogicalOperation.AND: return ((FindingPredicate) lValue).and((FindingPredicate) rValue).test(f)
             case LogicalOperation.OR: return ((FindingPredicate) lValue).or((FindingPredicate) rValue).test(f)
 
             case LogicalOperation.EQ: return lValue.equals(rValue)
             case LogicalOperation.NE: return !lValue.equals(rValue)
             case LogicalOperation.LIKE: return ((String) lValue).contains(rValue)
 
-            case LogicalOperation.LT: return ((String)lValue).compareTo(rValue) <0
-            case LogicalOperation.LE: return ((String)lValue).compareTo(rValue) <=0
-            case LogicalOperation.GT: return ((String)lValue).compareTo(rValue) >0
-            case LogicalOperation.GE: return ((String)lValue).compareTo(rValue) >=0
+            case LogicalOperation.LT: return ((String) lValue).compareTo(rValue) < 0
+            case LogicalOperation.LE: return ((String) lValue).compareTo(rValue) <= 0
+            case LogicalOperation.GT: return ((String) lValue).compareTo(rValue) > 0
+            case LogicalOperation.GE: return ((String) lValue).compareTo(rValue) >= 0
 
             case LogicalOperation.NOT: return (lValue instanceof FindingPredicate) ?
-                            ((FindingPredicate) lValue).negate().test(f) : !((Boolean) lValue).booleanValue()
+                    ((FindingPredicate) lValue).negate().test(f) : !((Boolean) lValue).booleanValue()
 
 
-            case LogicalOperation.IN: return ((List)rValue).contains(lValue)
+            case LogicalOperation.IN: return ((List) rValue).contains(lValue)
             case LogicalOperation.BETWEEN: return between(lValue, rValue)
             default: return true
 
@@ -148,21 +152,22 @@ class FindingPredicate implements Predicate<Finding> {
         List list = (List) value
         Object low = list.get(0)
         Object high = list.get(1)
-        return ((String)column).compareTo(low)>=0 &&
-                ((String)column).compareTo(high) <=0
+        return ((String) column).compareTo(low) >= 0 &&
+                ((String) column).compareTo(high) <= 0
     }
+
     String toString() {
         if (left instanceof ColumnName) {
             if (operation == LogicalOperation.NOT) {
                 return "!" + ((ColumnName) left)
             } else {
-                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'"+right+"'")
+                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
             }
         } else if (left instanceof FindingPredicate) {
             if (operation == LogicalOperation.NOT) {
                 return "!(" + left.toString() + ")"
             } else {
-                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'"+right+"'")
+                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
             }
         }
 

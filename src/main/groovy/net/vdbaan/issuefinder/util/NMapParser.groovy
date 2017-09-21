@@ -51,7 +51,7 @@ class NMapParser extends Parser{
                 String service = port.service.@name
                 String product = port.service.@product
                 String summary = ""
-                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/" + state + "/" + protocol, hostName: hostName,
+                result << new Finding([scanner:scanner, ip:hostIp, port:portnr ,portStatus: state ,protocol: protocol, hostName: hostName,
                                        service:service + " (" + product + ")", plugin:"NMap port information",
                                        severity:Finding.Severity.INFO, summary:summary])
             }
@@ -66,7 +66,7 @@ class NMapParser extends Parser{
         summary += "\nScan type      : " + xml.scaninfo.@type
         summary += "\nNmap command   : " + xml.@args
 
-        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",hostName: hostName,
+        return new Finding([scanner:scanner, ip:ip, port:0, portStatus: 'NA', protocol: protocol, service:"none",hostName: hostName,
                             plugin:"NMap scan info", severity:Finding.Severity.INFO, summary:summary])
     }
 
@@ -76,7 +76,7 @@ class NMapParser extends Parser{
         summary += "\nUp     : " + xml.runstats.hosts.@up
         summary += "\nDown   : " + xml.runstats.hosts.@down
 
-        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",hostName: hostName,
+        return new Finding([scanner:scanner, ip:ip, port:0,portStatus: 'NA' ,protocol: protocol, service:"none",hostName: hostName,
                             plugin:"NMap stats", severity:Finding.Severity.INFO, summary:summary])
     }
 
@@ -87,7 +87,7 @@ class NMapParser extends Parser{
                         "\nDuration : " + xml.runstats.finished.@elapsed +
                         " seconds"
 
-        return new Finding([scanner:scanner, ip:ip, port:"generic/" + protocol, service:"none",hostName: hostName,
+        return new Finding([scanner:scanner, ip:ip, port:0,portStatus: 'NA' ,protocol: protocol, service:"none",hostName: hostName,
                             plugin:"NMap summary", severity:Finding.Severity.INFO, summary:summary])
     }
 }

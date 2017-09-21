@@ -20,7 +20,7 @@ package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
 
-class NiktoParser extends Parser{
+class NiktoParser extends Parser {
     static String IDENTIFIER = "niktoscan"
     static String scanner = "Nikto"
 
@@ -47,8 +47,8 @@ class NiktoParser extends Parser{
             summary += "\nOSVDB-" + item.@osvdbid
             summary += "\nURI: " + item.uri
 
-            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp', service:"web", plugin:plugin,hostName: hostName,
-                                   severity:Finding.Severity.INFO, summary:summary])
+            result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: "web", plugin: plugin, hostName: hostName,
+                                   severity: Finding.Severity.INFO, summary: summary])
         }
         return result
     }
@@ -63,8 +63,8 @@ class NiktoParser extends Parser{
         summary += "\nItems found  : " + xml.scandetails.statistics.@itemsfound
         //Finding (scanner,ip, port,service,plugin,severity,summary)
 
-        new Finding([scanner:scanner, ip:ip, port:"generic/" + port, service:"none", plugin:"scaninfo",hostName: hostName,
-                     severity:Finding.Severity.INFO, summary:summary])
+        new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: "none", plugin: "scaninfo", hostName: hostName,
+                     severity: Finding.Severity.INFO, summary: summary])
     }
 
     private String cdata(String text) {

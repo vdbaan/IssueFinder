@@ -37,10 +37,10 @@ class NessusParser extends Parser {
         List<Finding> result = new ArrayList<>()
         content.Report.ReportHost.each { host ->
 
-            def IPTag = host.HostProperties.tag.find {it.@name == 'host-ip'}
+            def IPTag = host.HostProperties.tag.find { it.@name == 'host-ip' }
             String hostIp = IPTag
-            def FQDNTag = host.HostProperties.tag.find {it.@name == 'host-fqdn'}
-            String hostName = FQDNTag?: hostIp
+            def FQDNTag = host.HostProperties.tag.find { it.@name == 'host-fqdn' }
+            String hostName = FQDNTag ?: hostIp
 
             for (item in host.ReportItem) {
                 String portnr = item.@port
@@ -81,10 +81,10 @@ class NessusParser extends Parser {
                 summary << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
                 summary << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
 
-                result << new Finding([scanner:scanner, ip:hostIp, port:portnr + "/open/" + protocol, hostName: hostName,
-                                       service:service, plugin:plugin + ":" + pluginName,
-                                       exploitable:item.exploit_available == 'true', baseCVSS:item.cvss_base_score?:'0.0',
-                                       severity:severity, summary:summary.toString()])
+                result << new Finding([scanner    : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
+                                       service    : service, plugin: plugin + ":" + pluginName,
+                                       exploitable: item.exploit_available == 'true', baseCVSS: item.cvss_base_score ?: '0.0',
+                                       severity   : severity, summary: summary.toString()])
             }
         }
         return result
@@ -92,7 +92,7 @@ class NessusParser extends Parser {
 
     def convertToMap(nodes) {
         nodes.children().collectEntries {
-            [it.name(),it.childNodes()?convertToMap(it):it.text()]
+            [it.name(), it.childNodes() ? convertToMap(it) : it.text()]
         }
     }
 }
