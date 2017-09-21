@@ -28,15 +28,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.vdbaan.issuefinder.controller.DialogController;
-import net.vdbaan.issuefinder.controller.EditorController;
-import net.vdbaan.issuefinder.controller.FXMLController;
-import net.vdbaan.issuefinder.controller.ProgressController;
+import net.vdbaan.issuefinder.controller.*;
 import net.vdbaan.issuefinder.model.Finding;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class MainApp extends Application {
     Stage primaryStage;
@@ -52,6 +50,7 @@ public class MainApp extends Application {
         primaryStage.setTitle("Issue Finder");
         primaryStage.setMaximized(true);
         primaryStage.setScene(mainScene);
+
 
         FXMLController controller = fxmlLoader.getController();
         controller.setMasterData(masterData);
@@ -94,10 +93,9 @@ public class MainApp extends Application {
 
     public void showEditor(Finding finding) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/editor.fxml"));
-        Parent root = loader.load();
         Stage dialog = new Stage();
         dialog.initOwner(primaryStage);
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(loader.load());
         dialog.initStyle(StageStyle.UNDECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setScene(scene);
@@ -106,6 +104,20 @@ public class MainApp extends Application {
         controller.setDialogPane(dialog);
         controller.setMasterData(masterData);
         controller.setFinding(finding);
+        controller.setup();
+        dialog.showAndWait();
+    }
+
+    public void showSummary(Map<String, FXMLController.Container> summary) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/summary.fxml"));
+        Stage dialog = new Stage();
+        dialog.initOwner(primaryStage);
+        Scene scene = new Scene(loader.load());
+        dialog.setTitle("Summary");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        SummaryController controller = loader.getController();
+        controller.setSummary(summary);
         controller.setup();
         dialog.showAndWait();
     }

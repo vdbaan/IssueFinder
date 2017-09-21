@@ -1,5 +1,10 @@
 package net.vdbaan.issuefinder
 
+/*
+New options:
+-DIF.db=true
+-DIF.db.loc=
+ */
 class Runner {
     static void main(String... args) {
         testJavaFX()

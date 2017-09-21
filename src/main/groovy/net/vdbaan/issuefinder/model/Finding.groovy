@@ -20,7 +20,12 @@ package net.vdbaan.issuefinder.model
 
 class Finding {
     enum Severity {
-        CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
+        CRITICAL(5), HIGH(4), MEDIUM(3), LOW(2), INFO(1), UNKNOWN(0)
+        int value
+
+        Severity(int value) {
+            this.value = value
+        }
     }
 
     String scanner = ''

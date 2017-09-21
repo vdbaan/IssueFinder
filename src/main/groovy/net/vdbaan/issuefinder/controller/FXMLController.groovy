@@ -20,6 +20,7 @@ import net.vdbaan.issuefinder.filter.FindingPredicate
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.filter.FindingPredicateParser
 import net.vdbaan.issuefinder.filter.FindingPredicateParserRuntimeException
+import net.vdbaan.issuefinder.util.TableUtils
 
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
@@ -62,9 +63,6 @@ class FXMLController implements Initializable {
     def setup(MainApp mainApp) {
         this.mainApp = mainApp
 
-//        String css = getClass().getResource('/style.css')
-//        mainTable.getScene().getStylesheets().add(css)
-
         // 1. Wrap the ObservableList in a FilteredList (initially display all data).
         filteredData = new FilteredList<>(masterData, { f -> true })
 
@@ -102,6 +100,10 @@ class FXMLController implements Initializable {
             filterText.getEditor().getStyleClass().clear()
             filterText.getEditor().getStyleClass().add('text-input')
         })
+
+        TableUtils.installCopyPasteHandler(mainTable)
+//        mainTable.getSelectionModel().setCellSelectionEnabled(true);
+        mainTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE)
     }
 
 
@@ -123,7 +125,7 @@ class FXMLController implements Initializable {
     def filterOnPlugin() {
         Finding f = mainTable.selectionModel.selectedItem
         def plugin = f.plugin
-        filterText.setValue(plugin.contains('\'')?String.format("PLUGIN == \"%s\"", plugin):String.format("PLUGIN == '%s'", plugin))
+        filterText.setValue(plugin.contains('\'') ? String.format("PLUGIN == \"%s\"", plugin) : String.format("PLUGIN == '%s'", plugin))
     }
 
     // TODO: adjust to list to support multiline select
@@ -193,6 +195,49 @@ class FXMLController implements Initializable {
         mainApp.showProgressDialog(files, statusLabel)
     }
 
+
+    class Container {
+        Set<String> listedports = new HashSet<>()
+        Set<String> listedservices = new HashSet<>()
+        Finding.Severity highest = Finding.Severity.UNKNOWN
+        Set<String> plugins = new HashSet<>()
+
+        String toString() {
+            StringBuilder sb = new StringBuilder()
+            sb.append(String.format("open ports (%d)",listedports.size()))
+            sb.append("\t")
+            sb.append(listedports.join(","))
+            sb.append("\n")
+            sb.append(String.format("found services (%d)",listedservices.size()))
+            sb.append("\t")
+            sb.append(listedservices.join(","))
+            sb.append("\n")
+            sb.append(String.format("Highest vulnerability (%d %s)",plugins.size(),highest))
+            sb.append("\t")
+            sb.append(plugins.join(","))
+            sb.append("\n")
+            return sb.toString()
+        }
+    }
+
+    def buildSummary() {
+        Map<String, Container> summaryInfo = new HashMap()
+        filteredData.each { f ->
+            Container c = summaryInfo.get(f.ip) ?: new Container()
+            c.listedports << f.port
+            c.listedservices << f.service
+            if (f.severity.value > c.highest.value) {
+                c.plugins.clear()
+                c.highest = f.severity
+            }
+            if (f.severity == c.highest) {
+                c.plugins << f.plugin
+            }
+            summaryInfo.put(f.ip, c)
+        }
+
+        mainApp.showSummary(summaryInfo)
+    }
 
     def copyUniqueIps() {
         Set<String> ips = new TreeSet<>()

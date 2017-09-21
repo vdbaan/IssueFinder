@@ -26,14 +26,26 @@ def getVersionName = { ->
             commandLine 'git', 'describe', '--tags', '--abbrev=0'
             standardOutput = stdout
         }
-        return stdout.toString().trim()
+        def tag = stdout.toString().trim()
+        stdout.reset()
+        exec {
+            commandLine 'git', 'describe', '--all'
+            standardOutput = stdout
+        }
+        if ('heads/master'.equalsIgnoreCase(stdout.toString().trim())) {
+            return tag
+        } else {
+            // Adding the branch name to the version
+            def ver = stdout.toString().trim()
+            return tag+'-' + ver.substring(ver.indexOf('/')+1)
+        }
     }
     catch (ignored) {
         return null
     }
 }
 
-version=getVersionName()
+version = getVersionName()
 
 repositories {
     jcenter()
@@ -55,9 +67,9 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
     manifest {
-        attributes 'Main-Class':' net.vdbaan.issuefinder.Runner',
+        attributes 'Main-Class': ' net.vdbaan.issuefinder.Runner',
 //                   'Class-Path':'.',
-                   'version':project.version
+                'version': project.version
 
     }
 }

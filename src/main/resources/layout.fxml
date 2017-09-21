@@ -48,6 +48,7 @@
                 </Menu>
                 <Menu mnemonicParsing="true" text="_Help">
                     <items>
+                        <MenuItem mnemonicParsing="true" onAction="#buildSummary" text="Statistics" />
                         <MenuItem mnemonicParsing="true" onAction="#aboutAction" text="_About">
                             <accelerator>
                                 <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="UP" />
