@@ -150,12 +150,4 @@ class BurpParser extends Parser{
         }
         return result
     }
-
-    static void main(String... args) {
-        def burpFile = new File("C:\\Users\\Steven\\Documents\\1.Clients\\53375 - ADCS-008 - advanced computer software\\Work/burp-report.xml")
-        Parser parser = Parser.getParser(burpFile.text)
-        parser.parse().each { it ->
-            println it.fullDescription()
-        }
-    }
 }
