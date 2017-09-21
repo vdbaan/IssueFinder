@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
