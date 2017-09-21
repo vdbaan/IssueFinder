@@ -89,9 +89,24 @@
                                 <PropertyValueFactory property="ip" />
                             </cellValueFactory>
                         </TableColumn>
+                        <TableColumn maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Hostname" visible="false">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="hostname" />
+                            </cellValueFactory>
+                        </TableColumn>
                         <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Port">
                             <cellValueFactory>
                                 <PropertyValueFactory property="port" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Status"  visible="false">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="portstatus" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Protocol" visible="false">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="protocol" />
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Service">

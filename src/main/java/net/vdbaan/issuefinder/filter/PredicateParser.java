@@ -20,9 +20,10 @@ public class PredicateParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, LPAREN=8, RPAREN=9, 
-		AND=10, OR=11, NOT=12, IP=13, SCANNER=14, PORT=15, SERVICE=16, RISK=17, 
-		EXPLOITABLE=18, DESCRIPTION=19, PLUGIN=20, IN=21, LIKE=22, BETWEEN=23, 
-		GROUP=24, RANGE=25, STRING=26, SQUOTE=27, DQUOTE=28, CHAR=29, WS=30;
+		AND=10, OR=11, NOT=12, IP=13, SCANNER=14, PORT=15, STATUS=16, PROTOCOL=17, 
+		SERVICE=18, RISK=19, EXPLOITABLE=20, DESCRIPTION=21, PLUGIN=22, HOSTNAME=23, 
+		IN=24, LIKE=25, BETWEEN=26, GROUP=27, RANGE=28, STRING=29, SQUOTE=30, 
+		DQUOTE=31, CHAR=32, WS=33;
 	public static final int
 		RULE_expr = 0, RULE_column = 1, RULE_groupOperator = 2, RULE_rangeOperator = 3, 
 		RULE_operator = 4;
@@ -33,13 +34,13 @@ public class PredicateParser extends Parser {
 	private static final String[] _LITERAL_NAMES = {
 		null, "'=='", "'!='", "'<'", "'<='", "'>'", "'=>'", "'~='", "'('", "')'", 
 		null, null, "'!'", null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, "'''", "'\"'"
+		null, null, null, null, null, null, null, null, "'''", "'\"'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, "LPAREN", "RPAREN", "AND", 
-		"OR", "NOT", "IP", "SCANNER", "PORT", "SERVICE", "RISK", "EXPLOITABLE", 
-		"DESCRIPTION", "PLUGIN", "IN", "LIKE", "BETWEEN", "GROUP", "RANGE", "STRING", 
-		"SQUOTE", "DQUOTE", "CHAR", "WS"
+		"OR", "NOT", "IP", "SCANNER", "PORT", "STATUS", "PROTOCOL", "SERVICE", 
+		"RISK", "EXPLOITABLE", "DESCRIPTION", "PLUGIN", "HOSTNAME", "IN", "LIKE", 
+		"BETWEEN", "GROUP", "RANGE", "STRING", "SQUOTE", "DQUOTE", "CHAR", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -432,11 +433,14 @@ public class PredicateParser extends Parser {
 		public TerminalNode SCANNER() { return getToken(PredicateParser.SCANNER, 0); }
 		public TerminalNode IP() { return getToken(PredicateParser.IP, 0); }
 		public TerminalNode PORT() { return getToken(PredicateParser.PORT, 0); }
+		public TerminalNode STATUS() { return getToken(PredicateParser.STATUS, 0); }
+		public TerminalNode PROTOCOL() { return getToken(PredicateParser.PROTOCOL, 0); }
 		public TerminalNode SERVICE() { return getToken(PredicateParser.SERVICE, 0); }
 		public TerminalNode RISK() { return getToken(PredicateParser.RISK, 0); }
 		public TerminalNode EXPLOITABLE() { return getToken(PredicateParser.EXPLOITABLE, 0); }
 		public TerminalNode DESCRIPTION() { return getToken(PredicateParser.DESCRIPTION, 0); }
 		public TerminalNode PLUGIN() { return getToken(PredicateParser.PLUGIN, 0); }
+		public TerminalNode HOSTNAME() { return getToken(PredicateParser.HOSTNAME, 0); }
 		public ColumnContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -465,7 +469,7 @@ public class PredicateParser extends Parser {
 			{
 			setState(44);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IP) | (1L << SCANNER) | (1L << PORT) | (1L << SERVICE) | (1L << RISK) | (1L << EXPLOITABLE) | (1L << DESCRIPTION) | (1L << PLUGIN))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IP) | (1L << SCANNER) | (1L << PORT) | (1L << STATUS) | (1L << PROTOCOL) | (1L << SERVICE) | (1L << RISK) | (1L << EXPLOITABLE) | (1L << DESCRIPTION) | (1L << PLUGIN) | (1L << HOSTNAME))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -639,20 +643,20 @@ public class PredicateParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3 \67\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\67\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
 		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\"\n\2\3\2\3\2\3\2\3\2\3\2"+
 		"\3\2\7\2*\n\2\f\2\16\2-\13\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\2"+
-		"\7\2\4\6\b\n\2\4\3\2\17\26\4\2\3\t\30\30\28\2!\3\2\2\2\4.\3\2\2\2\6\60"+
+		"\7\2\4\6\b\n\2\4\3\2\17\31\4\2\3\t\33\33\28\2!\3\2\2\2\4.\3\2\2\2\6\60"+
 		"\3\2\2\2\b\62\3\2\2\2\n\64\3\2\2\2\f\r\b\2\1\2\r\16\7\n\2\2\16\17\5\2"+
 		"\2\2\17\20\7\13\2\2\20\"\3\2\2\2\21\22\7\16\2\2\22\"\5\2\2\7\23\24\5\4"+
-		"\3\2\24\25\5\n\6\2\25\26\7\34\2\2\26\"\3\2\2\2\27\30\5\4\3\2\30\31\5\b"+
-		"\5\2\31\32\7\33\2\2\32\"\3\2\2\2\33\34\5\4\3\2\34\35\5\6\4\2\35\36\7\32"+
+		"\3\2\24\25\5\n\6\2\25\26\7\37\2\2\26\"\3\2\2\2\27\30\5\4\3\2\30\31\5\b"+
+		"\5\2\31\32\7\36\2\2\32\"\3\2\2\2\33\34\5\4\3\2\34\35\5\6\4\2\35\36\7\35"+
 		"\2\2\36\"\3\2\2\2\37 \7\16\2\2 \"\5\4\3\2!\f\3\2\2\2!\21\3\2\2\2!\23\3"+
 		"\2\2\2!\27\3\2\2\2!\33\3\2\2\2!\37\3\2\2\2\"+\3\2\2\2#$\f\n\2\2$%\7\f"+
 		"\2\2%*\5\2\2\13&\'\f\t\2\2\'(\7\r\2\2(*\5\2\2\n)#\3\2\2\2)&\3\2\2\2*-"+
 		"\3\2\2\2+)\3\2\2\2+,\3\2\2\2,\3\3\2\2\2-+\3\2\2\2./\t\2\2\2/\5\3\2\2\2"+
-		"\60\61\7\27\2\2\61\7\3\2\2\2\62\63\7\31\2\2\63\t\3\2\2\2\64\65\t\3\2\2"+
+		"\60\61\7\32\2\2\61\7\3\2\2\2\62\63\7\34\2\2\63\t\3\2\2\2\64\65\t\3\2\2"+
 		"\65\13\3\2\2\2\5!)+";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

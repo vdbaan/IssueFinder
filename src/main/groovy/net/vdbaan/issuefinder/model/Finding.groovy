@@ -23,11 +23,13 @@ class Finding {
         CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
     }
 
-    String scanner= ''
-    String ip= ''
-    String hostName= ''
-    String port= ''
-    String service= ''
+    String scanner = ''
+    String ip = ''
+    String hostName = ''
+    String port = ''
+    String portStatus = ''
+    String protocol = ''
+    String service = ''
     String plugin = ''
     Severity severity = Severity.UNKNOWN
     String summary = ''
@@ -37,17 +39,18 @@ class Finding {
     @Override
     String toString() {
         return String.format("scanner:%s, source:%s:%s (%s), plugin:%s, risk:%s cvss:%s, exploitable:%b",
-                scanner, ip, port, service, plugin, severity,baseCVSS,exploitable)
+                scanner, ip, port, service, plugin, severity, baseCVSS, exploitable)
     }
 
     String fullDescription() {
-        return String.format("scanner: %s\nsource: %s:%s\nservice: %s\nplugin: %s\nrisk: %s\n"+
-                "=============================================\n"+"summary:\n%s\n",
+        return String.format("scanner: %s\nsource: %s:%s\nservice: %s\nplugin: %s\nrisk: %s\n" +
+                "=============================================\n" + "summary:\n%s\n",
                 scanner, ip, port, service, plugin, severity, summary)
     }
+
     String htmlDescription() {
-        return String.format("scanner: %s<br/>source: %s:%s<br/>service: %s<br/>plugin: %s<br/>risk: %s<br/>"+
-                "<hr/>"+"summary:<br/>%s",
-                scanner, ip, port, service, plugin, severity, summary.replace('\n','<br/>'))
+        return String.format("scanner: %s<br/>source: %s:%s (%s/%s)<br/>hostname: %s<br/>service: %s<br/>plugin: %s<br/>risk: %s<br/>" +
+                "<hr/>" + "summary:<br/>%s",
+                scanner, ip, port, protocol, portStatus, hostName,service, plugin, severity, summary.replace('\n', '<br/>'))
     }
 }

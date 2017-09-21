@@ -24,21 +24,18 @@ expr: expr AND expr              # andExpr
     | NOT column                 # notColumn
     ;
 
-LPAREN: '(';
-RPAREN: ')';
-AND   : '&&' | 'AND';
-OR    : '||' | 'OR';
-NOT   : '!';
-
 column
     : SCANNER
     | IP
     | PORT
+    | STATUS
+    | PROTOCOL
     | SERVICE
     | RISK
     | EXPLOITABLE
     | DESCRIPTION
     | PLUGIN
+    | HOSTNAME
     ;
 
 groupOperator: IN;
@@ -55,14 +52,24 @@ operator
     | LIKE
     ;
 
+
+LPAREN: '(';
+RPAREN: ')';
+AND   : '&&' | 'AND';
+OR    : '||' | 'OR';
+NOT   : '!';
+
 IP: I P;
 SCANNER: S C A N N E R;
 PORT: P O R T;
+STATUS: S T A T U S;
+PROTOCOL: P R O T O C O L;
 SERVICE: S E R V I C E;
 RISK: R I S K;
 EXPLOITABLE: E X P L O I T A B L E;
 DESCRIPTION: D E S C R I P T I O N;
 PLUGIN: P L U G I N;
+HOSTNAME: H O S T N A M E;
 
 IN: I N;
 LIKE: L I K E;
