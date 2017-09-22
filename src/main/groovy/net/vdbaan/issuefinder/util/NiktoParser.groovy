@@ -25,7 +25,7 @@ class NiktoParser extends Parser {
     static String scanner = "Nikto"
 
     NiktoParser(content) {
-        this.content = content.niktoscan
+        this.content = content
     }
 
     static boolean identify(contents) {

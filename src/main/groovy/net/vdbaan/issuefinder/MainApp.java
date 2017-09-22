@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -91,7 +92,8 @@ public class MainApp extends Application {
         dialog.showAndWait();
     }
 
-    public void showEditor(Finding finding) throws IOException {
+    public void showEditor(TableView table, ObservableList<Finding> data) throws IOException {
+//    public void showEditor(Finding finding) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/editor.fxml"));
         Stage dialog = new Stage();
         dialog.initOwner(primaryStage);
@@ -102,8 +104,9 @@ public class MainApp extends Application {
         EditorController controller = loader.getController();
 
         controller.setDialogPane(dialog);
-        controller.setMasterData(masterData);
-        controller.setFinding(finding);
+        controller.setTableView(table);
+        controller.setMasterData(data);
+//        controller.setFinding(finding);
         controller.setup();
         dialog.showAndWait();
     }

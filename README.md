@@ -80,10 +80,18 @@ Currently it is able to parse the following formats:
   - TestSSL (json format)
 
 ## Changelog
-1.3.0:
+
+1.4.1:
+ - Implement Summary sceen
+
+1.4.0:
  - Remade graphical interface into JavaFX
  - Added Filter technique like Burp-Logger++
 
+1.3.0:
+ - XML parsers have been optimised to be reused when multiple files are scanned.
+ - Nikto parser had lost their issues.
+ 
 1.2.0:
  - Added edit functionality.
  - Added CVSS Base score and exploitable to findings. Display the port in 'gnmap format'. Made more 'groovy'esk changed to the code.

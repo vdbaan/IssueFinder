@@ -49,6 +49,7 @@
                 <Menu mnemonicParsing="true" text="_Help">
                     <items>
                         <MenuItem mnemonicParsing="true" onAction="#buildSummary" text="Statistics" />
+                  <SeparatorMenuItem />
                         <MenuItem mnemonicParsing="true" onAction="#aboutAction" text="_About">
                             <accelerator>
                                 <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="UP" />
@@ -100,7 +101,7 @@
                                 <PropertyValueFactory property="port" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Status"  visible="false">
+                        <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Status" visible="false">
                             <cellValueFactory>
                                 <PropertyValueFactory property="portstatus" />
                             </cellValueFactory>
