@@ -57,6 +57,17 @@ You can right click on a table entry which allows you to:
 
 These will fill the specific selected filter.
 
+### Edit Screen
+The edit menu comes up when you right click on an issue. There are two ways in which the edit menu are used. First is when you 
+have a single issue selected. It will then show all the values in the edit menu. 
+When you have multiple issues selected and open the edit menu it will stay blank and will only change those values that you enter.
+
+### Summmary
+The summary menu has an overview of all IPs and for each IP it shows:
+- How many open ports there are and which
+- How many services are discovered and which
+- What the highest vulnerability was, how many of those there are and which plugin reported them
+
 #### Status bar
 ![](https://raw.githubusercontent.com/vdbaan/IssueFinder/master/wiki/images/FX-Status.png)
 The status bar has three regions. On the left the application will display general information. The other two areas show
@@ -80,10 +91,20 @@ Currently it is able to parse the following formats:
   - TestSSL (json format)
 
 ## Changelog
-1.3.0:
+
+1.5.0:
+ - Implemented Summary Screen
+ - Fixed Nikto parser
+ - Fixed Edit functionality 
+
+1.4.0:
  - Remade graphical interface into JavaFX
  - Added Filter technique like Burp-Logger++
 
+1.3.0:
+ - XML parsers have been optimised to be reused when multiple files are scanned.
+ - Nikto parser had lost their issues.
+ 
 1.2.0:
  - Added edit functionality.
  - Added CVSS Base score and exploitable to findings. Display the port in 'gnmap format'. Made more 'groovy'esk changed to the code.

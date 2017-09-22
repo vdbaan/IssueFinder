@@ -130,7 +130,8 @@ class FXMLController implements Initializable {
 
     // TODO: adjust to list to support multiline select
     def modifyEntry() {
-        mainApp.showEditor(mainTable.selectionModel.selectedItem)
+        mainApp.showEditor(mainTable, filteredData)
+//        mainApp.showEditor(mainTable.selectionModel.selectedItem)
     }
 
     def newAction() {
@@ -226,7 +227,7 @@ class FXMLController implements Initializable {
             Container c = summaryInfo.get(f.ip) ?: new Container()
             c.listedports << f.port
             c.listedservices << f.service
-            if (f.severity.value > c.highest.value) {
+            if (f.severity < c.highest) { // Severity runs from Critical (0) to UNKNOWN (5)
                 c.plugins.clear()
                 c.highest = f.severity
             }
