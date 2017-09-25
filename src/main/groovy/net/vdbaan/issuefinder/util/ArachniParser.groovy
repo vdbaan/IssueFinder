@@ -19,7 +19,7 @@ package net.vdbaan.issuefinder.util
 
 import net.vdbaan.issuefinder.model.Finding
 
-class ArachniParser  extends Parser {
+class ArachniParser extends Parser {
 
     static String IDENTIFIER = "report"
     static String scanner = "Arachni"
@@ -34,43 +34,44 @@ class ArachniParser  extends Parser {
 
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
-        String url =  content.sitemap.entry.@url
+        String url = content.sitemap.entry.@url
         URL host = new URL(url)
-        def ip = host.getHost()
+        def hostname = host.getHost()
         def port = host.getPort()
         String service = host.protocol.toUpperCase()
         if (port == -1) {
-            port = service == 'HTTPS'?443:80
+            port = service == 'HTTPS' ? 443 : 80
         }
         content.issues.issue.each { issue ->
             // scanner, ip, port, service, plugin, severity, summary
-            result << new Finding([scanner:scanner, ip:ip, port:port+'/open/tcp',
-                                   service:service, plugin:issue.check.name + " v"+issue.check.version,
-                                   severity:calc(issue.severity), summary:buildSummary(issue)])
+            def ip = issue.referring_page.response.ip_address
+            result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp',hostName:hostname,
+                                   service : service, plugin: issue.check.name + " v" + issue.check.version,
+                                   severity: calc(issue.severity), summary: buildSummary(issue)])
         }
         return result
     }
 
     private Finding.Severity calc(severity) {
 //        CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
-        switch(severity) {
+        switch (severity) {
             case 'high': return Finding.Severity.HIGH
             case 'medium': return Finding.Severity.MEDIUM
             case 'low': return Finding.Severity.LOW
-            case 'informational':return Finding.Severity.INFO
+            case 'informational': return Finding.Severity.INFO
             default: return Finding.Severity.UNKNOWN
         }
     }
 
     private String buildSummary(issue) {
         String summary = "Name: " + issue.name
-        summary += "\nDescription:\n "+ issue.description
+        summary += "\nDescription:\n " + issue.description
         summary += "\nRemedy:\n" + issue.remedy_guidance
-        if(issue.cwe)
-            summary += "\ncwe: "+issue.cwe
+        if (issue.cwe)
+            summary += "\ncwe: " + issue.cwe
         summary += "\nReferences:"
-        issue?.references.reference.each{ ref ->
-            summary += "- "+ ref.url
+        issue?.references.reference.each { ref ->
+            summary += "- " + ref.url
         }
         return summary
     }
