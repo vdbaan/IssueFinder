@@ -9,7 +9,7 @@ import net.vdbaan.issuefinder.view.impl.AbstractProgressView
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(JfxRunner.class)
+//@RunWith(JfxRunner.class)
 class ProgressPresenterTest {
     @Test
     void testSetup() {

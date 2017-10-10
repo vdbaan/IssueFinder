@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.assertEquals
 
-@RunWith(JfxRunner.class)
+//@RunWith(JfxRunner.class)
 class FindingServiceTest {
 //    @Test
 //    @TestInJfxThread

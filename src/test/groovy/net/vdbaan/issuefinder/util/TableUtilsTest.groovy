@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(JfxRunner.class)
+//@RunWith(JfxRunner.class)
 class TableUtilsTest {
 
 //    @Test
