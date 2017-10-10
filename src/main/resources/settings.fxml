@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.SettingsViewImpl">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Filters" />
+      <Label text="Batch size:" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+      <VBox alignment="TOP_CENTER" spacing="5.0" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowSpan="3">
+         <children>
+            <Button mnemonicParsing="false" onAction="#addFilter" prefWidth="70.0" text="Add" />
+            <Button mnemonicParsing="false" onAction="#editFilter" prefWidth="70.0" text="Edit" />
+            <Button mnemonicParsing="false" onAction="#deleteFilter" prefWidth="70.0" text="Delete" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </VBox>
+      <Button mnemonicParsing="false" onAction="#saveAll" prefWidth="70.0" text="Save" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowSpan="5">
+         <content>
+            <ListView fx:id="filterList" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+      </ScrollPane>
+      <Button mnemonicParsing="false" onAction="#cancelAll" prefWidth="70.0" text="Cancel" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+      <CheckBox fx:id="isCritical" mnemonicParsing="false" selected="true" text="CRITICAL" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <CheckBox fx:id="isHigh" mnemonicParsing="false" selected="true" text="HIGH" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+      <CheckBox fx:id="isMedium" mnemonicParsing="false" selected="true" text="MEDIUM" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+      <CheckBox fx:id="isLow" mnemonicParsing="false" selected="true" text="LOW" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+      <CheckBox fx:id="isInfo" mnemonicParsing="false" selected="true" text="INFO" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+      <Label text="Import these risks:" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+      <TextField fx:id="batchSize" text="100" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="8" />
+      <TextField fx:id="maxRows" text="5000" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="7" />
+      <Label text="Max rows visible:" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+      <TextField fx:id="filterText" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5" />
+      <Label text="IP / Port copy string:" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+      <TextField fx:id="copyString" disable="true" text="IP:PORT" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="9" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

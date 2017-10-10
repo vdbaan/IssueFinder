@@ -16,28 +16,20 @@
  */
 package net.vdbaan.issuefinder.filter
 
-
-import org.antlr.v4.runtime.BaseErrorListener
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.RecognitionException
-import org.antlr.v4.runtime.Recognizer
+import groovy.transform.CompileStatic
+import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.atn.PredictionMode
 import org.antlr.v4.runtime.tree.ParseTree
 
+@CompileStatic
 class FindingPredicateParserRuntimeException extends RuntimeException {
     FindingPredicateParserRuntimeException(String message) {
         super(message)
     }
 }
 
+@CompileStatic
 class FindingPredicateParser {
-    static void main(String[] args) {
-        String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE 'http')) || (RISK BETWEEN (LOW,CRITICAL)))"
-        FindingPredicateParser fpp = new FindingPredicateParser()
-        println fpp.parse(txt)
-    }
-
     FindingPredicate parse(String text) {
         PredicateLexer lexer = new PredicateLexer(CharStreams.fromString(text))
         CommonTokenStream tokens = new CommonTokenStream(lexer)
@@ -62,49 +54,54 @@ class FindingPredicateParser {
     }
 }
 
+@CompileStatic
 class FindingPredicateVisitor extends PredicateBaseVisitor {
 
     @Override
-    Object visitAndExpr(PredicateParser.AndExprContext ctx) {
+    Object visitAndExpr(PredicateParser.AndExprContext ctx) { // expr AND expr
         return new FindingPredicate(visit(ctx.expr(0)), FindingPredicate.LogicalOperation.AND, visit(ctx.expr(1)))
     }
 
     @Override
-    Object visitOrExpr(PredicateParser.OrExprContext ctx) {
+    Object visitOrExpr(PredicateParser.OrExprContext ctx) { // expr OR expr
         return new FindingPredicate(visit(ctx.expr(0)), FindingPredicate.LogicalOperation.OR, visit(ctx.expr(1)))
     }
 
     @Override
-    Object visitEnclosedExpr(PredicateParser.EnclosedExprContext ctx) {
+    Object visitEnclosedExpr(PredicateParser.EnclosedExprContext ctx) { // LPAREN expr RPAREN
         return visit(ctx.expr())
     }
 
     @Override
-    Object visitNotExpr(PredicateParser.NotExprContext ctx) {
+    Object visitNotExpr(PredicateParser.NotExprContext ctx) { //NOT expr
         return new FindingPredicate(visit(ctx.expr()), FindingPredicate.LogicalOperation.NOT, null)
     }
 
     @Override
-    Object visitAssign(PredicateParser.AssignContext ctx) {
+    Object visitAssign(PredicateParser.AssignContext ctx) { // column operator STRING
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.operator()), stripQuotes(ctx.STRING().text))
     }
 
     @Override
-    Object visitRange(PredicateParser.RangeContext ctx) {
-        ArrayList list = buildList(ctx.RANGE().text)
+    Object visitRange(PredicateParser.RangeContext ctx) { // column rangeOperator RANGE
+        List list = buildList(ctx.RANGE().text)
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.rangeOperator()), list)
     }
 
     @Override
-    Object visitGroup(PredicateParser.GroupContext ctx) {
+    Object visitGroup(PredicateParser.GroupContext ctx) { // column groupOperator GROUP
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.groupOperator()), buildList(ctx.GROUP().text))
     }
 
-    @Override
-    Object visitNotColumn(PredicateParser.NotColumnContext ctx) {
-        return new FindingPredicate(visit(ctx.column()), FindingPredicate.LogicalOperation.NOT, null)
-    }
+//    @Override
+//    Object visitNotColumn(PredicateParser.exploitableExpr ctx) {
+//        return new FindingPredicate(visit(ctx.column()), FindingPredicate.LogicalOperation.NOT, null)
+//    }
 
+    @Override
+    Object visitExploitableExpr(PredicateParser.ExploitableExprContext ctx) { //EXPLOITABLE
+        return ColumnName.EXPLOITABLE
+    }
 
     @Override
     Object visitColumn(PredicateParser.ColumnContext ctx) {

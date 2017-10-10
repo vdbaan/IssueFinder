@@ -18,8 +18,10 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'distribution'
+//apply plugin: 'jacoco'
 
 def getVersionName = { ->
+    return '2.0.0-BETA'
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -51,16 +53,25 @@ repositories {
     jcenter()
 }
 
+
+
 dependencies {
     compile 'org.antlr:antlr4-runtime:4.7'
 
     compile 'org.codehaus.groovy:groovy-all:2.4.8'
-    compile 'org.groovyfx:groovyfx:8.0.0'
-    compile 'org.controlsfx:controlsfx:8.40.13'
+// perhaps as improvement?
+//    compileOnly 'org.controlsfx:controlsfx:8.40.13'
     compile 'org.apache.commons:commons-pool2:2.4.2'
     compile group: 'org.json', name: 'json', version: '20170516'
 
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    compile group: 'com.h2database', name: 'h2', version: '1.4.196'
+
     testCompile 'junit:junit:4.12'
+
+//    testCompile "de.saxsys:mvvmfx-testing-utils:1.7.0"
+    testCompile "de.saxsys:jfx-testrunner:1.2"
+    testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
 }
 
 jar {
@@ -68,13 +79,27 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
     manifest {
-        attributes 'Main-Class': ' net.vdbaan.issuefinder.Runner',
-//                   'Class-Path':'.',
+        attributes 'Main-Class': 'net.vdbaan.issuefinder.Runner',
                 'version': project.version
 
     }
 }
 test {
     // Until generic (Metasploitable) test are uploaded
-    exclude '**/*Test*'
+//    exclude '**/*Test*'
 }
+
+
+/*
+use proguard to remove the following packages:
+- groovy.jmx.*
+- groovy.test.*
+- groovy.swing.*
+- groovy.grape.*
+- groovy.mock.*
+- groovy.servlet.*
+- groovy.ui.*
+- groovyjavjarcommonscli.*
+- org.codehous.groovy.ant.*
+- org.codehous.groovy.testng.*
+ */

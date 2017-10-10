@@ -16,11 +16,13 @@
  */
 package net.vdbaan.issuefinder.filter
 
+import groovy.transform.CompileStatic
 import net.vdbaan.issuefinder.model.Finding
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
 
+@CompileStatic
 enum ColumnName {
     SCANNER("SCANNER"), IP("IP"), PORT("PORT"), SERVICE("SERVICE"), RISK("RISK"),
     EXPLOITABLE("EXPLOITABLE"), DESCRIPTION("DESCRIPTION"), PLUGIN('PLUGIN'),
@@ -68,6 +70,7 @@ enum ColumnName {
         }
     }
 }
+
 
 class FindingPredicate implements Predicate<Finding> {
     enum LogicalOperation {
@@ -131,10 +134,10 @@ class FindingPredicate implements Predicate<Finding> {
             case LogicalOperation.NE: return !lValue.equals(rValue)
             case LogicalOperation.LIKE: return ((String) lValue).contains(rValue)
 
-            case LogicalOperation.LT: return ((String) lValue).compareTo(rValue) < 0
-            case LogicalOperation.LE: return ((String) lValue).compareTo(rValue) <= 0
-            case LogicalOperation.GT: return ((String) lValue).compareTo(rValue) > 0
-            case LogicalOperation.GE: return ((String) lValue).compareTo(rValue) >= 0
+            case LogicalOperation.LT: return compare(lValue, rValue) < 0
+            case LogicalOperation.LE: return compare(lValue, rValue) <= 0
+            case LogicalOperation.GT: return compare(lValue, rValue) > 0
+            case LogicalOperation.GE: return compare(lValue, rValue) >= 0
 
             case LogicalOperation.NOT: return (lValue instanceof FindingPredicate) ?
                     ((FindingPredicate) lValue).negate().test(f) : !((Boolean) lValue).booleanValue()
@@ -147,7 +150,27 @@ class FindingPredicate implements Predicate<Finding> {
         }
     }
 
+    private int compare(Object lValue, Object rValue) {
+        if(isInteger(lValue)) {
+            return Integer.compare(lValue as Integer, rValue as Integer)
+        }
+        switch(lValue.class) {
+            case Finding.Severity: return ((Finding.Severity)lValue).compareTo((Finding.Severity)rValue)
+            default: return ((String) lValue).compareTo(rValue)
+        }
+    }
 
+    private boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
+    }
     boolean between(Object column, Object value) {
         List list = (List) value
         Object low = list.get(0)
