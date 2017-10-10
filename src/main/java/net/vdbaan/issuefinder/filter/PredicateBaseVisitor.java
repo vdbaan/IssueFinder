@@ -40,14 +40,14 @@ public class PredicateBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNotColumn(PredicateParser.NotColumnContext ctx) { return visitChildren(ctx); }
+	@Override public T visitOrExpr(PredicateParser.OrExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOrExpr(PredicateParser.OrExprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExploitableExpr(PredicateParser.ExploitableExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

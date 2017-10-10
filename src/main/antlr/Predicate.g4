@@ -16,12 +16,12 @@ package net.vdbaan.issuefinder.parser;
 
 expr: expr AND expr              # andExpr
     | expr OR expr               # orExpr
-    | LPAREN expr RPAREN         # enclosedExpr
     | NOT expr                   # notExpr
+    | LPAREN expr RPAREN         # enclosedExpr
     | column operator STRING     # assign
     | column rangeOperator RANGE # range
     | column groupOperator GROUP # group
-    | NOT column                 # notColumn
+    | EXPLOITABLE                # exploitableExpr
     ;
 
 column
@@ -47,7 +47,7 @@ operator
     | '<'
     | '<='
     | '>'
-    | '=>'
+    | '>='
     | '~='
     | LIKE
     ;
@@ -75,8 +75,8 @@ IN: I N;
 LIKE: L I K E;
 BETWEEN: B E T W E E N;
 
-GROUP: '[' STRING (',' STRING)+ ']';
-RANGE: LPAREN STRING ',' STRING RPAREN;
+GROUP: '[' WS? STRING (',' STRING)+ WS? ']';
+RANGE: LPAREN WS? STRING ',' WS* STRING WS? RPAREN;
 STRING
     : DQUOTE ~["]+? DQUOTE
     | SQUOTE ~[']+? SQUOTE

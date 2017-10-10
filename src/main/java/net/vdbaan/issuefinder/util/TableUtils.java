@@ -3,18 +3,14 @@ Taken from: http://respostas.guj.com.br/47439-habilitar-copypaste-tableview-func
  */
 package net.vdbaan.issuefinder.util;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeTablePosition;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 
 public class TableUtils {
 
@@ -28,7 +24,10 @@ public class TableUtils {
 
         // install copy/paste keyboard handler
         table.setOnKeyPressed(new TableKeyEventHandler());
+    }
 
+    public static void installCopyPasteHandler(ObjectProperty<EventHandler<? super KeyEvent>> handler) {
+        handler.set(new TableKeyEventHandler());
     }
 
     public static void installCopyPasteHandler(TreeTableView<?> table) {

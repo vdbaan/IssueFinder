@@ -34,19 +34,19 @@ public interface PredicateVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRange(PredicateParser.RangeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code notColumn}
-	 * labeled alternative in {@link PredicateParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotColumn(PredicateParser.NotColumnContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code orExpr}
 	 * labeled alternative in {@link PredicateParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitOrExpr(PredicateParser.OrExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exploitableExpr}
+	 * labeled alternative in {@link PredicateParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExploitableExpr(PredicateParser.ExploitableExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code assign}
 	 * labeled alternative in {@link PredicateParser#expr}.

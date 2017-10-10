@@ -2,14 +2,16 @@
 
 package net.vdbaan.issuefinder.filter;
 
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class PredicateParser extends Parser {
@@ -32,7 +34,7 @@ public class PredicateParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'=='", "'!='", "'<'", "'<='", "'>'", "'=>'", "'~='", "'('", "')'", 
+		null, "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'~='", "'('", "')'", 
 		null, null, "'!'", null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, "'''", "'\"'"
 	};
@@ -109,14 +111,7 @@ public class PredicateParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(PredicateParser.RPAREN, 0); }
 		public EnclosedExprContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterEnclosedExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitEnclosedExpr(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitEnclosedExpr(this);
@@ -129,14 +124,7 @@ public class PredicateParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public NotExprContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterNotExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitNotExpr(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitNotExpr(this);
@@ -153,36 +141,8 @@ public class PredicateParser extends Parser {
 		public TerminalNode RANGE() { return getToken(PredicateParser.RANGE, 0); }
 		public RangeContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterRange(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitRange(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitRange(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class NotColumnContext extends ExprContext {
-		public TerminalNode NOT() { return getToken(PredicateParser.NOT, 0); }
-		public ColumnContext column() {
-			return getRuleContext(ColumnContext.class,0);
-		}
-		public NotColumnContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterNotColumn(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitNotColumn(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitNotColumn(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -195,17 +155,20 @@ public class PredicateParser extends Parser {
 		}
 		public TerminalNode OR() { return getToken(PredicateParser.OR, 0); }
 		public OrExprContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterOrExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitOrExpr(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitOrExpr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ExploitableExprContext extends ExprContext {
+		public TerminalNode EXPLOITABLE() { return getToken(PredicateParser.EXPLOITABLE, 0); }
+		public ExploitableExprContext(ExprContext ctx) { copyFrom(ctx); }
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitExploitableExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -218,14 +181,7 @@ public class PredicateParser extends Parser {
 		}
 		public TerminalNode STRING() { return getToken(PredicateParser.STRING, 0); }
 		public AssignContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterAssign(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitAssign(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitAssign(this);
@@ -241,14 +197,7 @@ public class PredicateParser extends Parser {
 		}
 		public TerminalNode GROUP() { return getToken(PredicateParser.GROUP, 0); }
 		public GroupContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterGroup(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitGroup(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitGroup(this);
@@ -264,14 +213,7 @@ public class PredicateParser extends Parser {
 		}
 		public TerminalNode AND() { return getToken(PredicateParser.AND, 0); }
 		public AndExprContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterAndExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitAndExpr(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitAndExpr(this);
@@ -294,32 +236,32 @@ public class PredicateParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(31);
+			setState(30);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				{
-				_localctx = new EnclosedExprContext(_localctx);
+				_localctx = new NotExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
 				setState(11);
-				match(LPAREN);
+				match(NOT);
 				setState(12);
-				expr(0);
-				setState(13);
-				match(RPAREN);
+				expr(6);
 				}
 				break;
 			case 2:
 				{
-				_localctx = new NotExprContext(_localctx);
+				_localctx = new EnclosedExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
+				setState(13);
+				match(LPAREN);
+				setState(14);
+				expr(0);
 				setState(15);
-				match(NOT);
-				setState(16);
-				expr(5);
+				match(RPAREN);
 				}
 				break;
 			case 3:
@@ -363,18 +305,16 @@ public class PredicateParser extends Parser {
 				break;
 			case 6:
 				{
-				_localctx = new NotColumnContext(_localctx);
+				_localctx = new ExploitableExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(29);
-				match(NOT);
-				setState(30);
-				column();
+				match(EXPLOITABLE);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(41);
+			setState(40);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -382,18 +322,18 @@ public class PredicateParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(39);
+					setState(38);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
 						_localctx = new AndExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(33);
+						setState(32);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
-						setState(34);
+						setState(33);
 						match(AND);
-						setState(35);
+						setState(34);
 						expr(9);
 						}
 						break;
@@ -401,18 +341,18 @@ public class PredicateParser extends Parser {
 						{
 						_localctx = new OrExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(36);
+						setState(35);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(37);
+						setState(36);
 						match(OR);
-						setState(38);
+						setState(37);
 						expr(8);
 						}
 						break;
 					}
 					} 
 				}
-				setState(43);
+				setState(42);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
@@ -445,14 +385,7 @@ public class PredicateParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_column; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterColumn(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitColumn(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitColumn(this);
@@ -467,7 +400,7 @@ public class PredicateParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(44);
+			setState(43);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IP) | (1L << SCANNER) | (1L << PORT) | (1L << STATUS) | (1L << PROTOCOL) | (1L << SERVICE) | (1L << RISK) | (1L << EXPLOITABLE) | (1L << DESCRIPTION) | (1L << PLUGIN) | (1L << HOSTNAME))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -496,14 +429,7 @@ public class PredicateParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_groupOperator; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterGroupOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitGroupOperator(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitGroupOperator(this);
@@ -517,7 +443,7 @@ public class PredicateParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(46);
+			setState(45);
 			match(IN);
 			}
 		}
@@ -538,14 +464,7 @@ public class PredicateParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_rangeOperator; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterRangeOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitRangeOperator(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitRangeOperator(this);
@@ -559,7 +478,7 @@ public class PredicateParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(48);
+			setState(47);
 			match(BETWEEN);
 			}
 		}
@@ -580,14 +499,7 @@ public class PredicateParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_operator; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).enterOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PredicateListener ) ((PredicateListener)listener).exitOperator(this);
-		}
+
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PredicateVisitor ) return ((PredicateVisitor<? extends T>)visitor).visitOperator(this);
@@ -602,7 +514,7 @@ public class PredicateParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(50);
+			setState(49);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << LIKE))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -643,21 +555,20 @@ public class PredicateParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\67\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\66\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
-		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\"\n\2\3\2\3\2\3\2\3\2\3\2"+
-		"\3\2\7\2*\n\2\f\2\16\2-\13\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\2"+
-		"\7\2\4\6\b\n\2\4\3\2\17\31\4\2\3\t\33\33\28\2!\3\2\2\2\4.\3\2\2\2\6\60"+
-		"\3\2\2\2\b\62\3\2\2\2\n\64\3\2\2\2\f\r\b\2\1\2\r\16\7\n\2\2\16\17\5\2"+
-		"\2\2\17\20\7\13\2\2\20\"\3\2\2\2\21\22\7\16\2\2\22\"\5\2\2\7\23\24\5\4"+
-		"\3\2\24\25\5\n\6\2\25\26\7\37\2\2\26\"\3\2\2\2\27\30\5\4\3\2\30\31\5\b"+
-		"\5\2\31\32\7\36\2\2\32\"\3\2\2\2\33\34\5\4\3\2\34\35\5\6\4\2\35\36\7\35"+
-		"\2\2\36\"\3\2\2\2\37 \7\16\2\2 \"\5\4\3\2!\f\3\2\2\2!\21\3\2\2\2!\23\3"+
-		"\2\2\2!\27\3\2\2\2!\33\3\2\2\2!\37\3\2\2\2\"+\3\2\2\2#$\f\n\2\2$%\7\f"+
-		"\2\2%*\5\2\2\13&\'\f\t\2\2\'(\7\r\2\2(*\5\2\2\n)#\3\2\2\2)&\3\2\2\2*-"+
-		"\3\2\2\2+)\3\2\2\2+,\3\2\2\2,\3\3\2\2\2-+\3\2\2\2./\t\2\2\2/\5\3\2\2\2"+
-		"\60\61\7\32\2\2\61\7\3\2\2\2\62\63\7\34\2\2\63\t\3\2\2\2\64\65\t\3\2\2"+
-		"\65\13\3\2\2\2\5!)+";
+		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2!\n\2\3\2\3\2\3\2\3\2\3\2\3\2"+
+		"\7\2)\n\2\f\2\16\2,\13\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\2\7\2"+
+		"\4\6\b\n\2\4\3\2\17\31\4\2\3\t\33\33\2\67\2 \3\2\2\2\4-\3\2\2\2\6/\3\2"+
+		"\2\2\b\61\3\2\2\2\n\63\3\2\2\2\f\r\b\2\1\2\r\16\7\16\2\2\16!\5\2\2\b\17"+
+		"\20\7\n\2\2\20\21\5\2\2\2\21\22\7\13\2\2\22!\3\2\2\2\23\24\5\4\3\2\24"+
+		"\25\5\n\6\2\25\26\7\37\2\2\26!\3\2\2\2\27\30\5\4\3\2\30\31\5\b\5\2\31"+
+		"\32\7\36\2\2\32!\3\2\2\2\33\34\5\4\3\2\34\35\5\6\4\2\35\36\7\35\2\2\36"+
+		"!\3\2\2\2\37!\7\26\2\2 \f\3\2\2\2 \17\3\2\2\2 \23\3\2\2\2 \27\3\2\2\2"+
+		" \33\3\2\2\2 \37\3\2\2\2!*\3\2\2\2\"#\f\n\2\2#$\7\f\2\2$)\5\2\2\13%&\f"+
+		"\t\2\2&\'\7\r\2\2\')\5\2\2\n(\"\3\2\2\2(%\3\2\2\2),\3\2\2\2*(\3\2\2\2"+
+		"*+\3\2\2\2+\3\3\2\2\2,*\3\2\2\2-.\t\2\2\2.\5\3\2\2\2/\60\7\32\2\2\60\7"+
+		"\3\2\2\2\61\62\7\34\2\2\62\t\3\2\2\2\63\64\t\3\2\2\64\13\3\2\2\2\5 (*";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
