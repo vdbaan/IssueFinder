@@ -12,20 +12,20 @@ import static org.junit.Assert.assertEquals
 
 @RunWith(JfxRunner.class)
 class FindingServiceTest {
-    @Test
-    @TestInJfxThread
-    void testService() {
-        File testFile = new File('.', '/testdata/Nessus.nessus')
-        FindingService service = new FindingService(testFile)
-        assertEquals('Got the wrong file', testFile, service.file)
-
-        service.stateProperty().addListener({
-            if (service.getState().equals(Worker.State.SUCCEEDED)) {
-                Object result = service.getValue()
-                assert result instanceof List<Finding>
-            }
-        } as InvalidationListener)
-
-        service.start()
-    }
+//    @Test
+//    @TestInJfxThread
+//    void testService() {
+//        File testFile = new File('.', '/testdata/Nessus.nessus')
+//        FindingService service = new FindingService(testFile)
+//        assertEquals('Got the wrong file', testFile, service.file)
+//
+//        service.stateProperty().addListener({
+//            if (service.getState().equals(Worker.State.SUCCEEDED)) {
+//                Object result = service.getValue()
+//                assert result instanceof List<Finding>
+//            }
+//        } as InvalidationListener)
+//
+//        service.start()
+//    }
 }
