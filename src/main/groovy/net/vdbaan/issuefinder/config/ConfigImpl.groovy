@@ -54,6 +54,8 @@ abstract class Config {
 
     abstract void setProperty(String key, Object value)
 
+    abstract boolean hasPropertyFor(String key)
+
     abstract void attachShutDownHook()
 
     abstract void saveConfig()
@@ -105,6 +107,10 @@ class ConfigImpl extends Config {
     }
 
     @Override
+    boolean hasPropertyFor(String key) {
+        return configObject.containsKey(key)
+    }
+    @Override
     void attachShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -121,6 +127,11 @@ class ConfigImpl extends Config {
             configFile.parentFile.mkdirs()
         }
         ConfigObject saver = configObject.clone()
+        saver.keySet().each { key ->
+            if (key.toString().startsWith('VOLATILE')) {
+                saver.remove(key)
+            }
+        }
         new StringWriter().with { sw ->
             saver.writeTo(sw)
             configFile.write(sw.toString())
@@ -131,7 +142,8 @@ class ConfigImpl extends Config {
     void loadConfig() {
         File configFile = new File(getUserDataDirectory(), CONFIGFILE_NAME)
         if (configFile.exists()) {
-            ConfigObject object = new ConfigSlurper().parse(configFile.text)
+//            ConfigObject object = new ConfigSlurper().parse(configFile.text)
+            configObject = new ConfigSlurper().parse(configFile.text)
             Map<String, Boolean> preload_filter = (Map) getInstance().getProperty(PRELOAD_FILTER)
             Map<Finding.Severity, Boolean> parsed = new HashMap<>()
             parsed.put(Finding.Severity.CRITICAL, preload_filter.get(Finding.Severity.CRITICAL.toString()))
@@ -139,8 +151,9 @@ class ConfigImpl extends Config {
             parsed.put(Finding.Severity.MEDIUM, preload_filter.get(Finding.Severity.MEDIUM.toString()))
             parsed.put(Finding.Severity.LOW, preload_filter.get(Finding.Severity.LOW.toString()))
             parsed.put(Finding.Severity.INFO, preload_filter.get(Finding.Severity.INFO.toString()))
-            object.put(PRELOAD_FILTER, parsed)
-            merge(object)
+            configObject.put(PRELOAD_FILTER, parsed)
+//            merge(object)
+
         }
     }
 

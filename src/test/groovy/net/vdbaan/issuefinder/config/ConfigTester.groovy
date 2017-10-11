@@ -89,6 +89,11 @@ class ConfigTester {
             void setProperty(String propertyName, Object newValue) {
                 super.setProperty(propertyName, newValue)
             }
+
+            @Override
+            boolean hasPropertyFor(String key) {
+                return false
+            }
         }
         Config.setInstance(mock)
         assertEquals(txt,Config.getInstance().getApplicationVersionString())

@@ -17,8 +17,10 @@
 
 package net.vdbaan.issuefinder.parser
 
+import groovy.util.logging.Log
 import net.vdbaan.issuefinder.model.Finding
 
+@Log
 class NessusParser extends Parser {
     static String IDENTIFIER = "NessusClientData_v2"
     static String scanner = "Nessus"
@@ -51,7 +53,7 @@ class NessusParser extends Parser {
 
                 String cvssval = item.cvss_base_score ?: '0.0'
                 if (cvssval == '') cvssval = '0.0'
-                Float cvss = Float.parseFloat(cvssval)
+                BigDecimal cvss = new BigDecimal(cvssval)
                 Finding.Severity severity = Finding.Severity.UNKNOWN
                 switch (risk.toInteger()) {
                     case 0: severity = Finding.Severity.INFO
@@ -98,6 +100,7 @@ class NessusParser extends Parser {
                                            pluginOutput: pluginOutput, solution: solution])
             }
         }
+        log.info (String.format("Returning %d issues",result.size()))
         return result
     }
 }
