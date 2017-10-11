@@ -15,21 +15,21 @@ class TableUtilsTest {
     @Test
 //    @TestInJfxThread
     void testUtilsWrongKeys() {
-//        TableView view = new TableView()
-//        TableUtils.installCopyPasteHandler(view)
-//        KeyEvent key = new KeyEvent(KeyEvent.KEY_PRESSED, "a", "",
-//                KeyCode.UNDEFINED, false, false, false, false)
+        TableView view = new TableView()
+        TableUtils.installCopyPasteHandler(view)
+        KeyEvent key = new KeyEvent(KeyEvent.KEY_PRESSED, "a", "",
+                KeyCode.UNDEFINED, false, false, false, false)
 //        view.fireEvent(key)
     }
 
     @Test
 //    @TestInJfxThread
     void testUtilsRightKeys() {
-//        TableView view = new TableView()
-//        TableUtils.installCopyPasteHandler(view)
-//        KeyEvent key = new KeyEvent(KeyEvent.KEY_PRESSED,"ctrl-C", "",
-//                KeyCode.C, false, true, false, false)
-//        key.source = view
+        TableView view = new TableView()
+        TableUtils.installCopyPasteHandler(view)
+        KeyEvent key = new KeyEvent(KeyEvent.KEY_PRESSED,"ctrl-C", "",
+                KeyCode.C, false, true, false, false)
+        key.source = view
 //        view.getOnKeyPressed().handle(key)
     }
 }
