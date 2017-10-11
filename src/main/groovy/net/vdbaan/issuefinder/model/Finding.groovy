@@ -17,7 +17,6 @@
 
 package net.vdbaan.issuefinder.model
 
-import net.vdbaan.issuefinder.parser.NessusParser
 import net.vdbaan.issuefinder.util.FindingHtmlViewer
 
 class Finding {
@@ -42,7 +41,7 @@ description  LONGVARCHAR,
 reference    LONGVARCHAR,
 pluginOutput LONGVARCHAR,
 solution     LONGVARCHAR,
-cvss         FLOAT,
+cvss         DECIMAL,
 cvssVector   VARCHAR(128),
 exploitable  BOOLEAN
 );
@@ -70,7 +69,7 @@ exploitable  BOOLEAN
     String reference = ''
     String pluginOutput= ''
     String solution= ''
-    Float baseCVSS = 0.0
+    BigDecimal baseCVSS = 0.0
     String cvssVector = ''
     Boolean exploitable = false
 

@@ -25,6 +25,8 @@ import net.vdbaan.issuefinder.model.Finding
 import org.h2.jdbc.JdbcSQLException
 import org.h2.jdbcx.JdbcDataSource
 
+import java.util.logging.Level
+
 interface DbHandler {
     List<Finding> getAllFinding(String where)
 
@@ -47,11 +49,20 @@ class DbHandlerImpl implements DbHandler {
     static final class MyDataSource {
         public static final MyDataSource INSTANCE = new MyDataSource()
         public static boolean create = true
+        private JdbcDataSource jdbcDataSource
 
         JdbcDataSource getDataSource() {
-            Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE)
-            log.fine 'Created db: ' + dataSource
-            return new JdbcDataSource(url: dataSource.database, user: dataSource.user, password: dataSource.password)
+            if (jdbcDataSource == null) {
+                Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE).clone()
+                String dbName = Config.getInstance().getProperty(Config.DB_NAME)
+                String name
+                name = dbName + '-' + System.currentTimeMillis()
+                Config.getInstance().setProperty('VOLATILE-DB', name)
+                dataSource.database = dataSource.database.replace(dbName, name)
+                log.info 'Using db: ' + dataSource
+                jdbcDataSource = new JdbcDataSource(url: dataSource.database, user: dataSource.user, password: dataSource.password)
+            }
+            return jdbcDataSource
         }
     }
     Sql sql = null
@@ -64,6 +75,7 @@ class DbHandlerImpl implements DbHandler {
                     createTable(sql)
                 } catch (JdbcSQLException e) {
                     log.warning(' Database wasn\'t deleted.....something went wrong')
+                    log.log(Level.FINE, 'Got this exception', e)
                 }
                 MyDataSource.create = false
                 attachShutdownHook()
@@ -83,7 +95,7 @@ class DbHandlerImpl implements DbHandler {
     }
 
     List<Finding> getAllFinding(String where) {
-        log.info(String.format('Filtering on <%s>',where))
+        log.info(String.format('Filtering on <%s>', where))
         def response = getSql().firstRow(buildQry(where, Finding.COUNT))
         numrows = response.'COUNT(*)'
         List<Finding> result = new ArrayList<>()
@@ -97,8 +109,8 @@ class DbHandlerImpl implements DbHandler {
     Finding buildFinding(GroovyResultSet p) {
         return new Finding(id: p.id, scanner: p.scanner, ip: p.ip, port: p.port, portStatus: p.status,
                 protocol: p.protocol, hostName: p.hostName, service: p.service, plugin: p.plugin, baseCVSS: p.cvss,
-                severity: getSeverity(p.risk), summary: p.summary, description: p.description, reference: p.reference,pluginOutput: p.pluginOutput,
-        solution: p.solution, cvssVector: p.cvssVector)
+                severity: getSeverity(p.risk), summary: p.summary, description: p.description, reference: p.reference, pluginOutput: p.pluginOutput,
+                solution: p.solution, cvssVector: p.cvssVector)
     }
 
     Finding.Severity getSeverity(String risk) {
@@ -128,7 +140,7 @@ class DbHandlerImpl implements DbHandler {
         StringBuilder sb = new StringBuilder(base)
         if (where != null && !"".equalsIgnoreCase(where)) {
             sb.append(' WHERE ')
-            sb.append(where.replace(' == ', ' = ').replace(' && ',' AND ').replace(' || ',' OR '))
+            sb.append(where.replace(' == ', ' = ').replace(' && ', ' AND ').replace(' || ', ' OR '))
         }
         return sb.toString()
     }
@@ -139,12 +151,12 @@ class DbHandlerImpl implements DbHandler {
         try {
             getSql().execute('SHUTDOWN')
         } catch (JdbcSQLException e) {
-            //
+            log.log(Level.FINE, 'Got this exception', e)
         } finally {
-            File dir = new File(Config.getInstance().getProperty(Config.DATA_DIR))
-            String name = Config.getInstance().getProperty(Config.DB_NAME)
+            File dir = new File(Config.getInstance().getProperty(Config.DATA_DIR).toString())
             dir.eachFile(FileType.FILES) { File f ->
-                if (f.getName().startsWith(name)) {
+                String name = Config.getInstance().getProperty('VOLATILE-DB')
+                if (f?.getName()?.startsWith(name)) {
                     log.fine 'Deleting ' + f.getAbsolutePath()
                     f.delete()
                 }
@@ -160,8 +172,9 @@ class DbHandlerImpl implements DbHandler {
                 try {
                     deleteAll()
                     deleteDB()
-                } catch (JdbcSQLException exception) {
+                } catch (JdbcSQLException e) {
                     log.warning 'Table already deleted'
+                    log.log(Level.FINE, 'Got this exception', e)
                 }
             }
         })
