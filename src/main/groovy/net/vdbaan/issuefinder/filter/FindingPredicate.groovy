@@ -26,7 +26,7 @@ import java.util.function.Predicate
 enum ColumnName {
     SCANNER("SCANNER"), IP("IP"), PORT("PORT"), SERVICE("SERVICE"), RISK("RISK"),
     EXPLOITABLE("EXPLOITABLE"), DESCRIPTION("DESCRIPTION"), PLUGIN('PLUGIN'),
-    STATUS("STATUS"), PROTOCOL("PROTOCOL"), HOSTNAME("HOSTNAME")
+    STATUS("STATUS"), PROTOCOL("PROTOCOL"), HOSTNAME("HOSTNAME"), CVSS('CVSS')
     private String value
     private static final Map<String, ColumnName> ENUM_MAP
 
@@ -184,7 +184,14 @@ class FindingPredicate implements Predicate<Finding> {
             if (operation == LogicalOperation.NOT) {
                 return "!" + ((ColumnName) left)
             } else {
-                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
+                switch (left) {
+                    case {it instanceof ColumnName && it == ColumnName.RISK}:
+                        return String.format("%s %s '%s'", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right.toString().toUpperCase())
+                    case {it instanceof ColumnName && it == ColumnName.CVSS}:
+                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right)
+                    default:
+                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
+                }
             }
         } else if (left instanceof FindingPredicate) {
             if (operation == LogicalOperation.NOT) {

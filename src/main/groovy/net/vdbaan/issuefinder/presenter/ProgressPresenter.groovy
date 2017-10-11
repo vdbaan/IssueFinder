@@ -79,4 +79,8 @@ class ProgressPresenter {
             service.start()
         }
     }
+
+    void setMasterView(MainView masterView) {
+        this.masterView = masterView
+    }
 }

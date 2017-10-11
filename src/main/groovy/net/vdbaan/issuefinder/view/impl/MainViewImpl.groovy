@@ -81,6 +81,10 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     private Label ipInfoLabel; // Value injected by FXMLLoader
 
     @FXML
+    // fx:id="webScroll
+    private ScrollPane webScroll
+
+    @FXML
     void aboutAction(ActionEvent event) {
         aboutAction?.handle(event)
     }
@@ -133,6 +137,26 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     @FXML
     void filterOnService(ActionEvent event) {
         filterServiceAction?.handle(event)
+    }
+
+    @FXML
+    void filterOnScanner(ActionEvent event) {
+        filterOnScannerAction?.handle(event)
+    }
+
+    @FXML
+    void filterOnPortStatus(ActionEvent event) {
+        filterOnPortStatusAction?.handle(event)
+    }
+
+    @FXML
+    void filterOnProtocol(ActionEvent event) {
+        filterOnProtocolAction?.handle(event)
+    }
+
+    @FXML
+    void filterOnRisk(ActionEvent event) {
+        filterOnRiskAction?.handle(event)
     }
 
     @FXML
@@ -237,6 +261,7 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
 //        return mainTable.getOnKeyPressed()
     }
 
+
     void textArealoadContent(String content) {
         textArea.getEngine().loadContent(content)
     }
@@ -262,6 +287,8 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
         return mainTable.comparatorProperty()
     }
 
+
+
     void addFilterTextItem(String item) {
         filterText.items.add(item)
     }
@@ -281,6 +308,10 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
     private EventHandler<ActionEvent> filterPortAction
     private EventHandler<ActionEvent> filterPluginAction
     private EventHandler<ActionEvent> filterServiceAction
+    private EventHandler<ActionEvent> filterOnScannerAction
+    private EventHandler<ActionEvent> filterOnPortStatusAction
+    private EventHandler<ActionEvent> filterOnProtocolAction
+    private EventHandler<ActionEvent> filterOnRiskAction
     private EventHandler<ActionEvent> settingsAction
     private EventHandler<ActionEvent> openAction
     private EventHandler<ActionEvent> newAction
@@ -289,6 +320,7 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
     private EventHandler<ActionEvent> copySelectedIpsAction
     private EventHandler<ActionEvent> copySelectedIpsPortsAction
     private EventHandler<MouseEvent> filterTextMouseAction
+
     RetentionFileChooser retentionFileChooser = new RetentionFileChooser()
 
     EventHandler<ActionEvent> getAboutAction() {
@@ -441,6 +473,46 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
 
     void setCopySelectedIpsPortsAction(EventHandler<ActionEvent> copySelectedIpsPortsAction) {
         this.copySelectedIpsPortsAction = copySelectedIpsPortsAction
+    }
+
+    MainPresenter getPresenter() {
+        return presenter
+    }
+
+    void setPresenter(MainPresenter presenter) {
+        this.presenter = presenter
+    }
+
+    EventHandler<ActionEvent> getFilterOnScannerAction() {
+        return filterOnScannerAction
+    }
+
+    void setFilterOnScannerAction(EventHandler<ActionEvent> filterOnScannerAction) {
+        this.filterOnScannerAction = filterOnScannerAction
+    }
+
+    EventHandler<ActionEvent> getFilterOnPortStatusAction() {
+        return filterOnPortStatusAction
+    }
+
+    void setFilterOnPortStatusAction(EventHandler<ActionEvent> filterOnPortStatusAction) {
+        this.filterOnPortStatusAction = filterOnPortStatusAction
+    }
+
+    EventHandler<ActionEvent> getFilterOnProtocolAction() {
+        return filterOnProtocolAction
+    }
+
+    void setFilterOnProtocolAction(EventHandler<ActionEvent> filterOnProtocolAction) {
+        this.filterOnProtocolAction = filterOnProtocolAction
+    }
+
+    EventHandler<ActionEvent> getFilterOnRiskAction() {
+        return filterOnRiskAction
+    }
+
+    void setFilterOnRiskAction(EventHandler<ActionEvent> filterOnRiskAction) {
+        this.filterOnRiskAction = filterOnRiskAction
     }
 
     @Override

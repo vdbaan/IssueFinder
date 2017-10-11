@@ -57,11 +57,20 @@ interface MainView extends BaseView, DbListener {
 
     void filterOnService(ActionEvent event)
 
+    void filterOnScanner(ActionEvent event)
+
+    void filterOnPortStatus(ActionEvent event)
+
+    void filterOnProtocol(ActionEvent event)
+
+    void filterOnRisk(ActionEvent event)
+
     void filterTable(ActionEvent event)
 
     void modifyEntry(ActionEvent event)
 
     void copySelectedIps(ActionEvent event)
+
     void copySelectedIpsPorts(ActionEvent event)
 
     void newAction(ActionEvent event)
@@ -113,6 +122,22 @@ interface MainView extends BaseView, DbListener {
     EventHandler<ActionEvent> getFilterServiceAction()
 
     void setFilterServiceAction(EventHandler<ActionEvent> filterServiceAction)
+
+    EventHandler<ActionEvent> getFilterOnScannerAction()
+
+    void setFilterOnScannerAction(EventHandler<ActionEvent> filterOnScannerAction)
+
+    EventHandler<ActionEvent> getFilterOnPortStatusAction()
+
+    void setFilterOnPortStatusAction(EventHandler<ActionEvent> filterOnPortStatusAction)
+
+    EventHandler<ActionEvent> getFilterOnProtocolAction()
+
+    void setFilterOnProtocolAction(EventHandler<ActionEvent> filterOnProtocolAction)
+
+    EventHandler<ActionEvent> getFilterOnRiskAction()
+
+    void setFilterOnRiskAction(EventHandler<ActionEvent> filterOnRiskAction)
 
     EventHandler<ActionEvent> getSettingsAction()
 

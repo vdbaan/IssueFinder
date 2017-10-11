@@ -50,7 +50,7 @@ class DbHandlerImpl implements DbHandler {
 
         JdbcDataSource getDataSource() {
             Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE)
-            log.fine 'Created db: '+dataSource
+            log.fine 'Created db: ' + dataSource
             return new JdbcDataSource(url: dataSource.database, user: dataSource.user, password: dataSource.password)
         }
     }
@@ -62,7 +62,7 @@ class DbHandlerImpl implements DbHandler {
             if (MyDataSource.create) {
                 try {
                     createTable(sql)
-                }catch(JdbcSQLException e) {
+                } catch (JdbcSQLException e) {
                     log.warning(' Database wasn\'t deleted.....something went wrong')
                 }
                 MyDataSource.create = false
@@ -83,6 +83,7 @@ class DbHandlerImpl implements DbHandler {
     }
 
     List<Finding> getAllFinding(String where) {
+        log.info(String.format('Filtering on <%s>',where))
         def response = getSql().firstRow(buildQry(where, Finding.COUNT))
         numrows = response.'COUNT(*)'
         List<Finding> result = new ArrayList<>()
@@ -94,14 +95,16 @@ class DbHandlerImpl implements DbHandler {
     }
 
     Finding buildFinding(GroovyResultSet p) {
-        return new Finding(id: p.id, scanner: p.scanner, ip: p.ip, port: p.port, portStatus: p.portStatus,
-                protocol: p.protocol, hostName: p.hostName, service: p.service, plugin: p.plugin,
-                severity: getRisk(p.risk), summary: p.summary)
+        return new Finding(id: p.id, scanner: p.scanner, ip: p.ip, port: p.port, portStatus: p.status,
+                protocol: p.protocol, hostName: p.hostName, service: p.service, plugin: p.plugin, baseCVSS: p.cvss,
+                severity: getSeverity(p.risk), summary: p.summary, description: p.description, reference: p.reference,pluginOutput: p.pluginOutput,
+        solution: p.solution, cvssVector: p.cvssVector)
     }
 
-    Finding.Severity getRisk(String risk) {
+    Finding.Severity getSeverity(String risk) {
         return Finding.Severity.valueOf(risk)
     }
+
     void saveFindings(List<Finding> list) {
         log.info String.format("Saving %s findings", list.size())
         if (list.size() > 0) {
@@ -125,7 +128,7 @@ class DbHandlerImpl implements DbHandler {
         StringBuilder sb = new StringBuilder(base)
         if (where != null && !"".equalsIgnoreCase(where)) {
             sb.append(' WHERE ')
-            sb.append(where.replace(' == ', ' = '))
+            sb.append(where.replace(' == ', ' = ').replace(' && ',' AND ').replace(' || ',' OR '))
         }
         return sb.toString()
     }
@@ -135,7 +138,7 @@ class DbHandlerImpl implements DbHandler {
         getSql().execute('TRUNCATE TABLE finding')
         try {
             getSql().execute('SHUTDOWN')
-        }catch(JdbcSQLException e) {
+        } catch (JdbcSQLException e) {
             //
         } finally {
             File dir = new File(Config.getInstance().getProperty(Config.DATA_DIR))

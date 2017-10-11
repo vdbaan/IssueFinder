@@ -37,6 +37,7 @@ class SettingsPresenter {
         settingsView.setIsMedium((Boolean) preload_filter.get(Finding.Severity.MEDIUM))
         settingsView.setIsLow((Boolean) preload_filter.get(Finding.Severity.LOW))
         settingsView.setIsInfo((Boolean) preload_filter.get(Finding.Severity.INFO))
+        settingsView.setColouredRow(Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean)
         settingsView.removeListItems()
         List list = (List) Config.getInstance().getProperty(Config.FILTERS)
         list.each {
@@ -75,6 +76,7 @@ class SettingsPresenter {
         loadfilter.put(Finding.Severity.INFO, settingsView.getIsInfo())
         Config.getInstance().setProperty(Config.PRELOAD_FILTER, loadfilter)
 
+        Config.getInstance().setProperty(Config.COLOURED_ROWS,settingsView.isColouredRow())
         Config.getInstance().setProperty(Config.MAX_ROWS, settingsView.getMaxRows() as Integer)
         Config.getInstance().setProperty(Config.BATCH_SIZE, settingsView.getBatchSize() as Integer)
 

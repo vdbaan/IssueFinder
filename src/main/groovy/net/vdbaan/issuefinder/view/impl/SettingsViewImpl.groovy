@@ -51,6 +51,8 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
     @FXML
     TextField copyString
 
+    @FXML
+    CheckBox coloredRows
 
 
     @FXML
@@ -177,6 +179,16 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
 
     void setCopyString(String copyString) {
         this.copyString.text = copyString
+    }
+
+    @Override
+    boolean isColouredRow() {
+        return coloredRows.selected
+    }
+
+    @Override
+    void setColouredRow(boolean coloured) {
+        coloredRows.selected = coloured
     }
 }
 

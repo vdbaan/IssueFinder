@@ -20,6 +20,7 @@ abstract class Config {
     final static String DATA_SOURCE = 'datasource'
     final static String DB_NAME = 'databaseName'
     final static String DATA_DIR = 'dataDirectory'
+    final static String COLOURED_ROWS = 'colouredRows'
 
     static Config getInstance() {
 
@@ -59,13 +60,14 @@ class ConfigImpl extends Config {
     ConfigObject configObject = new ConfigObject()
 
     ConfigImpl() {
-        Config.CONFIGFILE_NAME = Config.CONFIGFILE_NAME.replace('VERSION',getApplicationVersionString())
+        Config.CONFIGFILE_NAME = Config.CONFIGFILE_NAME.replace('VERSION', getApplicationVersionString())
         configObject.put(Config.MAX_ROWS, 5000)
         configObject.put(Config.FILTERS, ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE'])
         configObject.put(Config.PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
                                                  (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
         configObject.put(Config.BATCH_SIZE, 100)
         configObject.put(Config.IP_PORT_FORMAT_STRING, 'IP:PORT')
+        configObject.put(Config.COLOURED_ROWS, true)
         configObject.put(Config.DATA_DIR, System.getProperty("user.home") + '/.issuefinder/data/')
         configObject.put(Config.DB_NAME, 'issueDB')
 
@@ -113,7 +115,7 @@ class ConfigImpl extends Config {
     void loadConfig() {
         File configFile = new File(getUserDataDirectory(), Config.CONFIGFILE_NAME)
         if (configFile.exists()) {
-            configObject = new ConfigSlurper().parse(configFile.text)
+            ConfigObject object = new ConfigSlurper().parse(configFile.text)
             Map<String, Boolean> preload_filter = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
             Map<Finding.Severity, Boolean> parsed = new HashMap<>()
             parsed.put(Finding.Severity.CRITICAL, preload_filter.get(Finding.Severity.CRITICAL.toString()))
@@ -121,7 +123,14 @@ class ConfigImpl extends Config {
             parsed.put(Finding.Severity.MEDIUM, preload_filter.get(Finding.Severity.MEDIUM.toString()))
             parsed.put(Finding.Severity.LOW, preload_filter.get(Finding.Severity.LOW.toString()))
             parsed.put(Finding.Severity.INFO, preload_filter.get(Finding.Severity.INFO.toString()))
-            configObject.put(Config.PRELOAD_FILTER, parsed)
+            object.put(Config.PRELOAD_FILTER, parsed)
+            merge(object)
+        }
+    }
+
+    private merge(ConfigObject config) {
+        configObject.keySet().each { key ->
+            if (config.containsKey(key)) configObject.replace(key, config.get(key))
         }
     }
 

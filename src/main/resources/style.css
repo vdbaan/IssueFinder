@@ -30,6 +30,31 @@ selected {
 -fx-text-background-color: yellow ;
 }
 
+.CRITICALROW {
+-fx-background-color: #fec7c6;
+}
+.CRITICALROW:odd {
+-fx-background-color: #EFB8B7;
+}
+.HIGHROW {
+-fx-background-color: #ffdebd;
+}
+.HIGHROW:odd {
+-fx-background-color: #F0CFAE;
+}
+.MEDIUMROW {
+-fx-background-color: #ffffa3;
+}
+.MEDIUMROW:odd{
+-fx-background-color: #F0F094;
+}
+.LOWROW {
+-fx-background-color: #d5eaff;
+}
+.LOWROW:odd{
+-fx-background-color: #C6DBF0;
+}
+
 /*
 .INFO {
 -fx-background-color: #ffffff;

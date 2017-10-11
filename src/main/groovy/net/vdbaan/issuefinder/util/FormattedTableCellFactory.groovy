@@ -19,7 +19,9 @@ package net.vdbaan.issuefinder.util
 import groovy.transform.CompileStatic
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
+import javafx.scene.control.TableRow
 import javafx.util.Callback
+import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Finding
 
 @CompileStatic
@@ -27,17 +29,24 @@ class FormattedTableCellFactory<S, T> implements Callback<TableColumn<Finding, F
     @Override
     TableCell<S, T> call(TableColumn<Finding, Finding.Severity> param) {
 
-        List<String> styles = ['cell', 'indexed-cell', 'table-cell', 'table-column']
+        List<String> cellStyles = ['cell', 'indexed-cell', 'table-cell', 'table-column']
+        List<String> rowStyles = ['cell', 'indexed-cell', 'table-row-cell']
         TableCell result = new TableCell<Finding, Finding.Severity>() {
 
             @Override
             protected void updateItem(Finding.Severity item, boolean empty) {
                 super.updateItem(item, empty)
                 getStyleClass().clear()
-                getStyleClass().addAll(styles)
-                if(item != null) {
+                getStyleClass().addAll(cellStyles)
+                TableRow<Finding> row = getTableRow()
+                row.getStyleClass().clear()
+                row.getStyleClass().addAll(rowStyles)
+                if (item != null) {
                     setText(item.toString())
-                    getStyleClass().add(item.toString())
+                    if (Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean)
+                        row.getStyleClass().add(item.toString() + 'ROW')
+                    else
+                        getStyleClass().add(item.toString())
                 }
             }
         }

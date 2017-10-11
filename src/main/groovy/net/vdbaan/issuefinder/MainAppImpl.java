@@ -20,6 +20,7 @@ package net.vdbaan.issuefinder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -62,6 +63,8 @@ public class MainAppImpl extends Application implements MainApp {
 
         mainView = fxmlLoader.getController();
         mainView.setMainApp(this);
+
+        primaryStage.getIcons().add(new Image(MainAppImpl.class.getResourceAsStream("/539822430.jpg")));
 
         primaryStage.show();
     }

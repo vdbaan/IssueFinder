@@ -188,6 +188,26 @@ class MainViewMock extends AbstractMainView implements MainView {
     }
 
     @Override
+    void filterOnScanner(ActionEvent event) {
+
+    }
+
+    @Override
+    void filterOnPortStatus(ActionEvent event) {
+
+    }
+
+    @Override
+    void filterOnProtocol(ActionEvent event) {
+
+    }
+
+    @Override
+    void filterOnRisk(ActionEvent event) {
+
+    }
+
+    @Override
     void filterTable(ActionEvent event) {
 
     }

@@ -35,6 +35,7 @@ column
     | EXPLOITABLE
     | DESCRIPTION
     | PLUGIN
+    | CVSS
     | HOSTNAME
     ;
 
@@ -70,6 +71,7 @@ EXPLOITABLE: E X P L O I T A B L E;
 DESCRIPTION: D E S C R I P T I O N;
 PLUGIN: P L U G I N;
 HOSTNAME: H O S T N A M E;
+CVSS: C V S S;
 
 IN: I N;
 LIKE: L I K E;

@@ -48,6 +48,10 @@ class NessusParser extends Parser {
                 String pluginName = item.@pluginName
                 String service = item.@svc_name
                 String risk = item.@severity
+
+                String cvssval = item.cvss_base_score ?: '0.0'
+                if (cvssval == '') cvssval = '0.0'
+                Float cvss = Float.parseFloat(cvssval)
                 Finding.Severity severity = Finding.Severity.UNKNOWN
                 switch (risk.toInteger()) {
                     case 0: severity = Finding.Severity.INFO
@@ -62,29 +66,36 @@ class NessusParser extends Parser {
                         break
                 }
                 StringBuilder summary = new StringBuilder()
-                summary << item.synopsis
-                summary << "Plugin output:\n$item.plugin_output\n"
-                summary << "Description          : $item.description\n"
-                summary << "Solution             : $item.solution\n"
+                summary << "$item.synopsis\n"
+//                summary << "Plugin output:\n$item.plugin_output\n"
+//                summary << "Description          : $item.description\n"
+//                summary << "Solution             : $item.solution\n"
                 summary << "RiskFactor           : $item.risk_factor\n"
                 summary << "Exploit available    : $item.exploit_available\n"
                 summary << "Ease of exploit      : $item.exploitability_ease\n"
                 summary << "Patch available since: $item.patch_publication_date\n"
-                summary << "CVSS base vector     : $item.cvss_vector\n"
-                summary << "CVSS base score      : $item.cvss_base_score\n"
+//                summary << "CVSS base vector     : $item.cvss_vector\n"
+//                summary << "CVSS base score      : $item.cvss_base_score\n"
                 summary << "CVSS temporal vector : $item.cvss_temporal_vector\n"
                 summary << "CVSS temporal score  : $item.cvss_temporal_score\n"
                 summary << "See also:\n$item.see_also\n"
 
-                summary << "CVE references  : ${(item.cve.collect { it }).join(", ")}\n"
-                summary << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
-                summary << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
+                String description = item.description
+                String solution = item.solution
+                String pluginOutput = item.plugin_output
+                String cvssVector = item.cvss_vector
+
+                StringBuilder references = new StringBuilder()
+                references << "CVE references  : ${(item.cve.collect { it }).join(", ")}\n"
+                references << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
+                references << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
 
                 if (allowed(severity))
-                    result << new Finding([scanner    : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
-                                           service    : service, plugin: plugin + ":" + pluginName,
-                                           exploitable: item.exploit_available == 'true', baseCVSS: item.cvss_base_score ?: '0.0',
-                                           severity   : severity, summary: summary.toString()])
+                    result << new Finding([scanner     : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
+                                           service     : service, plugin: plugin + ":" + pluginName,
+                                           exploitable : item.exploit_available == 'true', baseCVSS: cvss, cvssVector: cvssVector,
+                                           severity    : severity, summary: summary.toString(), description: description, reference: references,
+                                           pluginOutput: pluginOutput, solution: solution])
             }
         }
         return result

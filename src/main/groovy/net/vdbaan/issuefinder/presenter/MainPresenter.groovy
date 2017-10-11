@@ -86,6 +86,11 @@ class MainPresenter {
         masterView.setFilterPluginAction(this.&filterPluginAction)
         masterView.setFilterPortAction(this.&filterPortAction)
         masterView.setFilterServiceAction(this.&filterServiceAction)
+        masterView.setFilterOnScannerAction(this.&filterScannerAction)
+        masterView.setFilterOnPortStatusAction(this.&filterPortStatusAction)
+        masterView.setFilterOnProtocolAction(this.&filterProtocolAction)
+        masterView.setFilterOnRiskAction(this.&filterRiskAction)
+
         masterView.setModifyAction(this.&modifyAction)
 
         masterView.setCopySelectedIpsAction(this.&copySelectedIpAction)
@@ -139,6 +144,10 @@ class MainPresenter {
         mainApp.showSettings()
         masterView.getFilterTextItems().removeAll(masterView.getFilterTextItems())
         masterView.setFilterTextItems((List<String>) Config.getInstance().getProperty(Config.FILTERS))
+        filterTableAction(e)
+//        List<Finding> tmp = (List<Finding>)masterData.clone()
+//        masterData.removeAll(masterData)
+//        masterData.addAll(tmp)
     }
 
     void closeAction(ActionEvent e) {
@@ -169,20 +178,41 @@ class MainPresenter {
     }
 
     void filterIpAction(ActionEvent e) {
-        masterView.setFilterText(String.format("IP == '%s'", masterView.getSelectedFinding().ip))
+        setFilterTextValue(String.format("IP == '%s'", masterView.getSelectedFinding().ip))
     }
 
     void filterPluginAction(ActionEvent e) {
-        masterView.setFilterText(String.format("PLUGIN == '%s'", masterView.getSelectedFinding().plugin))
-
+        setFilterTextValue(String.format("PLUGIN == '%s'", masterView.getSelectedFinding().plugin))
     }
 
     void filterPortAction(ActionEvent e) {
-        masterView.setFilterText(String.format("PORT == '%s'", masterView.getSelectedFinding().port))
+        setFilterTextValue(String.format("PORT == '%s'", masterView.getSelectedFinding().port))
     }
 
     void filterServiceAction(ActionEvent e) {
-        masterView.setFilterText(String.format("SERVICE == '%s'", masterView.getSelectedFinding().service))
+        setFilterTextValue(String.format("SERVICE == '%s'", masterView.getSelectedFinding().service))
+    }
+
+    void filterScannerAction(ActionEvent e) {
+        setFilterTextValue(String.format("SCANNER == '%s'", masterView.getSelectedFinding().scanner))
+    }
+
+    void filterPortStatusAction(ActionEvent e) {
+        setFilterTextValue(String.format("STATUS == '%s'", masterView.getSelectedFinding().portStatus))
+    }
+
+    void filterProtocolAction(ActionEvent e) {
+        setFilterTextValue(String.format("PROTOCOL == '%s'", masterView.getSelectedFinding().protocol))
+    }
+
+    void filterRiskAction(ActionEvent e) {
+        setFilterTextValue(String.format("RISK == '%s'", masterView.getSelectedFinding().risk))
+    }
+
+    void setFilterTextValue(String value) {
+        masterView.setFilterText(null)
+        resetFilterTextStyle(null)
+        masterView.setFilterText(value)
     }
 
     void modifyAction(ActionEvent e) {
@@ -271,6 +301,9 @@ class MainPresenter {
             } catch (FindingPredicateParserRuntimeException ex) {
                 masterView.getFilterTextStyleClass().add("text-input-wrong")
             }
+        } else {
+            masterData.removeAll(masterData)
+            masterData.addAll(db.getAllFinding(null))
         }
     }
 

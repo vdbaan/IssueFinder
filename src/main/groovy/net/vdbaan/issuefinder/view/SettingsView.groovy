@@ -89,4 +89,8 @@ interface SettingsView extends BaseView {
     String getCopyString()
 
     void setCopyString(String copyString)
+
+    boolean isColouredRow()
+
+    void setColouredRow(boolean coloured)
 }
