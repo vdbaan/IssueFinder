@@ -40,9 +40,9 @@ import java.util.Map;
 
 
 public class MainAppImpl extends Application implements MainApp {
-    Stage primaryStage;
+    private Stage primaryStage;
 
-    MainView mainView;
+    private MainView mainView;
 
     public static void startup(String[] args) {
         launch(args);

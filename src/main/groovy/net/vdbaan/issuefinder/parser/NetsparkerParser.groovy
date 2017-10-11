@@ -18,9 +18,12 @@
 
 package net.vdbaan.issuefinder.parser
 
+import groovy.util.logging.Log
 import net.vdbaan.issuefinder.model.Finding
 
+import java.util.logging.Level
 
+@Log
 class NetsparkerParser extends Parser {
     static String IDENTIFIER = "netsparker"
     static String scanner = "Netsparker"
@@ -68,6 +71,7 @@ class NetsparkerParser extends Parser {
         try {
             result = Finding.Severity.valueOf(Finding.Severity, risk.toUpperCase())
         } catch (IllegalArgumentException e) {
+            log.log(Level.FINE,'Got an exception',e)
             result = Finding.Severity.INFO
         }
         return result

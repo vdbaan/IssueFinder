@@ -67,7 +67,7 @@ class ProgressPresenter {
                     log.fine 'saved issues'
                     done += 1
                     progress.set((Double) (done / total))
-                    finished.set(progress == 1)
+                    finished.set(progress.get() == 1)
                     log.fine String.format('done: %d, total: %d', done, total)
                     if (done == total) {
                         masterView.setStatusLabel('Done importing')

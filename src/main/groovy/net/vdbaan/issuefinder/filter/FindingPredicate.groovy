@@ -17,11 +17,14 @@
 package net.vdbaan.issuefinder.filter
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log
 import net.vdbaan.issuefinder.model.Finding
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
+import java.util.logging.Level
 
+@Log
 @CompileStatic
 enum ColumnName {
     SCANNER("SCANNER"), IP("IP"), PORT("PORT"), SERVICE("SERVICE"), RISK("RISK"),
@@ -45,7 +48,7 @@ enum ColumnName {
 
     static {
         Map<String, ColumnName> map = new ConcurrentHashMap<>()
-        for (ColumnName instance : ColumnName.values()) {
+        for (ColumnName instance : values()) {
             map.put(instance.getValue(), instance)
         }
         ENUM_MAP = Collections.unmodifiableMap(map)
@@ -67,11 +70,12 @@ enum ColumnName {
             case STATUS: return f.portStatus
             case PROTOCOL: return f.protocol
             case HOSTNAME: return f.hostName
+            default: return null
         }
     }
 }
 
-
+@Log
 class FindingPredicate implements Predicate<Finding> {
     enum LogicalOperation {
         LT("<"), LE("<="), GT(">"), GE(">="), EQ("=="), NE("!="), LIKE("LIKE"), APROX("~="), NOT("!"),
@@ -90,7 +94,7 @@ class FindingPredicate implements Predicate<Finding> {
 
         static {
             Map<String, LogicalOperation> map = new ConcurrentHashMap<>()
-            for (LogicalOperation instance : LogicalOperation.values()) {
+            for (LogicalOperation instance : values()) {
                 map.put(instance.getRepresentation(), instance)
             }
             ENUM_MAP = Collections.unmodifiableMap(map)
@@ -151,26 +155,29 @@ class FindingPredicate implements Predicate<Finding> {
     }
 
     private int compare(Object lValue, Object rValue) {
-        if(isInteger(lValue)) {
+        if (isInteger(lValue)) {
             return Integer.compare(lValue as Integer, rValue as Integer)
         }
-        switch(lValue.class) {
-            case Finding.Severity: return ((Finding.Severity)lValue).compareTo((Finding.Severity)rValue)
+        switch (lValue.class) {
+            case Finding.Severity: return ((Finding.Severity) lValue).compareTo((Finding.Severity) rValue)
             default: return ((String) lValue).compareTo(rValue)
         }
     }
 
     private boolean isInteger(String value) {
         try {
-            Integer.parseInt(value);
-        } catch(NumberFormatException e) {
-            return false;
-        } catch(NullPointerException e) {
-            return false;
+            Integer.parseInt(value)
+        } catch (NumberFormatException e) {
+            log.log(Level.FINE, 'Got an exception', e)
+            return false
+        } catch (NullPointerException e) {
+            log.log(Level.FINE, 'Got an exception', e)
+            return false
         }
         // only got here if we didn't return false
-        return true;
+        return true
     }
+
     boolean between(Object column, Object value) {
         List list = (List) value
         Object low = list.get(0)
@@ -180,26 +187,57 @@ class FindingPredicate implements Predicate<Finding> {
     }
 
     String toString() {
-        if (left instanceof ColumnName) {
-            if (operation == LogicalOperation.NOT) {
-                return "!" + ((ColumnName) left)
-            } else {
-                switch (left) {
-                    case {it instanceof ColumnName && it == ColumnName.RISK}:
-                        return String.format("%s %s '%s'", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right.toString().toUpperCase())
-                    case {it instanceof ColumnName && it == ColumnName.CVSS}:
-                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right)
-                    default:
-                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
-                }
-            }
-        } else if (left instanceof FindingPredicate) {
-            if (operation == LogicalOperation.NOT) {
-                return "!(" + left.toString() + ")"
-            } else {
-                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
-            }
+        if (operation == LogicalOperation.NOT) {
+            return "!" + ((left instanceof FindingPredicate) ? '(' + left + ')' : left)
         }
+        if (left instanceof FindingPredicate && right instanceof FindingPredicate) {
+            return String.format("(%s) %s (%s)", left, operation.representation, right)
+        }
+        String rightval
+        switch (operation) {
+            case LogicalOperation.IN:
+            case LogicalOperation.BETWEEN:
+                rightval = String.format("(%s)",((List<String>)right)*.trim().join(", "))
+                break
+            default:
+                rightval = right.toString()
+        }
+        switch (left) {
+            case { it instanceof ColumnName && it == ColumnName.RISK }:
+                if(right instanceof List) {
+                    rightval = String.format("('%s')",((List<String>)right)*.trim().join("', '")).toUpperCase()
+                }
+                else
+                rightval = String.format("'%s'", rightval.toUpperCase())
+                break
+            case { it instanceof ColumnName && it == ColumnName.CVSS }:
+                break
+            default:
+                rightval = String.format("'%s'", rightval)
+        }
+        return String.format("%s %s %s", left, operation.representation,rightval)
+//        if (left instanceof ColumnName) {
+//            if (operation == LogicalOperation.NOT) {
+//                return "!" + ((ColumnName) left)
+//            } else {
+//                switch (left) {
+//                    case {it instanceof ColumnName && it == ColumnName.RISK}:
+//                        return String.format("%s %s '%s'", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right.toString().toUpperCase())
+//                    case {it instanceof ColumnName && it == ColumnName.CVSS}:
+//                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right)
+//                    default:
+//                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
+//                }
+//            }
+//        } else if (left instanceof FindingPredicate) {
+//            if (operation == LogicalOperation.NOT) {
+//                return "!(" + left.toString() + ")"
+//            } else {
+//                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
+//            }
+//        } else {
+//            return ""
+//        }
 
     }
 }

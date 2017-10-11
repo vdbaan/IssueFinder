@@ -17,9 +17,12 @@
 
 package net.vdbaan.issuefinder.parser
 
+import groovy.util.logging.Log
 import net.vdbaan.issuefinder.model.Finding
 
+import java.util.logging.Level
 
+@Log
 class TestSSLParser extends Parser {
     static String scanner = "TestSSL"
 
@@ -39,6 +42,7 @@ class TestSSLParser extends Parser {
             }
             return false
         } catch (Exception e) {
+            log.log(Level.FINE,'Got an exception',e)
             return false
         }
     }
@@ -80,7 +84,7 @@ class TestSSLParser extends Parser {
             case "low": return Finding.Severity.LOW
             case "ok":
             case "info": return Finding.Severity.INFO
-
+            default: return Finding.Severity.UNKNOWN
         }
     }
 

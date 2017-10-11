@@ -27,14 +27,14 @@ class PredicateParserTest {
 
     @Test
     void testParseComplex() {
-        String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE http)) || (RISK BETWEEN (LOW,CRITICAL)))"
+        String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE http)) || (RISK BETWEEN (low,  critical)))"
         FindingPredicateParser fpp = new FindingPredicateParser()
         FindingPredicate f = fpp.parse(txt)
-        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((!EXPLOITABLE) || ((PORT LIKE '443') && (!(SERVICE LIKE 'http')))) || (RISK BETWEEN '[LOW, CRITICAL]'))", f.toString())
-        txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE http)) || (RISK IN [LOW,CRITICAL,HIGH]))"
+        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((!EXPLOITABLE) || ((PORT LIKE '443') && (!(SERVICE LIKE 'http')))) || (RISK BETWEEN ('LOW', 'CRITICAL')))", f.toString())
+        txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE http)) || (RISK IN (LOW,CRITICAL,HIGH)))"
         fpp = new FindingPredicateParser()
         f = fpp.parse(txt)
-        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((!EXPLOITABLE) || ((PORT LIKE '443') && (!(SERVICE LIKE 'http')))) || (RISK IN '[LOW, CRITICAL, HIGH]'))", f.toString())
+        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((!EXPLOITABLE) || ((PORT LIKE '443') && (!(SERVICE LIKE 'http')))) || (RISK IN ('LOW', 'CRITICAL', 'HIGH')))", f.toString())
 
     }
 

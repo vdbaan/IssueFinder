@@ -17,8 +17,11 @@
 
 package net.vdbaan.issuefinder.parser
 
+import groovy.util.logging.Log
 import net.vdbaan.issuefinder.model.Finding
 import org.junit.Test
+
+import java.util.logging.Level
 
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
@@ -71,6 +74,7 @@ class NmapParserTest {
     }
 }
 
+@Log
 class TestSSLParserTest {
 
     @Test
@@ -81,7 +85,7 @@ class TestSSLParserTest {
 //            List<Finding> result = p.parse()
 //            assertTrue(result.isEmpty())
         } catch(Exception e) {
-
+            log.log(Level.FINE,'Got an exception',e)
         }
     }
 

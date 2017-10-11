@@ -42,43 +42,43 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
 
     @FXML
     // ResourceBundle that was given to the FXMLLoader
-    private ResourceBundle resources;
+    private ResourceBundle resources
 
     @FXML
     // URL location of the FXML file that was given to the FXMLLoader
-    private URL location;
+    private URL location
 
     @FXML
     // fx:id="filterText"
-    private ComboBox<String> filterText; // Value injected by FXMLLoader
+    private ComboBox<String> filterText // Value injected by FXMLLoader
 
     @FXML
     // fx:id="filterButton"
-    private Button filterButton; // Value injected by FXMLLoader
+    private Button filterButton // Value injected by FXMLLoader
 
     @FXML
     // fx:id="clearButton"
-    private Button clearButton; // Value injected by FXMLLoader
+    private Button clearButton // Value injected by FXMLLoader
 
     @FXML
     // fx:id="mainTable"
-    private TableView<?> mainTable; // Value injected by FXMLLoader
+    private TableView<?> mainTable // Value injected by FXMLLoader
 
     @FXML
     // fx:id="textArea"
-    private WebView textArea; // Value injected by FXMLLoader
+    private WebView textArea // Value injected by FXMLLoader
 
     @FXML
     // fx:id="statusLabel"
-    private Label statusLabel; // Value injected by FXMLLoader
+    private Label statusLabel // Value injected by FXMLLoader
 
     @FXML
     // fx:id="rowInfoLabel"
-    private Label rowInfoLabel; // Value injected by FXMLLoader
+    private Label rowInfoLabel // Value injected by FXMLLoader
 
     @FXML
     // fx:id="ipInfoLabel"
-    private Label ipInfoLabel; // Value injected by FXMLLoader
+    private Label ipInfoLabel // Value injected by FXMLLoader
 
     @FXML
     // fx:id="webScroll

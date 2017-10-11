@@ -37,6 +37,8 @@ import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.util.Container
 import net.vdbaan.issuefinder.view.MainView
 
+import java.util.logging.Level
+
 @Log
 @CompileStatic
 class MainPresenter {
@@ -277,7 +279,7 @@ class MainPresenter {
 
         String val = masterView.getFilterTextValue() ?: ''
         if (!val?.equals('')) {
-            FindingPredicate fp = null
+            FindingPredicate fp
             try {
                 fp = findingPredicateParser.parse(val)
                 if (fp != null) {
@@ -296,9 +298,11 @@ class MainPresenter {
                     clearAction(null)
                 }
             } catch (StringIndexOutOfBoundsException ex) {
+                log.log(Level.FINE,'Got an exception',ex)
                 masterView.getFilterTextStyleClass().add("text-input-wrong")
 
             } catch (FindingPredicateParserRuntimeException ex) {
+                log.log(Level.FINE,'Got an exception',ex)
                 masterView.getFilterTextStyleClass().add("text-input-wrong")
             }
         } else {

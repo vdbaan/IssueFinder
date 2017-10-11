@@ -48,7 +48,7 @@ abstract class Parser {
     }
 
     static Parser getParser(file) {
-        preload = Config.getInstance().getProperty(Config.PRELOAD_FILTER)
+        preload = (Map)Config.getInstance().getProperty(Config.PRELOAD_FILTER)
         try {
             def parser = parserPool.borrowObject()
             def content = new XmlSlurper(parser).parseText(file)
@@ -79,10 +79,9 @@ abstract class Parser {
 
     static boolean identify(content) { throw RuntimeException('Need to implement this') }
 
-    static Map preload = Config.getInstance().getProperty(Config.PRELOAD_FILTER)
+    static Map preload = (Map)Config.getInstance().getProperty(Config.PRELOAD_FILTER)
 
     boolean allowed(Finding.Severity severity) {
-        boolean result = preload.get(severity)
         return preload.get(severity)
     }
 }

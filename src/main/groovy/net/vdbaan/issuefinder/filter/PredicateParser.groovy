@@ -17,9 +17,13 @@
 package net.vdbaan.issuefinder.filter
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log
 import org.antlr.v4.runtime.*
+import org.antlr.v4.runtime.atn.ATNSimulator
 import org.antlr.v4.runtime.atn.PredictionMode
 import org.antlr.v4.runtime.tree.ParseTree
+
+import java.util.logging.Level
 
 @CompileStatic
 class FindingPredicateParserRuntimeException extends RuntimeException {
@@ -28,6 +32,7 @@ class FindingPredicateParserRuntimeException extends RuntimeException {
     }
 }
 
+@Log
 @CompileStatic
 class FindingPredicateParser {
     FindingPredicate parse(String text) {
@@ -37,7 +42,7 @@ class FindingPredicateParser {
         parser.removeErrorListeners()
         parser.addErrorListener(new BaseErrorListener() {
             @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+            void syntaxError(Recognizer<?, ? extends ATNSimulator> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
                 super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
                 throw new FindingPredicateParserRuntimeException("error")
             }
@@ -49,6 +54,7 @@ class FindingPredicateParser {
             FindingPredicate fp = (FindingPredicate) v.visit(tree)
             return fp
         } catch (FindingPredicateParserRuntimeException r) {
+            log.log(Level.FINE,'Got an exception',r)
             return null
         }
     }
@@ -84,7 +90,7 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
 
     @Override
     Object visitRange(PredicateParser.RangeContext ctx) { // column rangeOperator RANGE
-        List list = buildList(ctx.RANGE().text)
+        List list = buildList(ctx.GROUP().text)
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.rangeOperator()), list)
     }
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class RetentionFileChooser {
     private static FileChooser instance = null;
-    private static SimpleObjectProperty<File> lastKnownDirectoryProperty = new SimpleObjectProperty<>();
+    final private static SimpleObjectProperty<File> lastKnownDirectoryProperty = new SimpleObjectProperty<>();
 
     public RetentionFileChooser(){ }
 
@@ -50,7 +50,7 @@ public class RetentionFileChooser {
         }
         return result;
     }
-    public static File showOpenDialog(Window ownerWindow){
+    private static File showOpenDialog(Window ownerWindow){
         File chosenFile = getInstance().showOpenDialog(ownerWindow);
         if(chosenFile != null){
             //Set the property to the directory of the chosenFile so the fileChooser will open here next
@@ -63,7 +63,7 @@ public class RetentionFileChooser {
         return showSaveDialog(null);
     }
 
-    public static File showSaveDialog(Window ownerWindow){
+    private static File showSaveDialog(Window ownerWindow){
         File chosenFile = getInstance().showSaveDialog(ownerWindow);
         if(chosenFile != null){
             //Set the property to the directory of the chosenFile so the fileChooser will open here next

@@ -26,12 +26,11 @@ IN=25
 LIKE=26
 BETWEEN=27
 GROUP=28
-RANGE=29
-STRING=30
-SQUOTE=31
-DQUOTE=32
-CHAR=33
-WS=34
+STRING=29
+SQUOTE=30
+DQUOTE=31
+CHAR=32
+WS=33
 '=='=1
 '!='=2
 '<'=3
@@ -42,5 +41,5 @@ WS=34
 '('=8
 ')'=9
 '!'=12
-'\''=31
-'"'=32
+'\''=30
+'"'=31

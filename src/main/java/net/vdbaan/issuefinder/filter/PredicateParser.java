@@ -2,14 +2,17 @@
 
 package net.vdbaan.issuefinder.filter;
 
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class PredicateParser extends Parser {
@@ -22,8 +25,8 @@ public class PredicateParser extends Parser {
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, LPAREN=8, RPAREN=9, 
 		AND=10, OR=11, NOT=12, IP=13, SCANNER=14, PORT=15, STATUS=16, PROTOCOL=17, 
 		SERVICE=18, RISK=19, EXPLOITABLE=20, DESCRIPTION=21, PLUGIN=22, HOSTNAME=23, 
-		CVSS=24, IN=25, LIKE=26, BETWEEN=27, GROUP=28, RANGE=29, STRING=30, SQUOTE=31, 
-		DQUOTE=32, CHAR=33, WS=34;
+		CVSS=24, IN=25, LIKE=26, BETWEEN=27, GROUP=28, STRING=29, SQUOTE=30, DQUOTE=31, 
+		CHAR=32, WS=33;
 	public static final int
 		RULE_expr = 0, RULE_column = 1, RULE_groupOperator = 2, RULE_rangeOperator = 3, 
 		RULE_operator = 4;
@@ -34,14 +37,13 @@ public class PredicateParser extends Parser {
 	private static final String[] _LITERAL_NAMES = {
 		null, "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'~='", "'('", "')'", 
 		null, null, "'!'", null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, "'''", "'\"'"
+		null, null, null, null, null, null, null, null, "'''", "'\"'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, "LPAREN", "RPAREN", "AND", 
 		"OR", "NOT", "IP", "SCANNER", "PORT", "STATUS", "PROTOCOL", "SERVICE", 
 		"RISK", "EXPLOITABLE", "DESCRIPTION", "PLUGIN", "HOSTNAME", "CVSS", "IN", 
-		"LIKE", "BETWEEN", "GROUP", "RANGE", "STRING", "SQUOTE", "DQUOTE", "CHAR", 
-		"WS"
+		"LIKE", "BETWEEN", "GROUP", "STRING", "SQUOTE", "DQUOTE", "CHAR", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -151,7 +153,7 @@ public class PredicateParser extends Parser {
 		public RangeOperatorContext rangeOperator() {
 			return getRuleContext(RangeOperatorContext.class,0);
 		}
-		public TerminalNode RANGE() { return getToken(PredicateParser.RANGE, 0); }
+		public TerminalNode GROUP() { return getToken(PredicateParser.GROUP, 0); }
 		public RangeContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -343,7 +345,7 @@ public class PredicateParser extends Parser {
 				setState(22);
 				rangeOperator();
 				setState(23);
-				match(RANGE);
+				match(GROUP);
 				}
 				break;
 			case 5:
@@ -640,20 +642,20 @@ public class PredicateParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3$\66\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\66\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
 		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2!\n\2\3\2\3\2\3\2\3\2\3\2\3\2"+
 		"\7\2)\n\2\f\2\16\2,\13\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\3\2\7\2"+
 		"\4\6\b\n\2\4\3\2\17\32\4\2\3\t\34\34\2\67\2 \3\2\2\2\4-\3\2\2\2\6/\3\2"+
 		"\2\2\b\61\3\2\2\2\n\63\3\2\2\2\f\r\b\2\1\2\r\16\7\16\2\2\16!\5\2\2\b\17"+
 		"\20\7\n\2\2\20\21\5\2\2\2\21\22\7\13\2\2\22!\3\2\2\2\23\24\5\4\3\2\24"+
-		"\25\5\n\6\2\25\26\7 \2\2\26!\3\2\2\2\27\30\5\4\3\2\30\31\5\b\5\2\31\32"+
-		"\7\37\2\2\32!\3\2\2\2\33\34\5\4\3\2\34\35\5\6\4\2\35\36\7\36\2\2\36!\3"+
-		"\2\2\2\37!\7\26\2\2 \f\3\2\2\2 \17\3\2\2\2 \23\3\2\2\2 \27\3\2\2\2 \33"+
-		"\3\2\2\2 \37\3\2\2\2!*\3\2\2\2\"#\f\n\2\2#$\7\f\2\2$)\5\2\2\13%&\f\t\2"+
-		"\2&\'\7\r\2\2\')\5\2\2\n(\"\3\2\2\2(%\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3"+
-		"\2\2\2+\3\3\2\2\2,*\3\2\2\2-.\t\2\2\2.\5\3\2\2\2/\60\7\33\2\2\60\7\3\2"+
-		"\2\2\61\62\7\35\2\2\62\t\3\2\2\2\63\64\t\3\2\2\64\13\3\2\2\2\5 (*";
+		"\25\5\n\6\2\25\26\7\37\2\2\26!\3\2\2\2\27\30\5\4\3\2\30\31\5\b\5\2\31"+
+		"\32\7\36\2\2\32!\3\2\2\2\33\34\5\4\3\2\34\35\5\6\4\2\35\36\7\36\2\2\36"+
+		"!\3\2\2\2\37!\7\26\2\2 \f\3\2\2\2 \17\3\2\2\2 \23\3\2\2\2 \27\3\2\2\2"+
+		" \33\3\2\2\2 \37\3\2\2\2!*\3\2\2\2\"#\f\n\2\2#$\7\f\2\2$)\5\2\2\13%&\f"+
+		"\t\2\2&\'\7\r\2\2\')\5\2\2\n(\"\3\2\2\2(%\3\2\2\2),\3\2\2\2*(\3\2\2\2"+
+		"*+\3\2\2\2+\3\3\2\2\2,*\3\2\2\2-.\t\2\2\2.\5\3\2\2\2/\60\7\33\2\2\60\7"+
+		"\3\2\2\2\61\62\7\35\2\2\62\t\3\2\2\2\63\64\t\3\2\2\64\13\3\2\2\2\5 (*";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

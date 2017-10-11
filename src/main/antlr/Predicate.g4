@@ -35,7 +35,7 @@ expr: expr AND expr              # andExpr
     | NOT expr                   # notExpr
     | LPAREN expr RPAREN         # enclosedExpr
     | column operator STRING     # assign
-    | column rangeOperator RANGE # range
+    | column rangeOperator GROUP # range
     | column groupOperator GROUP # group
     | EXPLOITABLE                # exploitableExpr
     ;
@@ -93,8 +93,8 @@ IN: I N;
 LIKE: L I K E;
 BETWEEN: B E T W E E N;
 
-GROUP: '[' WS? STRING (',' STRING)+ WS? ']';
-RANGE: LPAREN WS? STRING ',' WS* STRING WS? RPAREN;
+GROUP: LPAREN WS* STRING WS* (',' WS* STRING WS*)+ RPAREN;
+
 STRING
     : DQUOTE ~["]+? DQUOTE
     | SQUOTE ~[']+? SQUOTE

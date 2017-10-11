@@ -43,7 +43,7 @@ class IssueFormatter extends SimpleFormatter {
     private static final String format = '%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] (%2$s) %5$s %6$s%n'
     private final Date dat = new Date()
 
-    String format(LogRecord record) {
+    synchronized String format(LogRecord record) {
         dat.setTime(record.getMillis())
         String source = getSource()
         String message = formatMessage(record)

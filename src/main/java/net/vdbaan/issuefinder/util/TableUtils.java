@@ -37,9 +37,9 @@ public class TableUtils {
      * Copy/Paste keyboard event handler.
      * The handler uses the keyEvent's source for the clipboard data. The source must be of type TableView.
      */
-    public static class TableKeyEventHandler implements EventHandler<KeyEvent> {
+    static class TableKeyEventHandler implements EventHandler<KeyEvent> {
 
-        KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
+        final KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
 
         public void handle(final KeyEvent keyEvent) {
 
@@ -63,8 +63,8 @@ public class TableUtils {
 
     }
 
-    public static class TreeTableKeyEventHandler implements EventHandler<KeyEvent> {
-        KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
+    static class TreeTableKeyEventHandler implements EventHandler<KeyEvent> {
+        final KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
 
         public void handle(final KeyEvent keyEvent) {
             if (copyKeyCodeCompination.match(keyEvent)) {
@@ -81,7 +81,7 @@ public class TableUtils {
      *
      * @param table
      */
-    public static void copySelectionToClipboard(TableView<?> table) {
+    private static void copySelectionToClipboard(TableView<?> table) {
 
         StringBuilder clipboardString = new StringBuilder();
 
@@ -133,7 +133,7 @@ public class TableUtils {
         Clipboard.getSystemClipboard().setContent(clipboardContent);
     }
 
-    public static void copySelectionToClipboard(TreeTableView<?> table) {
+    private static void copySelectionToClipboard(TreeTableView<?> table) {
         StringBuilder clipboardString = new StringBuilder();
 
         ObservableList<? extends TreeTablePosition<?, ?>> positionList = table.getSelectionModel().getSelectedCells();
