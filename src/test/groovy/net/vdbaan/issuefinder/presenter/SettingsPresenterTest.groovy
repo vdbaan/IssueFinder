@@ -188,4 +188,14 @@ class SettingsViewMock extends AbstractSettingsView implements SettingsView {
     void setCopyString(String copyString) {
         this.copyString = copyString
     }
+
+    @Override
+    boolean isColouredRow() {
+        return false
+    }
+
+    @Override
+    void setColouredRow(boolean coloured) {
+
+    }
 }

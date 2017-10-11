@@ -49,7 +49,7 @@ exploitable  BOOLEAN
 '''
     static String INSERT = 'INSERT INTO finding (scanner,  ip,  hostName,  port,  status,      protocol,  service,  plugin,  risk,  summary,  description,  reference,  pluginOutput,  solution,  cvss,      cvssVector,  exploitable) ' +
                                       'values (?.scanner,?.ip,?.hostName,?.port,?.portStatus,?.protocol,?.service,?.plugin,?.risk,?.summary,?.description,?.reference,?.pluginOutput,?.solution,?.baseCVSS,?.cvssVector,?.exploitable)'
-    static String UPDATE = 'UPDATE finding SET scanner=?.scanner, ip=?.ip, hostName=?.hostName, port=?.port, portStatus=?.portStatus, protocol=?.protocol, service=?.service, plugin=?.plugin, risk=?.risk, ' +
+    static String UPDATE = 'UPDATE finding SET scanner=?.scanner, ip=?.ip, hostName=?.hostName, port=?.port, status=?.portStatus, protocol=?.protocol, service=?.service, plugin=?.plugin, risk=?.risk, ' +
             'summary=?.summary, description=?.description, reference=?.reference, pluginOutput=?.pluginOutput, solution=?.solution, baseCVSS=?.baseCVSS, cvssVector=?.cvssVector, exploitable=?.exploitable WHERE id=?.id'
     static String SELECT = 'SELECT * FROM finding'
     static String COUNT = 'SELECT COUNT(*) FROM finding'
