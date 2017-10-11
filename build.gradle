@@ -18,10 +18,8 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'distribution'
-//apply plugin: 'jacoco'
 
 def getVersionName = { ->
-    return '2.0.0-BETA'
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -91,7 +89,7 @@ test {
 
 
 /*
-use proguard to remove the following packages:
+find a way to use proguard to remove the following packages:
 - groovy.jmx.*
 - groovy.test.*
 - groovy.swing.*

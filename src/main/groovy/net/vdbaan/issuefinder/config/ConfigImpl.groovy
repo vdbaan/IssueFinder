@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2017 S. van der Baan
+
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.vdbaan.issuefinder.config
 
 import groovy.transform.CompileStatic
@@ -25,13 +41,13 @@ abstract class Config {
     static Config getInstance() {
 
         if (configInstance == null) {
-            this.configInstance = new ConfigImpl()
+            configInstance = new ConfigImpl()
         }
-        return this.configInstance
+        return configInstance
     }
 
     static void setInstance(Config instance) {
-        this.configInstance = instance
+        configInstance = instance
     }
 
     abstract Object getProperty(String key)
@@ -60,18 +76,18 @@ class ConfigImpl extends Config {
     ConfigObject configObject = new ConfigObject()
 
     ConfigImpl() {
-        Config.CONFIGFILE_NAME = Config.CONFIGFILE_NAME.replace('VERSION', getApplicationVersionString())
-        configObject.put(Config.MAX_ROWS, 5000)
-        configObject.put(Config.FILTERS, ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE'])
-        configObject.put(Config.PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
+        CONFIGFILE_NAME = CONFIGFILE_NAME.replace('VERSION', getApplicationVersionString())
+        configObject.put(MAX_ROWS, 5000)
+        configObject.put(FILTERS, ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE'])
+        configObject.put(PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
                                                  (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
-        configObject.put(Config.BATCH_SIZE, 100)
-        configObject.put(Config.IP_PORT_FORMAT_STRING, 'IP:PORT')
-        configObject.put(Config.COLOURED_ROWS, true)
-        configObject.put(Config.DATA_DIR, System.getProperty("user.home") + '/.issuefinder/data/')
-        configObject.put(Config.DB_NAME, 'issueDB')
+        configObject.put(BATCH_SIZE, 100)
+        configObject.put(IP_PORT_FORMAT_STRING, 'IP:PORT')
+        configObject.put(COLOURED_ROWS, true)
+        configObject.put(DATA_DIR, System.getProperty("user.home") + '/.issuefinder/data/')
+        configObject.put(DB_NAME, 'issueDB')
 
-        configObject.put(Config.DATA_SOURCE, [database: 'jdbc:h2:' + configObject.get(Config.DATA_DIR) + configObject.get(Config.DB_NAME), user: 'sa', password: ''])
+        configObject.put(DATA_SOURCE, [database: 'jdbc:h2:' + configObject.get(DATA_DIR) + configObject.get(DB_NAME), user: 'sa', password: ''])
     }
 
     @Override
@@ -100,7 +116,7 @@ class ConfigImpl extends Config {
 
     @Override
     void saveConfig() {
-        File configFile = new File(getUserDataDirectory(), Config.CONFIGFILE_NAME)
+        File configFile = new File(getUserDataDirectory(), CONFIGFILE_NAME)
         if (!configFile.exists()) {
             configFile.parentFile.mkdirs()
         }
@@ -113,17 +129,17 @@ class ConfigImpl extends Config {
 
     @Override
     void loadConfig() {
-        File configFile = new File(getUserDataDirectory(), Config.CONFIGFILE_NAME)
+        File configFile = new File(getUserDataDirectory(), CONFIGFILE_NAME)
         if (configFile.exists()) {
             ConfigObject object = new ConfigSlurper().parse(configFile.text)
-            Map<String, Boolean> preload_filter = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
+            Map<String, Boolean> preload_filter = (Map) getInstance().getProperty(PRELOAD_FILTER)
             Map<Finding.Severity, Boolean> parsed = new HashMap<>()
             parsed.put(Finding.Severity.CRITICAL, preload_filter.get(Finding.Severity.CRITICAL.toString()))
             parsed.put(Finding.Severity.HIGH, preload_filter.get(Finding.Severity.HIGH.toString()))
             parsed.put(Finding.Severity.MEDIUM, preload_filter.get(Finding.Severity.MEDIUM.toString()))
             parsed.put(Finding.Severity.LOW, preload_filter.get(Finding.Severity.LOW.toString()))
             parsed.put(Finding.Severity.INFO, preload_filter.get(Finding.Severity.INFO.toString()))
-            object.put(Config.PRELOAD_FILTER, parsed)
+            object.put(PRELOAD_FILTER, parsed)
             merge(object)
         }
     }
@@ -150,7 +166,7 @@ class ConfigImpl extends Config {
     @Override
     void checkDataDirectory() {
         log.info('Checking data dir')
-        File directory = new File(configObject.getProperty(Config.DATA_DIR).toString())
+        File directory = new File(configObject.getProperty(DATA_DIR).toString())
         if (!directory.exists()) {
             directory.mkdirs()
         }
