@@ -9,7 +9,7 @@ import net.vdbaan.issuefinder.view.impl.AbstractProgressView
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(JfxRunner.class)
+//@RunWith(JfxRunner.class)
 class ProgressPresenterTest {
     @Test
     void testSetup() {
@@ -17,12 +17,12 @@ class ProgressPresenterTest {
         mock.setFileList(null)
     }
 
-    @Test
-    @TestInJfxThread
-    void processOneFile() {
-        ProgressView mock = new ProgressViewMock()
-        mock.setFileList([new File('testdata/Nessus.nessus')])
-    }
+//    @Test
+//    @TestInJfxThread
+//    void processOneFile() {
+//        ProgressView mock = new ProgressViewMock()
+//        mock.setFileList([new File('testdata/Nessus.nessus')])
+//    }
 }
 
 class ProgressViewMock extends AbstractProgressView implements ProgressView{
