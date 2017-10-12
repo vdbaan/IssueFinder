@@ -31,10 +31,10 @@ class SummaryPresenterTest {
     @Test
     void testSetup() {
         SummaryView mock = new SummaryViewMock()
-        mock.setSummary(new HashMap<String, Container> ())
+        mock.setSummary(new HashMap<String, Container>())
         TreeItem<Wrapper> root = mock.getTreeRoot()
 
-        assertEquals("IPs (0)",root.getValue().getKey())
+        assertEquals("IPs (0)", root.getValue().getKey())
     }
 
     @Test
@@ -45,21 +45,21 @@ class SummaryPresenterTest {
         c.highest = Finding.Severity.CRITICAL
         c.plugins << "Some HTML plugin"
         Map<String, Container> summaryInfo = new HashMap()
-        summaryInfo.put("127.0.0.1",c)
+        summaryInfo.put("127.0.0.1", c)
         SummaryView mock = new SummaryViewMock()
         mock.setSummary(summaryInfo)
 
         TreeItem<Wrapper> root = mock.getTreeRoot()
-        assertEquals("IPs (1)",root.getValue().getKey())
-        assertEquals(1,root.getChildren().size())
+        assertEquals("IPs (1)", root.getValue().getKey())
+        assertEquals(1, root.getChildren().size())
         TreeItem<Wrapper> child = root.getChildren().get(0)
-        assertEquals("127.0.0.1",child.getValue().getKey())
+        assertEquals("127.0.0.1", child.getValue().getKey())
         child = child.getChildren().get(0)
-        assertEquals("open ports (1)",child.getValue().getKey())
+        assertEquals("open ports (1)", child.getValue().getKey())
     }
 }
 
-class SummaryViewMock extends AbstractSummaryView implements SummaryView{
+class SummaryViewMock extends AbstractSummaryView implements SummaryView {
 
     TreeItem treeRoot
 

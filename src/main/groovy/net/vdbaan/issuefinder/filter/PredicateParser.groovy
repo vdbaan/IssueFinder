@@ -54,7 +54,7 @@ class FindingPredicateParser {
             FindingPredicate fp = (FindingPredicate) v.visit(tree)
             return fp
         } catch (FindingPredicateParserRuntimeException r) {
-            log.log(Level.FINE,'Got an exception',r)
+            log.log(Level.FINE, 'Got an exception', r)
             return null
         }
     }
@@ -97,8 +97,8 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
 
     @Override
     Object visitExploitableExpr(PredicateParser.ExploitableExprContext ctx) { //EXPLOITABLE
-        FindingPredicate result = new FindingPredicate(ColumnName.EXPLOITABLE,null,null)
-        if(ctx.childCount == 2) {
+        FindingPredicate result = new FindingPredicate(ColumnName.EXPLOITABLE, null, null)
+        if (ctx.childCount == 2) {
             result.operation = FindingPredicate.LogicalOperation.NOT
         }
         return result
@@ -111,10 +111,10 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
 
     @Override
     Object visitOperator(PredicateParser.OperatorContext ctx) {
-        if(ctx.childCount == 2) {
+        if (ctx.childCount == 2) {
             return FindingPredicate.LogicalOperation.NLIKE
         } else
-        return FindingPredicate.LogicalOperation.get(ctx.text.toUpperCase())
+            return FindingPredicate.LogicalOperation.get(ctx.text.toUpperCase())
     }
 
     @Override

@@ -27,7 +27,7 @@ class ConfigTester {
     void presetValues() {
         Config.setInstance(null)
 //        Object val = Config.getInstance().getProperty(Config.BATCH_SIZE)
-        assertEquals('Wrong value', 100, (Integer)Config.getInstance().getProperty(Config.BATCH_SIZE))
+        assertEquals('Wrong value', 100, (Integer) Config.getInstance().getProperty(Config.BATCH_SIZE))
     }
 
     @Test
@@ -39,7 +39,7 @@ class ConfigTester {
         Config.getInstance().saveConfig()
         Config.getInstance().loadConfig()
         assertEquals('Wrong value', value, Config.getInstance().getProperty(key))
-        Config.getInstance().setProperty(key,null)
+        Config.getInstance().setProperty(key, null)
         Config.getInstance().saveConfig()
         Config.getInstance().loadConfig()
         assertEquals('key and value still there', null, Config.getInstance().getProperty(key))
@@ -96,6 +96,6 @@ class ConfigTester {
             }
         }
         Config.setInstance(mock)
-        assertEquals(txt,Config.getInstance().getApplicationVersionString())
+        assertEquals(txt, Config.getInstance().getApplicationVersionString())
     }
 }

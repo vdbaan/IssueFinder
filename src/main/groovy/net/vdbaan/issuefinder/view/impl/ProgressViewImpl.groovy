@@ -32,7 +32,6 @@ class ProgressViewImpl extends AbstractProgressView implements ProgressView {
     ProgressBar files
 
 
-
     @FXML
     void initialize() {
         presenter = new ProgressPresenter(this)

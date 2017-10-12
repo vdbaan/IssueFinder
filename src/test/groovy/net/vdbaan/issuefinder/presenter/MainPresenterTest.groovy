@@ -105,11 +105,11 @@ class MainPresenterTest {
         Finding f1 = new Finding(ip: '127.0.0.1', port: '80', plugin: 'newplugin', service: 'newservice')
         Finding f2 = new Finding(ip: '127.0.0.2', port: '8080', plugin: 'newplugin', service: 'newservice')
         MainView mock = new MainViewMock()
-        mock.setMasterData([f1,f2])
+        mock.setMasterData([f1, f2])
         mock.getCopyIpAction().handle(null)
-        assertEquals('127.0.0.1\n127.0.0.2',mock.getClipboardContent().getString())
+        assertEquals('127.0.0.1\n127.0.0.2', mock.getClipboardContent().getString())
         mock.getCopyIpPortAction().handle(null)
-        assertEquals('127.0.0.1:80\n127.0.0.2:8080',mock.getClipboardContent().getString())
+        assertEquals('127.0.0.1:80\n127.0.0.2:8080', mock.getClipboardContent().getString())
     }
 
     @Before
@@ -274,6 +274,7 @@ class MainViewMock extends AbstractMainView implements MainView {
     }
 
     List<String> filterTextItems = new ArrayList<>()
+
     @Override
     void setFilterTextItems(List<String> items) {
         this.filterTextItems = items
@@ -311,6 +312,7 @@ class MainViewMock extends AbstractMainView implements MainView {
 
     }
     ObservableList<String> filterTextStyleClass = FXCollections.observableArrayList()
+
     @Override
     ObservableList<String> getFilterTextStyleClass() {
         return filterTextStyleClass
@@ -415,6 +417,7 @@ class MainViewMock extends AbstractMainView implements MainView {
     }
 
     ClipboardContent clipboardContent
+
     @Override
     void setClipboardContent(ClipboardContent content) {
         this.clipboardContent = content

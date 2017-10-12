@@ -30,17 +30,18 @@ class PredicateParserTest {
         String txt = "service like http"
         FindingPredicateParser fpp = new FindingPredicateParser()
         FindingPredicate f = fpp.parse(txt)
-        assertEquals('Wrong parsing',"SERVICE LIKE '%http%'",f.toString())
+        assertEquals('Wrong parsing', "SERVICE LIKE '%http%'", f.toString())
         txt = "service !like http"
         f = fpp.parse(txt)
-        assertEquals('Wrong parsing',"SERVICE NOT LIKE '%http%'",f.toString())
+        assertEquals('Wrong parsing', "SERVICE NOT LIKE '%http%'", f.toString())
         txt = "exploitable"
         f = fpp.parse(txt)
-        assertEquals('Wrong parsing',"EXPLOITABLE IS TRUE", f.toString())
+        assertEquals('Wrong parsing', "EXPLOITABLE IS TRUE", f.toString())
         txt = "!exploitable"
         f = fpp.parse(txt)
-        assertEquals('Wrong parsing',"EXPLOITABLE IS FALSE", f.toString())
+        assertEquals('Wrong parsing', "EXPLOITABLE IS FALSE", f.toString())
     }
+
     @Test
     void testParseComplex() {
         String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && (service !LIKE http)) || (RISK BETWEEN (low,  critical)))"
@@ -72,7 +73,9 @@ class PredicateParserTest {
         assertEquals('Should be true', true, p.test(f))
     }
 
-    @Rule public ExpectedException thrown= ExpectedException.none()
+    @Rule
+    public ExpectedException thrown = ExpectedException.none()
+
     @Test
     void testError() {
         thrown.expect(FindingPredicateParserRuntimeException.class)

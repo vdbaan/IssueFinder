@@ -100,7 +100,7 @@ class NessusParser extends Parser {
                                            pluginOutput: pluginOutput, solution: solution])
             }
         }
-        log.info (String.format("Returning %d issues",result.size()))
+        log.info(String.format("Returning %d issues", result.size()))
         return result
     }
 }

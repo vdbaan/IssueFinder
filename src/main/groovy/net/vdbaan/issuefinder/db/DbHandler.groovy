@@ -164,7 +164,6 @@ class DbHandlerImpl implements DbHandler {
         }
     }
 
-
     void attachShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override

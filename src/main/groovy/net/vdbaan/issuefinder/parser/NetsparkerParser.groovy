@@ -56,7 +56,7 @@ class NetsparkerParser extends Parser {
             Finding.Severity severity = calcSeverity('' + vuln.severity)
             String summary = 'URL: ' + vuln.url + '\n'
             summary += 'Severity:' + vuln.severity + ' (' + vuln.certainty + '%)\n'
-            summary += 'Classification:' + classification(vuln.classification) +'\n'
+            summary += 'Classification:' + classification(vuln.classification) + '\n'
             summary += 'Extra Information (' + vuln.extrainformation.info.@name + '):\n'
             summary += vuln.extrainformation.info + '\n'
 
@@ -72,7 +72,7 @@ class NetsparkerParser extends Parser {
         try {
             result = Finding.Severity.valueOf(Finding.Severity, risk.toUpperCase())
         } catch (IllegalArgumentException e) {
-            log.log(Level.FINE,'Got an exception',e)
+            log.log(Level.FINE, 'Got an exception', e)
             result = Finding.Severity.INFO
         }
         return result

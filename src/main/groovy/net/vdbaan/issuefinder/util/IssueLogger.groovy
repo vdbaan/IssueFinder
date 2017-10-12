@@ -72,11 +72,11 @@ class IssueFormatter extends SimpleFormatter {
             pos += 1
         pos += 4
         if (!st[pos].declaringClass.startsWith('java_util_logging_Logger$'))
-            return String.format("%s:%d",st[pos].methodName,st[pos].lineNumber)
+            return String.format("%s:%d", st[pos].methodName, st[pos].lineNumber)
         pos += 1
         while (!st[pos].declaringClass.equals('org.codehaus.groovy.runtime.callsite.AbstractCallSite') && !st[pos].methodName.equals('call') && st[pos].lineNumber != 125)
             pos += 1
         pos += 2
-        return String.format("%s:%d",st[pos].methodName,st[pos].lineNumber)
+        return String.format("%s:%d", st[pos].methodName, st[pos].lineNumber)
     }
 }

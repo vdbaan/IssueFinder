@@ -82,7 +82,7 @@ class ConfigImpl extends Config {
         configObject.put(MAX_ROWS, 5000)
         configObject.put(FILTERS, ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE'])
         configObject.put(PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
-                                                 (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
+                                          (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
         configObject.put(BATCH_SIZE, 100)
         configObject.put(IP_PORT_FORMAT_STRING, 'IP:PORT')
         configObject.put(COLOURED_ROWS, true)
@@ -110,6 +110,7 @@ class ConfigImpl extends Config {
     boolean hasPropertyFor(String key) {
         return configObject.containsKey(key)
     }
+
     @Override
     void attachShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -142,7 +143,6 @@ class ConfigImpl extends Config {
     void loadConfig() {
         File configFile = new File(getUserDataDirectory(), CONFIGFILE_NAME)
         if (configFile.exists()) {
-//            ConfigObject object = new ConfigSlurper().parse(configFile.text)
             configObject = new ConfigSlurper().parse(configFile.text)
             Map<String, Boolean> preload_filter = (Map) getInstance().getProperty(PRELOAD_FILTER)
             Map<Finding.Severity, Boolean> parsed = new HashMap<>()
@@ -152,16 +152,10 @@ class ConfigImpl extends Config {
             parsed.put(Finding.Severity.LOW, preload_filter.get(Finding.Severity.LOW.toString()))
             parsed.put(Finding.Severity.INFO, preload_filter.get(Finding.Severity.INFO.toString()))
             configObject.put(PRELOAD_FILTER, parsed)
-//            merge(object)
-
+            // TODO Find a way to merge with original configObject
         }
     }
 
-    private merge(ConfigObject config) {
-        configObject.keySet().each { key ->
-            if (config.containsKey(key)) configObject.replace(key, config.get(key))
-        }
-    }
 
     String getApplicationVersionString() {
         Manifest mf = new Manifest()

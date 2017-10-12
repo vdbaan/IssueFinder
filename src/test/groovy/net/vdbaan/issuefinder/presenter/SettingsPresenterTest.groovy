@@ -33,7 +33,7 @@ class SettingsPresenterTest {
         mock.setMaxRows(newValue)
         mock.getCancelAllAction().handle(null)
         mock.getSaveAllAction().handle(null)
-        assertEquals(newValue,Config.getInstance().getProperty(Config.MAX_ROWS).toString())
+        assertEquals(newValue, Config.getInstance().getProperty(Config.MAX_ROWS).toString())
     }
 
     @Test
@@ -102,7 +102,7 @@ class SettingsViewMock extends AbstractSettingsView implements SettingsView {
 
     @Override
     void removeItem(String item) {
-    filters.remove(item)
+        filters.remove(item)
     }
 
     boolean critical, high, medium, low, info

@@ -23,6 +23,7 @@ import net.vdbaan.issuefinder.util.Container
 @CompileStatic
 interface SummaryView extends BaseView {
     void setTreeRoot(TreeItem root)
+
     TreeItem getTreeRoot()
 
     void setSummary(Map<String, Container> summary)

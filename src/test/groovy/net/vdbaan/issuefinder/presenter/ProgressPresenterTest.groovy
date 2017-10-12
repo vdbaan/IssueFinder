@@ -41,7 +41,7 @@ class ProgressPresenterTest {
     }
 }
 
-class ProgressViewMock extends AbstractProgressView implements ProgressView{
+class ProgressViewMock extends AbstractProgressView implements ProgressView {
     ProgressViewMock() {
         presenter = new ProgressPresenter(this)
         presenter.setMasterView(new MainViewMock())

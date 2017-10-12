@@ -288,7 +288,6 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     }
 
 
-
     void addFilterTextItem(String item) {
         filterText.items.add(item)
     }
@@ -528,7 +527,7 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
         return retentionFileChooser
     }
 
-    void setClipboardContent(ClipboardContent content){
+    void setClipboardContent(ClipboardContent content) {
         Clipboard.getSystemClipboard().setContent(content)
     }
 }

@@ -47,7 +47,7 @@ exploitable  BOOLEAN
 );
 '''
     static String INSERT = 'INSERT INTO finding (scanner,  ip,  hostName,  port,  status,      protocol,  service,  plugin,  risk,  summary,  description,  reference,  pluginOutput,  solution,  cvss,      cvssVector,  exploitable) ' +
-                                      'values (?.scanner,?.ip,?.hostName,?.port,?.portStatus,?.protocol,?.service,?.plugin,?.risk,?.summary,?.description,?.reference,?.pluginOutput,?.solution,?.baseCVSS,?.cvssVector,?.exploitable)'
+            'values (?.scanner,?.ip,?.hostName,?.port,?.portStatus,?.protocol,?.service,?.plugin,?.risk,?.summary,?.description,?.reference,?.pluginOutput,?.solution,?.baseCVSS,?.cvssVector,?.exploitable)'
     static String UPDATE = 'UPDATE finding SET scanner=?.scanner, ip=?.ip, hostName=?.hostName, port=?.port, status=?.portStatus, protocol=?.protocol, service=?.service, plugin=?.plugin, risk=?.risk, ' +
             'summary=?.summary, description=?.description, reference=?.reference, pluginOutput=?.pluginOutput, solution=?.solution, cvss=?.baseCVSS, cvssVector=?.cvssVector, exploitable=?.exploitable WHERE id=?.id'
     static String SELECT = 'SELECT * FROM finding'
@@ -65,10 +65,10 @@ exploitable  BOOLEAN
     String plugin = ''
     Severity severity = Severity.UNKNOWN
     String summary = ''
-    String description= ''
+    String description = ''
     String reference = ''
-    String pluginOutput= ''
-    String solution= ''
+    String pluginOutput = ''
+    String solution = ''
     BigDecimal baseCVSS = 0.0
     String cvssVector = ''
     Boolean exploitable = false

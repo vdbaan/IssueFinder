@@ -190,7 +190,7 @@ class FindingPredicate implements Predicate<Finding> {
         if (left instanceof FindingPredicate && right instanceof FindingPredicate) {
             return String.format("(%s) %s (%s)", left, operation.representation, right)
         }
-        if(left == ColumnName.EXPLOITABLE) {
+        if (left == ColumnName.EXPLOITABLE) {
             if (operation == null) {
                 return "EXPLOITABLE IS TRUE"
             } else
@@ -200,7 +200,7 @@ class FindingPredicate implements Predicate<Finding> {
         switch (left) {
             case { it instanceof ColumnName && it == ColumnName.RISK }:
                 if (right instanceof List)
-                    rightval = ((List<String>) right).collect{ String.format("'%s'",it.trim().toUpperCase())}
+                    rightval = ((List<String>) right).collect { String.format("'%s'", it.trim().toUpperCase()) }
                 else
                     rightval = String.format("'%s'", right.toString().toUpperCase())
                 break
@@ -208,7 +208,7 @@ class FindingPredicate implements Predicate<Finding> {
                 break
             default:
                 if (right instanceof List)
-                    rightval = ((List<String>) right).collect{ String.format("'%s'",it.trim())}
+                    rightval = ((List<String>) right).collect { String.format("'%s'", it.trim()) }
                 else
                     rightval = String.format("'%s'", right.toString())
         }
@@ -217,13 +217,13 @@ class FindingPredicate implements Predicate<Finding> {
         switch (operation) {
             case LogicalOperation.LIKE:
             case LogicalOperation.NLIKE:
-                rightval = '\'' + rightval.toString().replace('\'','%') + '\''
+                rightval = '\'' + rightval.toString().replace('\'', '%') + '\''
                 break
             case LogicalOperation.IN:
                 rightval = String.format("(%s)", ((List<String>) rightval).join(", "))
                 break
             case LogicalOperation.BETWEEN:
-                rightval = String.format("%s",((List<String>) rightval).join(" AND "))
+                rightval = String.format("%s", ((List<String>) rightval).join(" AND "))
                 break
             default:
                 break

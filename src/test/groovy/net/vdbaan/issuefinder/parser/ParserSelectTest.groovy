@@ -41,7 +41,7 @@ class ParserSelectTest {
     void testSelectNetsparkerFile() {
         File testFile = new File("testdata/Netsparker.xml")
         if (testFile.exists()) {
-            assert Parser.getParser(testFile.text)  instanceof NetsparkerParser
+            assert Parser.getParser(testFile.text) instanceof NetsparkerParser
         }
     }
 
@@ -49,7 +49,7 @@ class ParserSelectTest {
     void testSelectNiktoFile() {
         File testFile = new File("testdata/Nikto.xml")
         if (testFile.exists()) {
-            assert Parser.getParser(testFile.text)  instanceof NiktoParser
+            assert Parser.getParser(testFile.text) instanceof NiktoParser
         }
     }
 

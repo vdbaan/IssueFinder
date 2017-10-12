@@ -160,7 +160,7 @@ class MainPresenter {
         Map<String, Container> summaryInfo = new HashMap()
         sortedData.each { f ->
             Container c = summaryInfo.get(f.ip) ?: new Container()
-            if(f.portStatus == 'open') {
+            if (f.portStatus == 'open') {
                 c.listedports << f.port
                 c.listedservices << f.service
             }
@@ -300,11 +300,11 @@ class MainPresenter {
                     clearAction(null)
                 }
             } catch (StringIndexOutOfBoundsException ex) {
-                log.log(Level.FINE,'Got an exception',ex)
+                log.log(Level.FINE, 'Got an exception', ex)
                 masterView.getFilterTextStyleClass().add("text-input-wrong")
 
             } catch (FindingPredicateParserRuntimeException ex) {
-                log.log(Level.FINE,'Got an exception',ex)
+                log.log(Level.FINE, 'Got an exception', ex)
                 masterView.getFilterTextStyleClass().add("text-input-wrong")
             }
         } else {

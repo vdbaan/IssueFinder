@@ -54,7 +54,7 @@ class EditorPresenterTest {
                 return new DbHandlerMock() {
                     @Override
                     void updateFinding(Finding finding) {
-                        assertEquals('Wrong finding',f,finding)
+                        assertEquals('Wrong finding', f, finding)
                     }
                 }
             }
@@ -74,7 +74,7 @@ class EditorPresenterTest {
 
                     @Override
                     void updateFinding(Finding finding) {
-                        assertEquals('Wrong finding',f,finding)
+                        assertEquals('Wrong finding', f, finding)
                     }
                 }
             }
@@ -85,7 +85,7 @@ class EditorPresenterTest {
     }
 }
 
-class EditorViewMock extends AbstractEditorView implements EditorView{
+class EditorViewMock extends AbstractEditorView implements EditorView {
     String scanner, hostName, ip, port, service, plugin
     Finding.Severity risk
 

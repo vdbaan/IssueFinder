@@ -42,7 +42,7 @@ class TestSSLParser extends Parser {
             }
             return false
         } catch (Exception e) {
-            log.log(Level.FINE,'Got an exception',e)
+            log.log(Level.FINE, 'Got an exception', e)
             return false
         }
     }
