@@ -55,10 +55,11 @@ class NetsparkerParser extends Parser {
             String plugin = vuln.type
             Finding.Severity severity = calcSeverity('' + vuln.severity)
             String summary = 'URL: ' + vuln.url + '\n'
-            summary += 'Severity:' + vuln.severity + ' (' + vuln.certainty + '%)'
-            summary += 'Extra Information (' + vuln.extrainformation.info.@name + '):'
+            summary += 'Severity:' + vuln.severity + ' (' + vuln.certainty + '%)\n'
+            summary += 'Classification:' + classification(vuln.classification) +'\n'
+            summary += 'Extra Information (' + vuln.extrainformation.info.@name + '):\n'
             summary += vuln.extrainformation.info + '\n'
-            summary += 'Classification:\n' + classification(vuln.classification)
+
             result << new Finding([scanner : scanner, ip: url.host, port: '' + port, service: service, plugin: plugin,
                                    severity: severity, summary: summary])
 
