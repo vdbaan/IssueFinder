@@ -29,7 +29,7 @@ class FindingHtmlViewer {
 
     static String nessusHTMLDescription(Finding finding) {
         return """
-<table border=1 style='border-collapse:collapse;font-family:arial;'>
+<table border=1 width='100%' style='border-collapse:collapse;font-family:arial;'>
 <tr><td width='15%' style='border:1px solid black;'><b>Scanner</b></td><td style='border:1px solid black;'>${finding.scanner}</td></tr>
 <tr><td width='15%' style='border:1px solid black;'><b>Source</b></td><td style='border:1px solid black;'>${finding.ip}:${finding.port}(${finding.protocol}/${finding.portStatus})</td></tr>
 <tr><td width='15%' style='border:1px solid black;'><b>Hostname</b></td><td style='border:1px solid black;'>${finding.hostName}</td></tr>
@@ -50,7 +50,7 @@ class FindingHtmlViewer {
 
     static String otherHTMLDescription(Finding finding) {
         return """
-<table border=1 style='border-collapse:collapse;'>
+<table border=1 width='100%' style='border-collapse:collapse;font-family:arial;'>
 <tr><td width='15%' style='border:1px solid black;'><b>Scanner</b></td><td style='border:1px solid black;'>${finding.scanner}</td></tr>
 <tr><td width='15%' style='border:1px solid black;'><b>Source</b></td><td style='border:1px solid black;'>${finding.ip}:${finding.port}(${finding.protocol}/${finding.portStatus})</td></tr>
 <tr><td width='15%' style='border:1px solid black;'><b>Hostname</b></td><td style='border:1px solid black;'>${finding.hostName}</td></tr>
@@ -58,7 +58,7 @@ class FindingHtmlViewer {
 <tr><td width='15%' style='border:1px solid black;'><b>Plugin/Version</b></td><td style='border:1px solid black;'>${finding.plugin}</td></tr>
 <tr><td width='15%' style='border:1px solid black;'><b>Severity</b></td><td style='border:1px solid black;${getSeverityStyle(finding)}'>${finding.severity}</td></tr>
 <tr><td colspan=2 style='border:1px solid black;'>&nbsp;</td></tr>
-<tr><td colspan=2 style='border:1px solid black;'><b>Summary:</b><br/>${finding.summary}</td></tr>
+<tr><td colspan=2 style='border:1px solid black;'><b>Summary:</b><br/>${finding.summary.replace('\n','<br/>')}</td></tr>
 </table>
 """
     }
