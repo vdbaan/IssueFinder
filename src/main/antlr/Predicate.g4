@@ -32,12 +32,12 @@ package net.vdbaan.issuefinder.parser;
 
 expr: expr AND expr              # andExpr
     | expr OR expr               # orExpr
-    | NOT expr                   # notExpr
+//    | NOT expr                   # notExpr
     | LPAREN expr RPAREN         # enclosedExpr
     | column operator STRING     # assign
     | column rangeOperator GROUP # range
     | column groupOperator GROUP # group
-    | EXPLOITABLE                # exploitableExpr
+    | (NOT)? EXPLOITABLE         # exploitableExpr
     ;
 
 column
@@ -66,7 +66,7 @@ operator
     | '>'
     | '>='
     | '~='
-    | LIKE
+    | (NOT)? LIKE
     ;
 
 

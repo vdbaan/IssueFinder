@@ -78,10 +78,6 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
         return visit(ctx.expr())
     }
 
-    @Override
-    Object visitNotExpr(PredicateParser.NotExprContext ctx) { //NOT expr
-        return new FindingPredicate(visit(ctx.expr()), FindingPredicate.LogicalOperation.NOT, null)
-    }
 
     @Override
     Object visitAssign(PredicateParser.AssignContext ctx) { // column operator STRING
@@ -99,14 +95,13 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.groupOperator()), buildList(ctx.GROUP().text))
     }
 
-//    @Override
-//    Object visitNotColumn(PredicateParser.exploitableExpr ctx) {
-//        return new FindingPredicate(visit(ctx.column()), FindingPredicate.LogicalOperation.NOT, null)
-//    }
-
     @Override
     Object visitExploitableExpr(PredicateParser.ExploitableExprContext ctx) { //EXPLOITABLE
-        return ColumnName.EXPLOITABLE
+        FindingPredicate result = new FindingPredicate(ColumnName.EXPLOITABLE,null,null)
+        if(ctx.childCount == 2) {
+            result.operation = FindingPredicate.LogicalOperation.NOT
+        }
+        return result
     }
 
     @Override
@@ -116,6 +111,9 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
 
     @Override
     Object visitOperator(PredicateParser.OperatorContext ctx) {
+        if(ctx.childCount == 2) {
+            return FindingPredicate.LogicalOperation.NLIKE
+        } else
         return FindingPredicate.LogicalOperation.get(ctx.text.toUpperCase())
     }
 

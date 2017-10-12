@@ -79,7 +79,7 @@ enum ColumnName {
 class FindingPredicate implements Predicate<Finding> {
     enum LogicalOperation {
         LT("<"), LE("<="), GT(">"), GE(">="), EQ("=="), NE("!="), LIKE("LIKE"), APROX("~="), NOT("!"),
-        AND("&&"), OR("||"), IN("IN"), BETWEEN("BETWEEN")
+        AND("&&"), OR("||"), IN("IN"), BETWEEN("BETWEEN"), NLIKE("NOT LIKE")
         final String representation
 
         private static final Map<String, LogicalOperation> ENUM_MAP
@@ -187,57 +187,47 @@ class FindingPredicate implements Predicate<Finding> {
     }
 
     String toString() {
-        if (operation == LogicalOperation.NOT) {
-            return "!" + ((left instanceof FindingPredicate) ? '(' + left + ')' : left)
-        }
         if (left instanceof FindingPredicate && right instanceof FindingPredicate) {
             return String.format("(%s) %s (%s)", left, operation.representation, right)
         }
-        String rightval
-        switch (operation) {
-            case LogicalOperation.IN:
-            case LogicalOperation.BETWEEN:
-                rightval = String.format("(%s)",((List<String>)right)*.trim().join(", "))
-                break
-            default:
-                rightval = right.toString()
+        if(left == ColumnName.EXPLOITABLE) {
+            if (operation == null) {
+                return "EXPLOITABLE IS TRUE"
+            } else
+                return "EXPLOITABLE IS FALSE"
         }
+        Object rightval
         switch (left) {
             case { it instanceof ColumnName && it == ColumnName.RISK }:
-                if(right instanceof List) {
-                    rightval = String.format("('%s')",((List<String>)right)*.trim().join("', '")).toUpperCase()
-                }
+                if (right instanceof List)
+                    rightval = ((List<String>) right).collect{ String.format("'%s'",it.trim().toUpperCase())}
                 else
-                rightval = String.format("'%s'", rightval.toUpperCase())
+                    rightval = String.format("'%s'", right.toString().toUpperCase())
                 break
             case { it instanceof ColumnName && it == ColumnName.CVSS }:
                 break
             default:
-                rightval = String.format("'%s'", rightval)
+                if (right instanceof List)
+                    rightval = ((List<String>) right).collect{ String.format("'%s'",it.trim())}
+                else
+                    rightval = String.format("'%s'", right.toString())
         }
-        return String.format("%s %s %s", left, operation.representation,rightval)
-//        if (left instanceof ColumnName) {
-//            if (operation == LogicalOperation.NOT) {
-//                return "!" + ((ColumnName) left)
-//            } else {
-//                switch (left) {
-//                    case {it instanceof ColumnName && it == ColumnName.RISK}:
-//                        return String.format("%s %s '%s'", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right.toString().toUpperCase())
-//                    case {it instanceof ColumnName && it == ColumnName.CVSS}:
-//                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, right)
-//                    default:
-//                        return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
-//                }
-//            }
-//        } else if (left instanceof FindingPredicate) {
-//            if (operation == LogicalOperation.NOT) {
-//                return "!(" + left.toString() + ")"
-//            } else {
-//                return String.format("%s %s %s", (left instanceof FindingPredicate) ? "(" + left + ")" : left, operation.representation, (right instanceof FindingPredicate) ? "(" + right + ")" : "'" + right + "'")
-//            }
-//        } else {
-//            return ""
-//        }
 
+
+        switch (operation) {
+            case LogicalOperation.LIKE:
+            case LogicalOperation.NLIKE:
+                rightval = '\'' + rightval.toString().replace('\'','%') + '\''
+                break
+            case LogicalOperation.IN:
+                rightval = String.format("(%s)", ((List<String>) rightval).join(", "))
+                break
+            case LogicalOperation.BETWEEN:
+                rightval = String.format("%s",((List<String>) rightval).join(" AND "))
+                break
+            default:
+                break
+        }
+        return String.format("%s %s %s", left, operation.representation, rightval)
     }
 }

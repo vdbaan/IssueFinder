@@ -20,13 +20,6 @@ public interface PredicateVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEnclosedExpr(PredicateParser.EnclosedExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code notExpr}
-	 * labeled alternative in {@link PredicateParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotExpr(PredicateParser.NotExprContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code range}
 	 * labeled alternative in {@link PredicateParser#expr}.
 	 * @param ctx the parse tree

@@ -22,18 +22,6 @@ public interface PredicateListener extends ParseTreeListener {
 	 */
 	void exitEnclosedExpr(PredicateParser.EnclosedExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code notExpr}
-	 * labeled alternative in {@link PredicateParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterNotExpr(PredicateParser.NotExprContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code notExpr}
-	 * labeled alternative in {@link PredicateParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitNotExpr(PredicateParser.NotExprContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code range}
 	 * labeled alternative in {@link PredicateParser#expr}.
 	 * @param ctx the parse tree

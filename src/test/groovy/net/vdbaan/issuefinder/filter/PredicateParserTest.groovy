@@ -26,15 +26,31 @@ import static org.junit.Assert.assertEquals
 class PredicateParserTest {
 
     @Test
-    void testParseComplex() {
-        String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE http)) || (RISK BETWEEN (low,  critical)))"
+    void testParseFormat() {
+        String txt = "service like http"
         FindingPredicateParser fpp = new FindingPredicateParser()
         FindingPredicate f = fpp.parse(txt)
-        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((!EXPLOITABLE) || ((PORT LIKE '443') && (!(SERVICE LIKE 'http')))) || (RISK BETWEEN ('LOW', 'CRITICAL')))", f.toString())
-        txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && !(SERVICE LIKE http)) || (RISK IN (LOW,CRITICAL,HIGH)))"
+        assertEquals('Wrong parsing',"SERVICE LIKE '%http%'",f.toString())
+        txt = "service !like http"
+        f = fpp.parse(txt)
+        assertEquals('Wrong parsing',"SERVICE NOT LIKE '%http%'",f.toString())
+        txt = "exploitable"
+        f = fpp.parse(txt)
+        assertEquals('Wrong parsing',"EXPLOITABLE IS TRUE", f.toString())
+        txt = "!exploitable"
+        f = fpp.parse(txt)
+        assertEquals('Wrong parsing',"EXPLOITABLE IS FALSE", f.toString())
+    }
+    @Test
+    void testParseComplex() {
+        String txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && (service !LIKE http)) || (RISK BETWEEN (low,  critical)))"
+        FindingPredicateParser fpp = new FindingPredicateParser()
+        FindingPredicate f = fpp.parse(txt)
+        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((EXPLOITABLE IS FALSE) || ((PORT LIKE '%443%') && (SERVICE NOT LIKE '%http%'))) || (RISK BETWEEN 'LOW' AND 'CRITICAL'))", f.toString())
+        txt = "(IP == \"127.0.0.1\") && ((!EXPLOITABLE) || ((PORT LIKE \"443\") && (SERVICE !LIKE http)) || (RISK IN (LOW,CRITICAL,HIGH)))"
         fpp = new FindingPredicateParser()
         f = fpp.parse(txt)
-        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((!EXPLOITABLE) || ((PORT LIKE '443') && (!(SERVICE LIKE 'http')))) || (RISK IN ('LOW', 'CRITICAL', 'HIGH')))", f.toString())
+        assertEquals('Wrong parsing', "(IP == '127.0.0.1') && (((EXPLOITABLE IS FALSE) || ((PORT LIKE '%443%') && (SERVICE NOT LIKE '%http%'))) || (RISK IN ('LOW', 'CRITICAL', 'HIGH')))", f.toString())
 
     }
 
