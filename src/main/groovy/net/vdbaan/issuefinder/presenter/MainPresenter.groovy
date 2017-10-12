@@ -160,8 +160,10 @@ class MainPresenter {
         Map<String, Container> summaryInfo = new HashMap()
         sortedData.each { f ->
             Container c = summaryInfo.get(f.ip) ?: new Container()
-            c.listedports << f.port
-            c.listedservices << f.service
+            if(f.portStatus == 'open') {
+                c.listedports << f.port
+                c.listedservices << f.service
+            }
             if (f.severity < c.highest) { // Severity runs from Critical (0) to UNKNOWN (5)
                 c.plugins.clear()
                 c.highest = f.severity
