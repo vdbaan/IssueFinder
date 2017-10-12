@@ -46,6 +46,12 @@ class NMapParser extends Parser {
                 result += runStats(content, hostIp, hostName, protocol)
             if (allowed(Finding.Severity.INFO))
                 result += summary(content, hostIp, hostName, protocol)
+            if (host.ports?.extraports?.@state == 'closed') {
+                String summary = "Amount of closed ports: " + host.ports.extraports.@count
+
+                result << new Finding(([scanner: scanner, ip: hostIp, port: 0, portStatus: 'closed', protocol: protocol, service: "none", hostName: hostName,
+                                        plugin : "NMap closed ports", severity: Finding.Severity.LOW, summary: summary]))
+            }
             host.ports.port.each { port ->
                 String portnr = port.@portid
                 protocol = port.@protocol
@@ -53,10 +59,11 @@ class NMapParser extends Parser {
                 String service = port.service.@name
                 String product = port.service.@product
                 String summary = ""
+
                 if (allowed(Finding.Severity.INFO))
                     result << new Finding([scanner : scanner, ip: hostIp, port: portnr, portStatus: state, protocol: protocol, hostName: hostName,
-                                           service : service + " (" + product + ")", plugin: "NMap port information",
-                                           severity: Finding.Severity.INFO, summary: summary])
+                                           service : service + " (" + product + ")", plugin: "NMap port (" + portnr + ") information",
+                                           severity: (state == 'closed') ? Finding.Severity.LOW : Finding.Severity.INFO, summary: summary])
             }
         }
         return result
