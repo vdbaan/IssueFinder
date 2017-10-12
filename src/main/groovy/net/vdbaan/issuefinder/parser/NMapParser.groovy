@@ -60,6 +60,15 @@ class NMapParser extends Parser {
                 String product = port.service.@product
                 String summary = ""
 
+                port.script.each { script ->
+                    summary += 'script ('
+                    summary += script.@id
+                    summary += '):\n'
+                    summary += script.@output
+                    summary += '\n'
+                    summary += script
+                    summary += '\n\n'
+                }
                 if (allowed(Finding.Severity.INFO))
                     result << new Finding([scanner : scanner, ip: hostIp, port: portnr, portStatus: state, protocol: protocol, hostName: hostName,
                                            service : service + " (" + product + ")", plugin: "NMap port (" + portnr + ") information",
