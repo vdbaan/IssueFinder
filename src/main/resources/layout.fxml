@@ -28,8 +28,8 @@
                                                     shortcut="UP"/>
                             </accelerator>
                         </MenuItem>
-                        <SeparatorMenuItem/>
-                        <MenuItem mnemonicParsing="true" onAction="#exportAction" text="_Export"/>
+                        <!--<SeparatorMenuItem/>-->
+                        <!--<MenuItem mnemonicParsing="true" onAction="#exportAction" text="_Export"/>-->
                         <SeparatorMenuItem/>
                         <MenuItem mnemonicParsing="true" onAction="#openSettings" text="_Preferences"/>
                         <SeparatorMenuItem/>
@@ -101,7 +101,7 @@
                         </TableColumn>
                         <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Status" visible="false">
                             <cellValueFactory>
-                                <PropertyValueFactory property="status"/>
+                                <PropertyValueFactory property="portStatus"/>
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Protocol"
@@ -151,8 +151,8 @@
                                     <MenuItem onAction="#filterOnRisk" text="Filter on Risk"/>
                                 </Menu>
                                 <SeparatorMenuItem/>
-                                <MenuItem onAction="#modifyEntry" text="Modify Entry"/>
-                                <SeparatorMenuItem/>
+                                <!--<MenuItem onAction="#modifyEntry" text="Modify Entry"/>-->
+                                <!--<SeparatorMenuItem/>-->
                                 <Menu text="Copy">
                                     <MenuItem onAction="#copySelectedIps" text="Copy unique IPs"/>
                                     <MenuItem onAction="#copySelectedIpsPorts" text="Copy unique IP and Ports"/>
