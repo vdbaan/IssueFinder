@@ -260,4 +260,9 @@ class DbHandlerMock implements DbHandler {
     void attachShutdownHook() {
 
     }
+
+    @Override
+    void resetJdbc() {
+
+    }
 }

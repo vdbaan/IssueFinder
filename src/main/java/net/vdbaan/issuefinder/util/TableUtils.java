@@ -33,49 +33,7 @@ public class TableUtils {
     public static void installCopyPasteHandler(TreeTableView<?> table) {
         table.setOnKeyPressed(new TreeTableKeyEventHandler());
     }
-    /**
-     * Copy/Paste keyboard event handler.
-     * The handler uses the keyEvent's source for the clipboard data. The source must be of type TableView.
-     */
-    static class TableKeyEventHandler implements EventHandler<KeyEvent> {
 
-        final KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
-
-        public void handle(final KeyEvent keyEvent) {
-
-            if (copyKeyCodeCompination.match(keyEvent)) {
-
-                if (keyEvent.getSource() instanceof TableView) {
-
-                    // copy to clipboard
-                    copySelectionToClipboard((TableView<?>) keyEvent.getSource());
-
-                    System.out.println("Selection copied to clipboard");
-
-                    // event is handled, consume it
-                    keyEvent.consume();
-
-                }
-
-            }
-
-        }
-
-    }
-
-    static class TreeTableKeyEventHandler implements EventHandler<KeyEvent> {
-        final KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
-
-        public void handle(final KeyEvent keyEvent) {
-            if (copyKeyCodeCompination.match(keyEvent)) {
-                if (keyEvent.getSource() instanceof TreeTableView) {
-                    copySelectionToClipboard((TreeTableView<?>) keyEvent.getSource());
-                    System.out.println("Selection copied to clipboard");
-                    keyEvent.consume();
-                }
-            }
-        }
-    }
     /**
      * Get table selection and copy it to the clipboard.
      *
@@ -182,5 +140,49 @@ public class TableUtils {
 
         // set clipboard content
         Clipboard.getSystemClipboard().setContent(clipboardContent);
+    }
+
+    /**
+     * Copy/Paste keyboard event handler.
+     * The handler uses the keyEvent's source for the clipboard data. The source must be of type TableView.
+     */
+    static class TableKeyEventHandler implements EventHandler<KeyEvent> {
+
+        final KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
+
+        public void handle(final KeyEvent keyEvent) {
+
+            if (copyKeyCodeCompination.match(keyEvent)) {
+
+                if (keyEvent.getSource() instanceof TableView) {
+
+                    // copy to clipboard
+                    copySelectionToClipboard((TableView<?>) keyEvent.getSource());
+
+                    System.out.println("Selection copied to clipboard");
+
+                    // event is handled, consume it
+                    keyEvent.consume();
+
+                }
+
+            }
+
+        }
+
+    }
+
+    static class TreeTableKeyEventHandler implements EventHandler<KeyEvent> {
+        final KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
+
+        public void handle(final KeyEvent keyEvent) {
+            if (copyKeyCodeCompination.match(keyEvent)) {
+                if (keyEvent.getSource() instanceof TreeTableView) {
+                    copySelectionToClipboard((TreeTableView<?>) keyEvent.getSource());
+                    System.out.println("Selection copied to clipboard");
+                    keyEvent.consume();
+                }
+            }
+        }
     }
 }

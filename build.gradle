@@ -32,7 +32,7 @@ def getVersionName = { ->
             commandLine 'git', 'describe', '--all'
             standardOutput = stdout
         }
-        if ('heads/master'.equalsIgnoreCase(stdout.toString().trim())) {
+        if ('heads/master'.equalsIgnoreCase(stdout.toString().trim()) || stdout.toString().trim().contains(tag)) {
             return tag
         } else {
             // Adding the branch name to the version

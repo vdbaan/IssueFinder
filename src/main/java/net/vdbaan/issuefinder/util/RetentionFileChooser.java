@@ -24,13 +24,14 @@ import java.io.File;
 import java.util.List;
 
 public class RetentionFileChooser {
-    private static FileChooser instance = null;
     final private static SimpleObjectProperty<File> lastKnownDirectoryProperty = new SimpleObjectProperty<>();
+    private static FileChooser instance = null;
 
-    public RetentionFileChooser(){ }
+    public RetentionFileChooser() {
+    }
 
-    private static FileChooser getInstance(){
-        if(instance == null) {
+    private static FileChooser getInstance() {
+        if (instance == null) {
             instance = new FileChooser();
             instance.initialDirectoryProperty().bindBidirectional(lastKnownDirectoryProperty);
 
@@ -38,37 +39,37 @@ public class RetentionFileChooser {
         return instance;
     }
 
-    public static File showOpenDialog(){
+    public static File showOpenDialog() {
         return showOpenDialog(null);
     }
 
-
-    public List<File> showOpenMultipleDialog(final Window ownerWindow) {
-        List<File> result = getInstance().showOpenMultipleDialog(ownerWindow);
-        if(result != null) {
-            lastKnownDirectoryProperty.setValue(result.get(0).getParentFile());
-        }
-        return result;
-    }
-    private static File showOpenDialog(Window ownerWindow){
+    private static File showOpenDialog(Window ownerWindow) {
         File chosenFile = getInstance().showOpenDialog(ownerWindow);
-        if(chosenFile != null){
+        if (chosenFile != null) {
             //Set the property to the directory of the chosenFile so the fileChooser will open here next
             lastKnownDirectoryProperty.setValue(chosenFile.getParentFile());
         }
         return chosenFile;
     }
 
-    public static File showSaveDialog(){
+    public static File showSaveDialog() {
         return showSaveDialog(null);
     }
 
-    private static File showSaveDialog(Window ownerWindow){
+    private static File showSaveDialog(Window ownerWindow) {
         File chosenFile = getInstance().showSaveDialog(ownerWindow);
-        if(chosenFile != null){
+        if (chosenFile != null) {
             //Set the property to the directory of the chosenFile so the fileChooser will open here next
             lastKnownDirectoryProperty.setValue(chosenFile.getParentFile());
         }
         return chosenFile;
+    }
+
+    public List<File> showOpenMultipleDialog(final Window ownerWindow) {
+        List<File> result = getInstance().showOpenMultipleDialog(ownerWindow);
+        if (result != null) {
+            lastKnownDirectoryProperty.setValue(result.get(0).getParentFile());
+        }
+        return result;
     }
 }

@@ -41,6 +41,8 @@ interface DbHandler {
     void deleteDB()
 
     void attachShutdownHook()
+
+    void resetJdbc()
 }
 
 @Log
@@ -55,14 +57,21 @@ class DbHandlerImpl implements DbHandler {
             if (jdbcDataSource == null) {
                 Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE).clone()
                 String dbName = Config.getInstance().getProperty(Config.DB_NAME)
-                String name
-                name = dbName + '-' + System.currentTimeMillis()
-                Config.getInstance().setProperty('VOLATILE-DB', name)
-                dataSource.database = dataSource.database.replace(dbName, name)
+                if(!Config.getInstance().hasPropertyFor('LEAVE_DB')) {
+                    String name
+                    name = dbName + '-' + System.currentTimeMillis()
+                    Config.getInstance().setProperty('VOLATILE-DB', name)
+                    dataSource.database = dataSource.database.replace(dbName, name)
+                }
                 log.info 'Using db: ' + dataSource
                 jdbcDataSource = new JdbcDataSource(url: dataSource.database, user: dataSource.user, password: dataSource.password)
             }
             return jdbcDataSource
+        }
+
+        void resetJdbc() {
+            jdbcDataSource = null
+            create=true
         }
     }
     Sql sql = null
@@ -177,5 +186,9 @@ class DbHandlerImpl implements DbHandler {
                 }
             }
         })
+    }
+
+    void resetJdbc() {
+        MyDataSource.INSTANCE.resetJdbc()
     }
 }

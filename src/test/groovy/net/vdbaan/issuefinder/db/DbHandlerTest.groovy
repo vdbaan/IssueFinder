@@ -27,20 +27,25 @@ class DbHandlerTest {
 
     @Before
     void memDB() {
-        Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDB;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
+
     }
 
     @Test
     void testEmptyDb() {
+        Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDBEmpty;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
+        Config.getInstance().setProperty('LEAVE-DB',true)
         DbHandler handler = new DbHandlerImpl()
+        handler.resetJdbc()
         handler.getAllFinding(null)
         assertEquals('', 0, handler.getNumrows())
     }
 
     @Test
     void testSimpleDb() {
-
+        Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDBSimple;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
+        Config.getInstance().setProperty('LEAVE-DB',true)
         DbHandler handler = new DbHandlerImpl()
+        handler.resetJdbc()
         handler.saveFindings([makeFinding('1')])
         assertEquals('Should still be 0', 0, handler.getNumrows())
         List<Finding> result = handler.getAllFinding(null)
@@ -54,9 +59,11 @@ class DbHandlerTest {
 
     @Test
     void testUpdate() {
-
+        Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDBUpdate;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
+        Config.getInstance().setProperty('LEAVE-DB',true)
         String txt = 'New service'
         DbHandler handler = new DbHandlerImpl()
+        handler.resetJdbc()
         handler.saveFindings([makeFinding('1')])
         assertEquals('Should still be 0', 0, handler.getNumrows())
         List<Finding> result = handler.getAllFinding(null)
@@ -72,7 +79,7 @@ class DbHandlerTest {
     @Test
     void deleteDBAfterUse() {
         String dir = './build/tmp/'
-        String name = 'issueDB'
+        String name = 'issueDBDelete'
         File d = new File(dir)
         if (!d.exists()) d.mkdirs()
 
@@ -80,6 +87,7 @@ class DbHandlerTest {
         Config.getInstance().setProperty(Config.DB_NAME, name)
         Config.getInstance().setProperty(Config.DATA_SOURCE, [database: "jdbc:h2:${dir}${name};DB_CLOSE_ON_EXIT=FALSE", user: 'sa', password: ''])
         DbHandler handler = new DbHandlerImpl()
+        handler.resetJdbc()
         handler.saveFindings([makeFinding('1')])
         String n = Config.getInstance().getProperty('VOLATILE-DB')
         File db = new File(dir, n.concat('.mv.db'))
