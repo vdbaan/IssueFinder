@@ -112,11 +112,11 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
     }
 
     void setEditRisk(Finding.Severity editRisk) {
-        this.editRisk.value = Finding.Severity
+        this.editRisk.value = editRisk
     }
 
     void setEditRiskOptions(List<Finding.Severity> options) {
-        this.editRisk.items.add(options)
+        this.editRisk.items.addAll(options)
     }
 
 
