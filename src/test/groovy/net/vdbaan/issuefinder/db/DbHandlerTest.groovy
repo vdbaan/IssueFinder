@@ -78,18 +78,16 @@ class DbHandlerTest {
 
         Config.getInstance().setProperty(Config.DATA_DIR, dir)
         Config.getInstance().setProperty(Config.DB_NAME, name)
-        Config.getInstance().setProperty(Config.DATA_SOURCE, [database: "jdbc:h2:${dir}${name}", user: 'sa', password: ''])
+        Config.getInstance().setProperty(Config.DATA_SOURCE, [database: "jdbc:h2:${dir}${name};DB_CLOSE_ON_EXIT=FALSE", user: 'sa', password: ''])
         DbHandler handler = new DbHandlerImpl()
-        File db = new File(dir, name.concat('.mv.db'))
-//
-//        handler.saveFindings([makeFinding('1')])
-//        assert db.exists()
-//        handler.deleteAll()
-//        handler.deleteDB()
-//        assert !db.exists()
-//        handler.execute('SHUTDOWN')
+        handler.saveFindings([makeFinding('1')])
+        String n = Config.getInstance().getProperty('VOLATILE-DB')
+        File db = new File(dir, n.concat('.mv.db'))
+        assert db.exists()
+        handler.deleteAll()
+        handler.deleteDB()
+        assert !db.exists()
     }
-
 
     private Finding makeFinding(String txt) {
         return new Finding(scanner: 'scanner' + txt, ip: 'ip' + txt, port: 'port' + txt, portStatus: 'portStatus' + txt,
