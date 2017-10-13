@@ -36,8 +36,17 @@ class NMapParser extends Parser {
         content.host.each { host ->
             def hostNode = host.address.find { it.@addrtype == 'ipv4' }
             String hostIp = hostNode.@addr
-            hostNode = host.hostnames.hostname.find { it.@type == 'user' }
-            String hostName = (hostNode.@name)
+            String hostName
+            host.hostnames.hostname.each { hostname ->
+                if(hostname.@type=='user') {
+                    hostName = hostname.@name
+                } else if (hostname.@type=='PTR') {
+                    hostName = hostname.@name
+                } else {
+                    hostName = hostIp
+                }
+
+            }
             hostName = hostName ?: hostIp
             String protocol = content.scaninfo.@protocol
             if (allowed(Finding.Severity.INFO))
