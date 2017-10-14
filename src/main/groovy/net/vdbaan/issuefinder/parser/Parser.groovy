@@ -61,6 +61,8 @@ abstract class Parser {
             if (ArachniParser.identify(content)) return new ArachniParser(content)
             if (BurpParser.identify(content)) return new BurpParser(content)
             if (SSLyzeParser.identify(content)) return new SSLyzeParser(content)
+            if (ZAPParser.identify(content)) return new ZAPParser(content)
+
         } catch (Exception e) {
             log.warning e.getMessage()
             try {

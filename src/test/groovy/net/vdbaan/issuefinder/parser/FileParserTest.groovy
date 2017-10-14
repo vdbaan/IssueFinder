@@ -219,3 +219,26 @@ class NetSparkerTest {
         }
     }
 }
+
+class ZAPParserTest {
+    @Test
+    void testEmptyZAP() {
+        Parser p = Parser.getParser('<?xml version="1.0"?>\n' +
+                '<OWASPZAPReport version="2.6.0" generated="Sat, 14 Oct 2017 17:20:09"></OWASPZAPReport>')
+        assert p instanceof ZAPParser
+        List<Finding> result = p.parse()
+        assertTrue(result.isEmpty())
+    }
+    @Test
+    void testZAPFile() {
+        File testFile = new File('testdata/zap.xml')
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testFile.text)
+            assert p instanceof ZAPParser
+            List result = p.parse()
+            result.each {println it}
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
+    }
+}
