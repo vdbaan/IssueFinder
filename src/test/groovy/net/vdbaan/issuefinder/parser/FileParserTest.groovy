@@ -242,3 +242,26 @@ class ZAPParserTest {
         }
     }
 }
+
+class OpenVASParserTest {
+    @Test
+    void testEmptyOpenVAS() {
+        Parser p = Parser.getParser('<report id="43abd40f-5db4-4bae-965e-bf07838465ef" format_id="a994b278-1f62-11e1-96ac-406186ea4fc5" extension="xml" type="scan" content_type="text/xml"><report/></report>')
+        assert p instanceof OpenVASParser
+        List<Finding> result = p.parse()
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    void testOpenVASFile() {
+        File testFile = new File('testdata/openvas.xml')
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testFile.text)
+            assert p instanceof OpenVASParser
+            List result = p.parse()
+            result.each {println it}
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
+    }
+}

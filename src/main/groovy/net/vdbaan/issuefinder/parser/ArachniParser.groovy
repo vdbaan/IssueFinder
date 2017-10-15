@@ -17,6 +17,7 @@
 
 package net.vdbaan.issuefinder.parser
 
+import groovy.util.slurpersupport.GPathResult
 import net.vdbaan.issuefinder.model.Finding
 
 class ArachniParser extends Parser {
@@ -28,8 +29,10 @@ class ArachniParser extends Parser {
         this.content = content
     }
 
-    static boolean identify(contents) {
-        return IDENTIFIER.equalsIgnoreCase(contents.name())
+    static boolean identify(GPathResult contents) {
+        boolean hasIssues = false
+        contents.'**'.each {if ('issues'.equals(it.name())) hasIssues = true}
+        return IDENTIFIER.equalsIgnoreCase(contents.name()) && hasIssues
     }
 
     List<Finding> parse() {
