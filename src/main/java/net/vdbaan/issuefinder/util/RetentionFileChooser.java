@@ -31,11 +31,17 @@ public class RetentionFileChooser {
     }
 
     private static FileChooser getInstance() {
+        return getInstance("");
+    }
+
+    private static FileChooser getInstance(String title) {
         if (instance == null) {
             instance = new FileChooser();
             instance.initialDirectoryProperty().bindBidirectional(lastKnownDirectoryProperty);
 
         }
+        if (title == null) title = "";
+        instance.setTitle(title);
         return instance;
     }
 
@@ -66,7 +72,7 @@ public class RetentionFileChooser {
     }
 
     public List<File> showOpenMultipleDialog(final Window ownerWindow) {
-        List<File> result = getInstance().showOpenMultipleDialog(ownerWindow);
+        List<File> result = getInstance("Load").showOpenMultipleDialog(ownerWindow);
         if (result != null) {
             lastKnownDirectoryProperty.setValue(result.get(0).getParentFile());
         }
