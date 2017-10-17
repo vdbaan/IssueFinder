@@ -18,15 +18,18 @@
 package net.vdbaan.issuefinder;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.vdbaan.issuefinder.db.DbHandler;
 import net.vdbaan.issuefinder.db.DbHandlerImpl;
 import net.vdbaan.issuefinder.model.Finding;
+import net.vdbaan.issuefinder.util.BrowserPopupHandler;
 import net.vdbaan.issuefinder.util.Container;
 import net.vdbaan.issuefinder.view.EditorView;
 import net.vdbaan.issuefinder.view.MainView;
@@ -66,6 +69,8 @@ public class MainAppImpl extends Application implements MainApp {
 
         primaryStage.getIcons().add(new Image(MainAppImpl.class.getResourceAsStream("/539822430.jpg")));
 
+//        mainWindow.setOnHidden(e -> Platform.exit());
+        primaryStage.setOnHidden(e -> Platform.exit());
         primaryStage.show();
     }
 
@@ -138,5 +143,17 @@ public class MainAppImpl extends Application implements MainApp {
         dialog.setScene(scene);
 
         dialog.showAndWait();
+    }
+
+    public void showHelp() {
+        Stage dialog = new Stage();
+        dialog.setTitle("IssueFinder Help");
+        WebView view = new WebView();
+
+        view.getEngine().load(MainAppImpl.class.getResource("/helptext.html").toExternalForm());
+        view.getEngine().setCreatePopupHandler(new BrowserPopupHandler(this));
+        dialog.initModality(Modality.NONE);
+        dialog.setScene(new Scene(view));
+        dialog.show();
     }
 }

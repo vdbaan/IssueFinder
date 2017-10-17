@@ -85,6 +85,10 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     private ScrollPane webScroll
 
     @FXML
+    void aboutHelp(ActionEvent event) {
+        aboutHelpAction?.handle(event)
+    }
+    @FXML
     void aboutAction(ActionEvent event) {
         aboutAction?.handle(event)
     }
@@ -297,6 +301,7 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
     MainPresenter presenter
 
     private EventHandler<ActionEvent> aboutAction
+    private EventHandler<ActionEvent> aboutHelpAction
     private EventHandler<ActionEvent> summaryAction
     private EventHandler<ActionEvent> clearAction
     private EventHandler<ActionEvent> closeAction
@@ -324,6 +329,13 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
 
     EventHandler<ActionEvent> getAboutAction() {
         return aboutAction
+    }
+
+    void setAboutHelpAction(EventHandler<ActionEvent> aboutHelpAction) {
+        this.aboutHelpAction = aboutHelpAction
+    }
+    EventHandler<ActionEvent> getAboutHelpAction() {
+        return aboutHelpAction
     }
 
     void setAboutAction(EventHandler<ActionEvent> aboutAction) {

@@ -34,4 +34,6 @@ public interface MainApp {
     void showSummary(Map<String, Container> summary) throws IOException;
 
     void showSettings() throws IOException;
+
+    void showHelp();
 }

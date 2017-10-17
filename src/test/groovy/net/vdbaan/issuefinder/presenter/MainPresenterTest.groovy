@@ -60,6 +60,11 @@ class MainPresenterTest {
         mock.setRetentionResult([testFile])
         mock.setMainApp(new MainApp() {
             @Override
+            void showHelp() {
+
+            }
+
+            @Override
             void showProgressDialog(List<File> files) throws IOException {
 
             }
@@ -137,6 +142,11 @@ class MainViewMock extends AbstractMainView implements MainView {
 
     MainViewMock() {
         presenter = new MainPresenter(this)
+    }
+
+    @Override
+    void aboutHelp(ActionEvent event) {
+
     }
 
     @Override

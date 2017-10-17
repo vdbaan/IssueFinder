@@ -81,6 +81,7 @@ class MainPresenter {
         masterView.setSettingsAction(this.&settingsAction)
         masterView.setCloseAction(this.&closeAction)
 
+        masterView.setAboutHelpAction(this.&aboutHelpAction)
         masterView.setSummaryAction(this.&summaryAction)
         masterView.setAboutAction(this.&aboutAction)
 
@@ -177,6 +178,9 @@ class MainPresenter {
         mainApp.showSummary(summaryInfo)
     }
 
+    void aboutHelpAction(ActionEvent e) {
+        mainApp.showHelp()
+    }
     void aboutAction(ActionEvent e) {
         mainApp.showAbout()
     }

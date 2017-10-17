@@ -67,20 +67,7 @@ class NessusParser extends Parser {
                     case 4: severity = Finding.Severity.CRITICAL
                         break
                 }
-                StringBuilder summary = new StringBuilder()
-                summary << "$item.synopsis\n"
-//                summary << "Plugin output:\n$item.plugin_output\n"
-//                summary << "Description          : $item.description\n"
-//                summary << "Solution             : $item.solution\n"
-                summary << "RiskFactor           : $item.risk_factor\n"
-                summary << "Exploit available    : $item.exploit_available\n"
-                summary << "Ease of exploit      : $item.exploitability_ease\n"
-                summary << "Patch available since: $item.patch_publication_date\n"
-//                summary << "CVSS base vector     : $item.cvss_vector\n"
-//                summary << "CVSS base score      : $item.cvss_base_score\n"
-                summary << "CVSS temporal vector : $item.cvss_temporal_vector\n"
-                summary << "CVSS temporal score  : $item.cvss_temporal_score\n"
-                summary << "See also:\n$item.see_also\n"
+
 
                 String description = item.description
                 String solution = item.solution
@@ -96,12 +83,24 @@ class NessusParser extends Parser {
                     result << new Finding([scanner     : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
                                            service     : service, plugin: plugin + ":" + pluginName,
                                            exploitable : item.exploit_available == 'true', baseCVSS: cvss, cvssVector: cvssVector,
-                                           severity    : severity, summary: summary.toString(), description: description, reference: references,
+                                           severity    : severity, summary: buildSummary(item), description: description, reference: references,
                                            pluginOutput: pluginOutput, solution: solution])
             }
         }
         log.info(String.format("Returning %d issues", result.size()))
         return result
+    }
+
+    String buildSummary(item) {
+        return """
+${item.synopsis}
+RiskFactor           : ${item.risk_factor}
+Exploit available    : ${item.exploit_available}
+Ease of exploit      : ${item.exploitability_ease}
+Patch availabls since: ${item.patch_publication_date}
+CVSS temporal vector : ${item.cvss_temporal_vector}
+CVSS temporal score  : ${item.cvss_temporal_score}
+"""
     }
 }
 

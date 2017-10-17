@@ -35,6 +35,8 @@ import net.vdbaan.issuefinder.util.RetentionFileChooser
 interface MainView extends BaseView, DbListener {
     void setMainApp(MainApp mainApp)
 
+    void aboutHelp(ActionEvent event)
+
     void aboutAction(ActionEvent event)
 
     void buildSummary(ActionEvent event)
@@ -80,6 +82,10 @@ interface MainView extends BaseView, DbListener {
     void openSettings(ActionEvent event)
 
     EventHandler<ActionEvent> getAboutAction()
+
+
+    void setAboutHelpAction(EventHandler<ActionEvent> aboutHelpAction)
+    EventHandler<ActionEvent> getAboutHelpAction()
 
     void setAboutAction(EventHandler<ActionEvent> aboutAction)
 
