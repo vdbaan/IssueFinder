@@ -22,9 +22,9 @@
                                                     shortcut="UP"/>
                             </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="true" onAction="#openAction" text="_Open Report">
+                        <MenuItem mnemonicParsing="true" onAction="#openAction" text="_Load Report">
                             <accelerator>
-                                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP"
+                                <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP"
                                                     shortcut="UP"/>
                             </accelerator>
                         </MenuItem>
@@ -43,14 +43,14 @@
                 </Menu>
                 <Menu mnemonicParsing="true" text="_Help">
                     <items>
-                        <MenuItem mnemonicParsing="true" onAction="#aboutHelp" text="_Help"/>
-                        <MenuItem mnemonicParsing="true" onAction="#buildSummary" text="Statistics"/>
-                        <SeparatorMenuItem/>
-                        <MenuItem mnemonicParsing="true" onAction="#aboutAction" text="_About">
+                        <MenuItem mnemonicParsing="true" onAction="#aboutHelp" text="_Help">
                             <accelerator>
                                 <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                             </accelerator>
                         </MenuItem>
+                        <MenuItem mnemonicParsing="true" onAction="#buildSummary" text="Statistics"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem mnemonicParsing="true" onAction="#aboutAction" text="_About"/>
                     </items>
                 </Menu>
             </menus>
