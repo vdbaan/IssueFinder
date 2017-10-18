@@ -92,7 +92,7 @@
                         <TableColumn maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Hostname"
                                      visible="false">
                             <cellValueFactory>
-                                <PropertyValueFactory property="hostname"/>
+                                <PropertyValueFactory property="hostName"/>
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Port">
