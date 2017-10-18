@@ -56,7 +56,7 @@ class FindingHtmlViewer {
         }</td></tr>
 <tr><td colspan=2 style='border:1px solid black;'>&nbsp;</td></tr>
 <tr><td colspan=2 style='border:1px solid black;'><b>Summary:</b><br/>${finding.summary.replace('\n', '<br/>')}</td></tr>
-<tr><td colspan=2 style='border:1px solid black;'><b>Description:</b><br/>${finding.description}</td></tr>
+<tr><td colspan=2 style='border:1px solid black;'><b>Description:</b><br/>${finding.description.replace('\n', '<br/>')}</td></tr>
 <tr><td colspan=2 style='border:1px solid black;'><b>Reference:</b><br/>${finding.reference.replace('\n', '<br/>')}</td></tr>
 <tr><td colspan=2 style='border:1px solid black;'><b>Plugin Output:</b><br/><pre>${finding.pluginOutput}</pre></td></tr>
 <tr><td colspan=2 style='border:1px solid black;'><b>Solution:</b><br/>${finding.solution}</td></tr>
