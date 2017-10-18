@@ -21,6 +21,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -155,5 +156,12 @@ public class MainAppImpl extends Application implements MainApp {
         dialog.initModality(Modality.NONE);
         dialog.setScene(new Scene(view));
         dialog.show();
+    }
+
+    public void showWarning(String warning){
+        Alert popup = new Alert(Alert.AlertType.WARNING);
+        popup.setTitle("Warning");
+        popup.setContentText(warning);
+        popup.showAndWait();
     }
 }

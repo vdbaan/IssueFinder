@@ -74,7 +74,7 @@
         <Label text="Max Rows Visible:" GridPane.columnSpan="2" GridPane.rowIndex="7"/>
         <TextField fx:id="filterText" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5"/>
         <Label text="IP / Port copy string:" GridPane.columnSpan="2" GridPane.rowIndex="10"/>
-        <TextField fx:id="copyString" disable="true" text="IP:PORT" GridPane.columnIndex="2" GridPane.columnSpan="5"
+        <TextField fx:id="copyString" text="IP:PORT" GridPane.columnIndex="2" GridPane.columnSpan="5"
                    GridPane.rowIndex="10"/>
         <Label text="Coloured Rows:" GridPane.columnSpan="2" GridPane.rowIndex="9"/>
         <CheckBox fx:id="coloredRows" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="9"/>

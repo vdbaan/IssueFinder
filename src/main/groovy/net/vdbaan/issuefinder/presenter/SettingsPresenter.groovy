@@ -31,6 +31,7 @@ class SettingsPresenter {
 
         settingsView.setMaxRows(Config.getInstance().getProperty(Config.MAX_ROWS) as String)
         settingsView.setBatchSize(Config.getInstance().getProperty(Config.BATCH_SIZE) as String)
+        settingsView.setCopyString(Config.getInstance().getProperty(Config.IP_PORT_FORMAT_STRING) as String)
         Map<Finding.Severity, Boolean> preload_filter = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
         settingsView.setIsCritical(preload_filter.get(Finding.Severity.CRITICAL))
         settingsView.setIsHigh((Boolean) preload_filter.get(Finding.Severity.HIGH))
@@ -79,7 +80,7 @@ class SettingsPresenter {
         Config.getInstance().setProperty(Config.COLOURED_ROWS, settingsView.isColouredRow())
         Config.getInstance().setProperty(Config.MAX_ROWS, settingsView.getMaxRows() as Integer)
         Config.getInstance().setProperty(Config.BATCH_SIZE, settingsView.getBatchSize() as Integer)
-
+        Config.getInstance().setProperty(Config.IP_PORT_FORMAT_STRING, settingsView.getCopyString())
 //        ((List) ConfigHandler.getIFProperty(Config.FILTERS)).clear()
         Config.getInstance().setProperty(Config.FILTERS, settingsView.getAllItems())
 

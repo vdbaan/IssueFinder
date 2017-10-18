@@ -36,4 +36,6 @@ public interface MainApp {
     void showSettings() throws IOException;
 
     void showHelp();
+
+    void showWarning(String warning);
 }

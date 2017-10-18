@@ -148,9 +148,6 @@ class MainPresenter {
         masterView.getFilterTextItems().removeAll(masterView.getFilterTextItems())
         masterView.setFilterTextItems((List<String>) Config.getInstance().getProperty(Config.FILTERS))
         filterTableAction(e)
-//        List<Finding> tmp = (List<Finding>)masterData.clone()
-//        masterData.removeAll(masterData)
-//        masterData.addAll(tmp)
     }
 
     void closeAction(ActionEvent e) {
@@ -347,6 +344,8 @@ class MainPresenter {
         int sizeList = masterData.size()
         int sizeDb = db.getNumrows()
         if (sizeDb > sizeList) {
+            // TODO Create alert to inform about showing partial result
+            mainApp.showWarning(String.format("Only showing %d of %d Findings\nPlease use a filter to reduce the number of finding", sizeList, sizeDb))
             masterView.setRowInfoLabel String.format("Showing %d of %d Findings", sizeList, sizeDb)
         }
     }

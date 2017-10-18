@@ -59,6 +59,12 @@ class MainPresenterTest {
         MainView mock = new MainViewMock()
         mock.setRetentionResult([testFile])
         mock.setMainApp(new MainApp() {
+
+            @Override
+            void showWarning(String warning) {
+
+            }
+
             @Override
             void showHelp() {
 
