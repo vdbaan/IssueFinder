@@ -84,7 +84,7 @@ class ConfigImpl extends Config {
         configObject.put(PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
                                           (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
         configObject.put(BATCH_SIZE, 100)
-        configObject.put(IP_PORT_FORMAT_STRING, 'IP:PORT')
+        configObject.put(IP_PORT_FORMAT_STRING, '$ip:$port')
         configObject.put(COLOURED_ROWS, true)
         configObject.put(DATA_DIR, System.getProperty("user.home") + '/.issuefinder/data/')
         configObject.put(DB_NAME, 'issueDB')

@@ -245,23 +245,26 @@ class MainPresenter {
     }
 
     void copyUniqueIpPorts(List<Finding> findings) {
-        Set<String> ips = new TreeSet<>()
+        Map<String,String> ips = new TreeMap<>()
+        String formatString = Config.getInstance().getProperty(Config.IP_PORT_FORMAT_STRING)
         findings.each { f ->
             String port = f.port.split('/')[0]
             if (port.isNumber() && port != '0') {
                 if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
-                    ips << f.ip + ":" + port // TODO Make this configurable
+                    ips.put(f.ip + ":" + port,f.formatString(formatString))
             }
         }
-        def sorted = ips.sort { a, b ->
-            def ip1 = a.split(":")[0].split("\\.")
-            def ip2 = b.split(":")[0].split("\\.")
-            def uip1 = String.format("%03d.%03d.%03d.%03d.%05d", ip1[0] as int, ip1[1] as int, ip1[2] as int, ip1[3] as int, (a.split(":")[1]) as int)
-            def uip2 = String.format("%03d.%03d.%03d.%03d.%05d", ip2[0] as int, ip2[1] as int, ip2[2] as int, ip2[3] as int, (b.split(":")[1]) as int)
+        Map<String,String> sorted = ips.sort( { Map.Entry a, Map.Entry b ->
+            def ip1 = a.key.toString().split(":")[0].split("\\.")
+            def port1 = a.key.toString().split(":")[1]
+            def ip2 = b.key.toString().split(":")[0].split("\\.")
+            def port2 = b.key.toString().split(":")[1]
+            def uip1 = String.format("%03d.%03d.%03d.%03d.%05d", ip1[0] as int, ip1[1] as int, ip1[2] as int, ip1[3] as int, port1 as int)
+            def uip2 = String.format("%03d.%03d.%03d.%03d.%05d", ip2[0] as int, ip2[1] as int, ip2[2] as int, ip2[3] as int, port2 as int)
             uip1 <=> uip2
-        }
+        })
         final ClipboardContent clipboardContent = new ClipboardContent()
-        clipboardContent.putString(sorted.join("\n"))
+        clipboardContent.putString(sorted.values().join("\n"))
         masterView.setClipboardContent(clipboardContent)
     }
 

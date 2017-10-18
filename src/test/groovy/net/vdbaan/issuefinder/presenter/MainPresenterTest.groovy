@@ -107,14 +107,17 @@ class MainPresenterTest {
 
     @Test
     void testClipboard() {
-        Finding f1 = new Finding(ip: '127.0.0.1', port: '80', plugin: 'newplugin', service: 'newservice')
-        Finding f2 = new Finding(ip: '127.0.0.2', port: '8080', plugin: 'newplugin', service: 'newservice')
+        Finding f1 = new Finding(ip: '127.0.0.1', port: '80', portStatus: 'open', plugin: 'newplugin', service: 'www')
+        Finding f2 = new Finding(ip: '127.0.0.2', port: '8080', portStatus: 'open',plugin: 'newplugin', service: 'www')
         MainView mock = new MainViewMock()
         mock.setMasterData([f1, f2])
         mock.getCopyIpAction().handle(null)
         assertEquals('127.0.0.1\n127.0.0.2', mock.getClipboardContent().getString())
         mock.getCopyIpPortAction().handle(null)
         assertEquals('127.0.0.1:80\n127.0.0.2:8080', mock.getClipboardContent().getString())
+        Config.getInstance().setProperty(Config.IP_PORT_FORMAT_STRING,'$ip\t$port/$service/$portStatus')
+        mock.getCopyIpPortAction().handle(null)
+        assertEquals('127.0.0.1\t80/www/open\n127.0.0.2\t8080/www/open', mock.getClipboardContent().getString())
     }
 
     @Before

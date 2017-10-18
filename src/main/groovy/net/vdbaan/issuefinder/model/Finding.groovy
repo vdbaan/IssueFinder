@@ -17,6 +17,7 @@
 
 package net.vdbaan.issuefinder.model
 
+import groovy.text.SimpleTemplateEngine
 import net.vdbaan.issuefinder.util.FindingHtmlViewer
 
 class Finding {
@@ -75,6 +76,12 @@ exploitable  BOOLEAN
 
     String getRisk() {
         return severity.toString()
+    }
+
+    String formatString(String str) {
+        SimpleTemplateEngine ste = new SimpleTemplateEngine()
+        def template = ste.createTemplate(str).make(getProperties())
+        return template.toString()
     }
 
     @Override
