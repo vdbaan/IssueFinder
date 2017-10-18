@@ -344,7 +344,6 @@ class MainPresenter {
         int sizeList = masterData.size()
         int sizeDb = db.getNumrows()
         if (sizeDb > sizeList) {
-            // TODO Create alert to inform about showing partial result
             mainApp.showWarning(String.format("Only showing %d of %d Findings\nPlease use a filter to reduce the number of finding", sizeList, sizeDb))
             masterView.setRowInfoLabel String.format("Showing %d of %d Findings", sizeList, sizeDb)
         }
