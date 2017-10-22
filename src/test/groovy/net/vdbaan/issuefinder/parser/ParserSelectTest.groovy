@@ -19,13 +19,15 @@ package net.vdbaan.issuefinder.parser
 
 import org.junit.Test
 
+import java.nio.file.Paths
+
 class ParserSelectTest {
 
     @Test
     void testSelectNessusFile() {
         File testFile = new File("testdata/Nessus.nessus")
         if (testFile.exists()) {
-            assert Parser.getParser(testFile.text) instanceof NessusParser
+            assert Parser.getParser(testFile) instanceof NessusParser
         }
     }
 
@@ -33,7 +35,7 @@ class ParserSelectTest {
     void testSelectNMapFile() {
         File testFile = new File("testdata/Nmap.xml")
         if (testFile.exists()) {
-            assert Parser.getParser(testFile.text) instanceof NMapParser
+            assert Parser.getParser(testFile) instanceof NMapParser
         }
     }
 
@@ -41,7 +43,7 @@ class ParserSelectTest {
     void testSelectNetsparkerFile() {
         File testFile = new File("testdata/Netsparker.xml")
         if (testFile.exists()) {
-            assert Parser.getParser(testFile.text) instanceof NetsparkerParser
+            assert Parser.getParser(testFile) instanceof NetsparkerParser
         }
     }
 
@@ -49,13 +51,13 @@ class ParserSelectTest {
     void testSelectNiktoFile() {
         File testFile = new File("testdata/Nikto.xml")
         if (testFile.exists()) {
-            assert Parser.getParser(testFile.text) instanceof NiktoParser
+            assert Parser.getParser(testFile) instanceof NiktoParser
         }
     }
 
     @Test
     void testSelectIllegalFile() {
-        Parser p = Parser.getParser(getClass().getResource("/style.css"))
+        Parser p = Parser.getParser(Paths.get(getClass().getResource("/style.css").toURI()).toFile())
         assert p == null
     }
 }

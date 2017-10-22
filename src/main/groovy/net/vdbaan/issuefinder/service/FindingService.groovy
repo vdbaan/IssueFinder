@@ -37,7 +37,7 @@ class FindingService extends Service<List<Finding>> {
             protected List<Finding> call() {
                 List<Finding> answer = new ArrayList<>()
                 try {
-                    Parser p = Parser.getParser(file.getText())
+                    Parser p = Parser.getParser(file)
                     answer.addAll(p.parse())
                 } finally {
                     return answer

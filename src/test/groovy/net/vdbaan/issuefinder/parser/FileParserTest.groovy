@@ -41,7 +41,7 @@ class NessusParserTest {
 
         File testFile = new File("testdata/Nessus.nessus")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof NessusParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -65,7 +65,7 @@ class NmapParserTest {
     void testNmapFile() {
         File testFile = new File("testdata/Nmap.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof NMapParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -93,7 +93,7 @@ class TestSSLParserTest {
     void testJSonFile() {
         File testFile = new File("testdata/testssl-4-4848.json")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof TestSSLParser
             List<Finding> result = p.parse()
             assertFalse(result.isEmpty())
@@ -118,7 +118,7 @@ class NiktoParserTest {
     void testNiktoFile() {
         File testFile = new File("testdata/Nikto.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof NiktoParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -141,7 +141,7 @@ class ArachniParserTest {
     void testArachniFile1() {
         File testFile = new File("testdata/2017-02-20 21_19_14 +0000.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof ArachniParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -153,7 +153,7 @@ class ArachniParserTest {
     void testArachniFile2() {
         File testFile = new File("testdata/2017-02-21 10_47_30 +0000.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof ArachniParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -175,7 +175,7 @@ class BurpParserTest {
     void testBurpFile() {
         File testFile = new File("testdata/burp.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof BurpParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -187,7 +187,7 @@ class BurpParserTest {
     void testBurp1727File() {
         File testFile = new File("testdata/burp1727.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof BurpParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -211,7 +211,7 @@ class NetSparkerTest {
     void testNetsparkerFile() {
         File testFile = new File("testdata/Netsparker.xml")
         if (testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof NetsparkerParser
             List result = p.parse()
             assertFalse(result.isEmpty())
@@ -233,7 +233,7 @@ class ZAPParserTest {
     void testZAPFile() {
         File testFile = new File('testdata/zap.xml')
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof ZAPParser
             List result = p.parse()
             result.each {println it}
@@ -256,8 +256,23 @@ class OpenVASParserTest {
     void testOpenVASFile() {
         File testFile = new File('testdata/openvas.xml')
         if(testFile.exists()) {
-            Parser p = Parser.getParser(testFile.text)
+            Parser p = Parser.getParser(testFile)
             assert p instanceof OpenVASParser
+            List result = p.parse()
+            result.each {println it}
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+        }
+    }
+}
+
+class BurpStateTest {
+    @Test
+    void testStateFile() {
+        File testFile = new File('testdata/Burp.state')
+        if(testFile.exists()) {
+            Parser p = Parser.getParser(testFile)
+            assert p instanceof BurpStateParser
             List result = p.parse()
             result.each {println it}
             assertFalse(result.isEmpty())

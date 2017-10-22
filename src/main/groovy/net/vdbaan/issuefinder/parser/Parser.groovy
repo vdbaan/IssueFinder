@@ -47,11 +47,20 @@ abstract class Parser {
         jsonSlurper = new JsonSlurper()
     }
 
-    static Parser getParser(file) {
+    static Parser getParser(File file) {
+        try {
+            return getParser(file.getText())
+        } catch (Exception e) {
+            if (BurpStateParser.identify(file)) return new BurpStateParser(file)
+            else return null
+        }
+    }
+
+    static Parser getParser(String text) {
         preload = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
         try {
             def parser = parserPool.borrowObject()
-            def content = new XmlSlurper(parser).parseText(file)
+            def content = new XmlSlurper(parser).parseText(text)
 
             parserPool.returnObject(parser)
             if (NessusParser.identify(content)) return new NessusParser(content)
@@ -67,11 +76,11 @@ abstract class Parser {
         } catch (Exception e) {
             log.warning e.getMessage()
             try {
-                def json = jsonSlurper.parseText(file)
+                def json = jsonSlurper.parseText(text)
                 if (TestSSLParser.identify(json)) return new TestSSLParser(json)
             } catch (Exception e2) {
                 log.warning e2.getMessage()
-                return null
+                throw e2
             }
         }
 
