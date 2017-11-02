@@ -56,7 +56,7 @@ repositories {
 dependencies {
     compile 'org.antlr:antlr4-runtime:4.7'
 
-    compile 'org.codehaus.groovy:groovy-all:2.4.8'
+    compile 'org.codehaus.groovy:groovy-all:2.4.12'
 // perhaps as improvement?
 //    compileOnly 'org.controlsfx:controlsfx:8.40.13'
     compile 'org.apache.commons:commons-pool2:2.4.2'
@@ -65,9 +65,10 @@ dependencies {
     // https://mvnrepository.com/artifact/com.h2database/h2
     compile group: 'com.h2database', name: 'h2', version: '1.4.196'
 
-    testCompile 'junit:junit:4.12'
+    // https://mvnrepository.com/artifact/org.ccil.cowan.tagsoup/tagsoup
+//    compile group: 'org.ccil.cowan.tagsoup', name: 'tagsoup', version: '1.2.1'
 
-//    testCompile "de.saxsys:mvvmfx-testing-utils:1.7.0"
+    testCompile 'junit:junit:4.12'
     testCompile "de.saxsys:jfx-testrunner:1.2"
     testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
 }
@@ -76,28 +77,23 @@ jar {
     baseName = 'IF'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
+    exclude('groovy/jmx/**')
+    exclude('groovy/test/**')
+    exclude('groovy/swing/**')
+    exclude('groovy/mock/**')
+    exclude('groovy/servlet/**')
+    exclude('groovy/ui/**')
+    exclude('groovyjarjarcommonscli/**')
+    exclude('org/codehaus/groovy/ant/**')
+    exclude('org/codehaus/groovy/testng/**')
+    exclude('org/codehaus/groovy/tools/shell/**')
+    exclude('org/codehaus/groovy/tools/groovydoc/**')
     manifest {
         attributes 'Main-Class': 'net.vdbaan.issuefinder.Runner',
                 'version': project.version
-
     }
 }
 test {
     // Until generic (Metasploitable) test are uploaded
 //    exclude '**/*Test*'
 }
-
-
-/*
-find a way to use proguard to remove the following packages:
-- groovy.jmx.*
-- groovy.test.*
-- groovy.swing.*
-- groovy.grape.*
-- groovy.mock.*
-- groovy.servlet.*
-- groovy.ui.*
-- groovyjavjarcommonscli.*
-- org.codehous.groovy.ant.*
-- org.codehous.groovy.testng.*
- */

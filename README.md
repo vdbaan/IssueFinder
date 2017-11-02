@@ -81,6 +81,16 @@ Right-clicking on the amount of unique IPs shows you a pupup that allows you to 
 ![](https://raw.githubusercontent.com/vdbaan/IssueFinder/master/wiki/images/FX-ports.png)
 
 
+## Troubleshooting
+In case there is a problem with a particular file that you want to load and something goes wrong AND you don't want /can't 
+share that file with me, there are things you can do to help me locating the problem.
+
+First of all, you need to run the jar file from the commandline:
+- java -jar IF-&lt;version&gt;.jar [--debug]
+
+This will show some logging within the terminal. You can even increase the amount of logging my using the additional --debug flag.
+
+
 ## About
 IssueFinder takes some ideas for the definition of an issue from [IVIL xml](https://github.com/seccubus/ivil). 
 Currently it is able to parse the following formats:
