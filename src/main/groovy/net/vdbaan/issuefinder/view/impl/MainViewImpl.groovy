@@ -109,6 +109,16 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     }
 
     @FXML
+    void loadAction(ActionEvent event) {
+        loadAction?.handle(event)
+    }
+
+    @FXML
+    void saveAction(ActionEvent event) {
+        saveAction?.handle(event)
+    }
+
+    @FXML
     void copyUniqueIps(ActionEvent event) {
         copyIpAction?.handle(event)
     }
@@ -319,6 +329,8 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
     private EventHandler<ActionEvent> settingsAction
     private EventHandler<ActionEvent> openAction
     private EventHandler<ActionEvent> newAction
+    private EventHandler<ActionEvent> loadAction
+    private EventHandler<ActionEvent> saveAction
     private EventHandler<ActionEvent> modifyAction
     private EventHandler<ActionEvent> filterTableAction
     private EventHandler<ActionEvent> copySelectedIpsAction
@@ -446,6 +458,18 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
         this.newAction = newAction
     }
 
+    void setLoadAction(EventHandler<ActionEvent> loadAction) {
+        this.loadAction = loadAction
+    }
+    EventHandler<ActionEvent> getLoadAction() {
+        return loadAction
+    }
+    void setSaveAction(EventHandler<ActionEvent> saveAction) {
+        this.saveAction = saveAction
+    }
+    EventHandler<ActionEvent> getSaveAction() {
+        return saveAction
+    }
     EventHandler<ActionEvent> getModifyAction() {
         return modifyAction
     }

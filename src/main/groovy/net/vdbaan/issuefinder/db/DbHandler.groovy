@@ -43,6 +43,10 @@ interface DbHandler {
     void attachShutdownHook()
 
     void resetJdbc()
+
+    void saveDb(String fileName)
+
+    void loadDb(String fileName)
 }
 
 @Log
@@ -190,5 +194,13 @@ class DbHandlerImpl implements DbHandler {
 
     void resetJdbc() {
         MyDataSource.INSTANCE.resetJdbc()
+    }
+
+    void saveDb(String fileName) {
+        getSql().execute("SCRIPT NOPASSWORDS NOSETTINGS DROP TO '$fileName'")
+    }
+
+    void loadDb(String fileName) {
+        getSql().execute ("RUNSCRIPT FROM '$fileName'")
     }
 }

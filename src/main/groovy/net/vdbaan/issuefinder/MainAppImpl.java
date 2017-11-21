@@ -70,7 +70,6 @@ public class MainAppImpl extends Application implements MainApp {
 
         primaryStage.getIcons().add(new Image(MainAppImpl.class.getResourceAsStream("/539822430.jpg")));
 
-//        mainWindow.setOnHidden(e -> Platform.exit());
         primaryStage.setOnHidden(e -> Platform.exit());
         primaryStage.show();
     }

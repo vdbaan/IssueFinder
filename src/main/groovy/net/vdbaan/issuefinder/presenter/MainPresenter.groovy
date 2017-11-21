@@ -78,6 +78,8 @@ class MainPresenter {
         masterView.setNewAction(this.&newAction)
         masterView.setOpenAction(this.&openAction)
         masterView.setExportAction(this.&exportAction)
+        masterView.setLoadAction(this.&loadAction)
+        masterView.setSaveAction(this.&saveAction)
         masterView.setSettingsAction(this.&settingsAction)
         masterView.setCloseAction(this.&closeAction)
 
@@ -138,7 +140,24 @@ class MainPresenter {
     }
 
     void openAction(ActionEvent e) {
-        openFiles(masterView.getRetentionFileChooser().showOpenMultipleDialog(masterView.getWindow()))
+        openFiles(masterView.getRetentionFileChooser().showOpenMultipleDialog(masterView.getWindow(), 'Load Reports'))
+    }
+
+
+    void saveAction(ActionEvent e) {
+        File location = masterView.getRetentionFileChooser().showSaveDialog(masterView.getWindow(), 'Save DB')
+        if (location != null) {
+            db.saveDb(location.getAbsolutePath())
+        }
+    }
+
+    void loadAction(ActionEvent e) {
+        File location = masterView.getRetentionFileChooser().showOpenDialog(masterView.getWindow(), 'Load DB')
+        if (location != null) {
+            db.deleteAll()
+            db.loadDb(location.getAbsolutePath())
+            loadAll()
+        }
     }
 
     void exportAction(ActionEvent e) {}
@@ -178,6 +197,7 @@ class MainPresenter {
     void aboutHelpAction(ActionEvent e) {
         mainApp.showHelp()
     }
+
     void aboutAction(ActionEvent e) {
         mainApp.showAbout()
     }
@@ -242,16 +262,16 @@ class MainPresenter {
     }
 
     void copyUniqueIpPorts(List<Finding> findings) {
-        Map<String,String> ips = new TreeMap<>()
+        Map<String, String> ips = new TreeMap<>()
         String formatString = Config.getInstance().getProperty(Config.IP_PORT_FORMAT_STRING)
         findings.each { f ->
             String port = f.port.split('/')[0]
             if (port.isNumber() && port != '0') {
                 if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
-                    ips.put(f.ip + ":" + port,f.formatString(formatString))
+                    ips.put(f.ip + ":" + port, f.formatString(formatString))
             }
         }
-        Map<String,String> sorted = ips.sort( { Map.Entry a, Map.Entry b ->
+        Map<String, String> sorted = ips.sort({ Map.Entry a, Map.Entry b ->
             def ip1 = a.key.toString().split(":")[0].split("\\.")
             def port1 = a.key.toString().split(":")[1]
             def ip2 = b.key.toString().split(":")[0].split("\\.")
@@ -295,7 +315,7 @@ class MainPresenter {
                     List<String> list = masterView.getFilterTextItems()
                     if (!list.contains(val)) {
                         List l = new ArrayList()
-                        l.add(fp.toString())
+                        l.add(val)
                         l.addAll(list)
                         masterView.setFilterTextItems(l)
                     }

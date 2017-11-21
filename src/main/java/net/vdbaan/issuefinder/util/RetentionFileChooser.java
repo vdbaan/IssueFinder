@@ -46,11 +46,11 @@ public class RetentionFileChooser {
     }
 
     public static File showOpenDialog() {
-        return showOpenDialog(null);
+        return showOpenDialog(null, "");
     }
 
-    private static File showOpenDialog(Window ownerWindow) {
-        File chosenFile = getInstance().showOpenDialog(ownerWindow);
+    public static File showOpenDialog(Window ownerWindow, String title) {
+        File chosenFile = getInstance(title).showOpenDialog(ownerWindow);
         if (chosenFile != null) {
             //Set the property to the directory of the chosenFile so the fileChooser will open here next
             lastKnownDirectoryProperty.setValue(chosenFile.getParentFile());
@@ -59,11 +59,11 @@ public class RetentionFileChooser {
     }
 
     public static File showSaveDialog() {
-        return showSaveDialog(null);
+        return showSaveDialog(null,"");
     }
 
-    private static File showSaveDialog(Window ownerWindow) {
-        File chosenFile = getInstance().showSaveDialog(ownerWindow);
+    public static File showSaveDialog(Window ownerWindow, String title) {
+        File chosenFile = getInstance(title).showSaveDialog(ownerWindow);
         if (chosenFile != null) {
             //Set the property to the directory of the chosenFile so the fileChooser will open here next
             lastKnownDirectoryProperty.setValue(chosenFile.getParentFile());
@@ -71,8 +71,8 @@ public class RetentionFileChooser {
         return chosenFile;
     }
 
-    public List<File> showOpenMultipleDialog(final Window ownerWindow) {
-        List<File> result = getInstance("Load").showOpenMultipleDialog(ownerWindow);
+    public List<File> showOpenMultipleDialog(final Window ownerWindow, String title) {
+        List<File> result = getInstance(title).showOpenMultipleDialog(ownerWindow);
         if (result != null) {
             lastKnownDirectoryProperty.setValue(result.get(0).getParentFile());
         }

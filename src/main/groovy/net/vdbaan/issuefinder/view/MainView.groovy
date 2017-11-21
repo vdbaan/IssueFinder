@@ -153,6 +153,9 @@ interface MainView extends BaseView, DbListener {
 
     void setOpenAction(EventHandler<ActionEvent> openAction)
 
+    void setLoadAction(EventHandler<ActionEvent> loadAction)
+    void setSaveAction(EventHandler<ActionEvent> saveAction)
+
     EventHandler<ActionEvent> getNewAction()
 
     void setNewAction(EventHandler<ActionEvent> newAction)

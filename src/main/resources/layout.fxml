@@ -28,8 +28,10 @@
                                                     shortcut="UP"/>
                             </accelerator>
                         </MenuItem>
-                        <!--<SeparatorMenuItem/>-->
+                        <SeparatorMenuItem/>
                         <!--<MenuItem mnemonicParsing="true" onAction="#exportAction" text="_Export"/>-->
+                        <MenuItem mnemonicParsing="true" onAction="#saveAction" text="Save DB"/>
+                        <MenuItem mnemonicParsing="true" onAction="#loadAction" text="Load DB"/>
                         <SeparatorMenuItem/>
                         <MenuItem mnemonicParsing="true" onAction="#openSettings" text="_Preferences"/>
                         <SeparatorMenuItem/>
