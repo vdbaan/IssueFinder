@@ -16,18 +16,25 @@
  */
 package net.vdbaan.issuefinder
 
+import groovy.transform.CompileStatic
 import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.util.IssueLogger
 
 import java.util.logging.Level
 import java.util.logging.Logger
 
+@CompileStatic
 class Runner {
     private final static Logger logger = Logger.getLogger(Runner.class.getCanonicalName())
 
     static void main(String... args) {
         IssueLogger.setup(args)
         logger.info('starting')
+        Map<String, String> sortedMap = new TreeMap(System.getProperties())
+        for (String key : sortedMap.keySet()) {
+            logger.info(key + "=" + sortedMap.get(key))
+        }
+        // Show OS, JAVA_HOME, java impl and version ( for debugging
         testJavaFX()
         Config.getInstance().attachShutDownHook()
         if (!args.contains('--reset-config')) {
@@ -42,6 +49,7 @@ class Runner {
         logger.info('testing availability of JavaFX')
         try {
             Class.forName('javafx.stage.Stage')
+            Class.forName('javafx.scene.control.Alert')
         } catch (ClassNotFoundException e) {
             logger.severe 'JavaFX8 Missing'
             logger.severe 'Please install JavaFX, for example:'

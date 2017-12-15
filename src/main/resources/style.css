@@ -64,14 +64,22 @@ selected {
 }
 */
 
-.cell:empty {
--fx-text-background-color: white ;
-}
-
 .text-input-wrong {
   -fx-control-inner-background: #d9534f;
 }
 
-.table-row-cell:selected {
-   -fx-background-color: steelblue;
+.tree-table-row-cell {
+-fx-background-color: #ffffff;
+}
+
+.tree-table-row-cell:odd {
+-fx-background-color: #f5f5f5;
+}
+
+.cell:empty {
+-fx-text-background-color: white ;
+}
+
+.table-row-cell:selected , .tree-table-row-cell:selected {
+    -fx-background-color: steelblue;
 }

@@ -20,8 +20,10 @@ import groovy.transform.CompileStatic
 import javafx.beans.property.ReadOnlyStringWrapper
 import javafx.fxml.FXML
 import javafx.scene.control.TreeItem
+import javafx.scene.control.TreeTableCell
 import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableView
+import javafx.scene.text.Text
 import net.vdbaan.issuefinder.presenter.SummaryPresenter
 import net.vdbaan.issuefinder.util.Container
 import net.vdbaan.issuefinder.util.TableUtils
@@ -45,6 +47,24 @@ class SummaryViewImpl extends AbstractSummaryView implements SummaryView {
 
         prop.setCellValueFactory({ TreeTableColumn.CellDataFeatures<Wrapper, String> param -> new ReadOnlyStringWrapper(param.getValue().getValue().getKey()) })
         val.setCellValueFactory({ TreeTableColumn.CellDataFeatures<Wrapper, String> param -> new ReadOnlyStringWrapper(param.getValue().getValue().getValue()) })
+
+        val.setCellFactory({ TreeTableColumn<Object,String>  param -> new TreeTableCell<Object,String> () {
+            private Text text
+            @Override
+            void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty)
+                if(!isEmpty() && !("" == item.toString())) {
+                    text = new Text(item.toString())
+                    text.wrappingWidthProperty().bind(val.widthProperty())
+                    this.setWrapText(true)
+                    setGraphic(text)
+
+                } else {
+                    this.setText('')
+                    setGraphic(null)
+                }
+            }
+        }})
     }
 
     @Override
