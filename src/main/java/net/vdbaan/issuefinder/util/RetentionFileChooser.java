@@ -59,7 +59,7 @@ public class RetentionFileChooser {
     }
 
     public static File showSaveDialog() {
-        return showSaveDialog(null,"");
+        return showSaveDialog(null, "");
     }
 
     public static File showSaveDialog(Window ownerWindow, String title) {

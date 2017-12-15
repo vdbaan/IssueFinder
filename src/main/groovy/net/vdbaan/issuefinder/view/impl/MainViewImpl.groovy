@@ -89,6 +89,7 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     void aboutHelp(ActionEvent event) {
         aboutHelpAction?.handle(event)
     }
+
     @FXML
     void aboutAction(ActionEvent event) {
         aboutAction?.handle(event)
@@ -348,6 +349,7 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
     void setAboutHelpAction(EventHandler<ActionEvent> aboutHelpAction) {
         this.aboutHelpAction = aboutHelpAction
     }
+
     EventHandler<ActionEvent> getAboutHelpAction() {
         return aboutHelpAction
     }
@@ -463,15 +465,19 @@ abstract class AbstractMainView extends BaseViewImpl implements MainView {
     void setLoadAction(EventHandler<ActionEvent> loadAction) {
         this.loadAction = loadAction
     }
+
     EventHandler<ActionEvent> getLoadAction() {
         return loadAction
     }
+
     void setSaveAction(EventHandler<ActionEvent> saveAction) {
         this.saveAction = saveAction
     }
+
     EventHandler<ActionEvent> getSaveAction() {
         return saveAction
     }
+
     EventHandler<ActionEvent> getModifyAction() {
         return modifyAction
     }

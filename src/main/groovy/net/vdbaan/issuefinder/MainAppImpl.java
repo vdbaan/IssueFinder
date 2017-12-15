@@ -157,7 +157,7 @@ public class MainAppImpl extends Application implements MainApp {
         dialog.show();
     }
 
-    public void showWarning(String warning){
+    public void showWarning(String warning) {
         Alert popup = new Alert(Alert.AlertType.WARNING);
         popup.setTitle("Warning");
         popup.setContentText(warning);

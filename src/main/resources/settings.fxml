@@ -3,7 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity"
+          minHeight="-Infinity"
           minWidth="-Infinity" prefHeight="364.0" prefWidth="620.0"
           xmlns="http://javafx.com/javafx/8.0.111" fx:controller="net.vdbaan.issuefinder.view.impl.SettingsViewImpl">
     <columnConstraints>

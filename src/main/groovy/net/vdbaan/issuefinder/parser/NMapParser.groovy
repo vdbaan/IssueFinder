@@ -38,9 +38,9 @@ class NMapParser extends Parser {
             String hostIp = hostNode.@addr
             String hostName
             host.hostnames.hostname.each { hostname ->
-                if(hostname.@type=='user') {
+                if (hostname.@type == 'user') {
                     hostName = hostname.@name
-                } else if (hostname.@type=='PTR') {
+                } else if (hostname.@type == 'PTR') {
                     hostName = hostname.@name
                 } else {
                     hostName = hostIp
@@ -67,7 +67,7 @@ class NMapParser extends Parser {
                 String state = port.state.@state
                 String service = port.service.@name
                 String product = port.service.@product
-                if(product != "") product = ' ('+product+')'
+                if (product != "") product = ' (' + product + ')'
                 String summary = ""
 
                 port.script.each { script ->
@@ -81,7 +81,7 @@ class NMapParser extends Parser {
                 }
                 if (allowed(Finding.Severity.INFO))
                     result << new Finding([scanner : scanner, ip: hostIp, port: portnr, portStatus: state, protocol: protocol, hostName: hostName,
-                                           service : service + product , plugin: "NMap port (" + portnr + ") information",
+                                           service : service + product, plugin: "NMap port (" + portnr + ") information",
                                            severity: (state == 'closed') ? Finding.Severity.LOW : Finding.Severity.INFO, summary: summary])
             }
         }

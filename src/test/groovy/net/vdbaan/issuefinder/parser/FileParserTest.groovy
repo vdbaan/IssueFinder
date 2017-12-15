@@ -229,14 +229,15 @@ class ZAPParserTest {
         List<Finding> result = p.parse()
         assertTrue(result.isEmpty())
     }
+
     @Test
     void testZAPFile() {
         File testFile = new File('testdata/zap.xml')
-        if(testFile.exists()) {
+        if (testFile.exists()) {
             Parser p = Parser.getParser(testFile)
             assert p instanceof ZAPParser
             List result = p.parse()
-            result.each {println it}
+            result.each { println it }
             assertFalse(result.isEmpty())
             assert result[0] instanceof Finding
         }
@@ -255,11 +256,11 @@ class OpenVASParserTest {
     @Test
     void testOpenVASFile() {
         File testFile = new File('testdata/openvas.xml')
-        if(testFile.exists()) {
+        if (testFile.exists()) {
             Parser p = Parser.getParser(testFile)
             assert p instanceof OpenVASParser
             List result = p.parse()
-            result.each {println it}
+            result.each { println it }
             assertFalse(result.isEmpty())
             assert result[0] instanceof Finding
         }
@@ -270,11 +271,11 @@ class BurpStateTest {
     @Test
     void testStateFile() {
         File testFile = new File('testdata/Burp.state')
-        if(testFile.exists()) {
+        if (testFile.exists()) {
             Parser p = Parser.getParser(testFile)
             assert p instanceof BurpStateParser
             List result = p.parse()
-            result.each {println it}
+            result.each { println it }
             assertFalse(result.isEmpty())
             assert result[0] instanceof Finding
         }

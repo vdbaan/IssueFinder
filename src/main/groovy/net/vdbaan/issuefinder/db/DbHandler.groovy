@@ -61,7 +61,7 @@ class DbHandlerImpl implements DbHandler {
             if (jdbcDataSource == null) {
                 Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE).clone()
                 String dbName = Config.getInstance().getProperty(Config.DB_NAME)
-                if(!Config.getInstance().hasPropertyFor('LEAVE_DB')) {
+                if (!Config.getInstance().hasPropertyFor('LEAVE_DB')) {
                     String name
                     name = dbName + '-' + System.currentTimeMillis()
                     Config.getInstance().setProperty('VOLATILE-DB', name)
@@ -75,7 +75,7 @@ class DbHandlerImpl implements DbHandler {
 
         void resetJdbc() {
             jdbcDataSource = null
-            create=true
+            create = true
         }
     }
     Sql sql = null
@@ -201,6 +201,6 @@ class DbHandlerImpl implements DbHandler {
     }
 
     void loadDb(String fileName) {
-        getSql().execute ("RUNSCRIPT FROM '$fileName'")
+        getSql().execute("RUNSCRIPT FROM '$fileName'")
     }
 }

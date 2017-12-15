@@ -21,7 +21,7 @@ class BurpStateParser extends Parser {
             ZipEntry state = zipFile.getEntry('burp')
 
             return state.size > 0
-        }catch(ZipException z) {
+        } catch (ZipException z) {
             return false
         }
     }
@@ -61,7 +61,7 @@ class BurpStateParser extends Parser {
         int sc = getInt(getBytes(input, '<sc>', '</sc>'), 1)
         int ss = getInt(getBytes(input, '<ss>', '</ss>'), 1)
         String host = new String(getBytes(input, '<httpService><host>', '</host>')).trim()
-        int port = getInt(getBytes(input, '</host><port>', '</port>'),1)
+        int port = getInt(getBytes(input, '</host><port>', '</port>'), 1)
         boolean https = getBoolean(getBytes(input, '<https>', '</https>'), 1)
         String path = new String(getBytes(input, '<path>', '</path>')).trim()
         Map<Long, String> kv = new HashMap<>()
@@ -80,8 +80,8 @@ class BurpStateParser extends Parser {
             }
         }
 
-        def plugin = type + ':' + (kv.get(15l)?:'UNKNOWN')
-        return new Finding([scanner: scanner, ip: host, port: port as String, portStatus: 'open', protocol: 'tcp', service: (https)?'HTTPS':'HTTP',
+        def plugin = type + ':' + (kv.get(15l) ?: 'UNKNOWN')
+        return new Finding([scanner: scanner, ip: host, port: port as String, portStatus: 'open', protocol: 'tcp', service: (https) ? 'HTTPS' : 'HTTP',
                             plugin : plugin, severity: calc(ss),
                             summary: buildSummary(path, ss, sc, kv)])
     }
@@ -100,13 +100,14 @@ Remediation : ${keyValues.get(17l)}
     }
 
     private String cc(int confidence) {
-        switch(confidence) {
+        switch (confidence) {
             case 3: return 'Certain'
             case 2: return 'Firm'
             case 1: return 'Tentative'
             default: return ''
         }
     }
+
     private Finding.Severity calc(int severity) {
         switch (severity) {
             case 4: return Finding.Severity.HIGH

@@ -33,7 +33,7 @@ class DbHandlerTest {
     @Test
     void testEmptyDb() {
         Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDBEmpty;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
-        Config.getInstance().setProperty('LEAVE-DB',true)
+        Config.getInstance().setProperty('LEAVE-DB', true)
         DbHandler handler = new DbHandlerImpl()
         handler.resetJdbc()
         handler.getAllFinding(null)
@@ -43,7 +43,7 @@ class DbHandlerTest {
     @Test
     void testSimpleDb() {
         Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDBSimple;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
-        Config.getInstance().setProperty('LEAVE-DB',true)
+        Config.getInstance().setProperty('LEAVE-DB', true)
         DbHandler handler = new DbHandlerImpl()
         handler.resetJdbc()
         handler.saveFindings([makeFinding('1')])
@@ -60,7 +60,7 @@ class DbHandlerTest {
     @Test
     void testUpdate() {
         Config.getInstance().setProperty(Config.DATA_SOURCE, [database: 'jdbc:h2:mem:issueDBUpdate;DB_CLOSE_DELAY=-1', user: 'sa', password: ''])
-        Config.getInstance().setProperty('LEAVE-DB',true)
+        Config.getInstance().setProperty('LEAVE-DB', true)
         String txt = 'New service'
         DbHandler handler = new DbHandlerImpl()
         handler.resetJdbc()

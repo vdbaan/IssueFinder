@@ -56,15 +56,15 @@ class ZAPParser extends Parser {
         String solution = '' + issue.solution
         String otherInfo = '' + issue.otherinfo
         String reference = '' + issue.reference
-        summary += "\nDescription:\n " + description.replace('\n',' ')
-        summary += "\nSolution:\n" + solution.replace('\n',' ')
-        summary += "\nOther info:\n" + otherInfo.replace('\n',' ')
-        summary += "\nreference:\n" + reference.replace('\n',' ')
+        summary += "\nDescription:\n " + description.replace('\n', ' ')
+        summary += "\nSolution:\n" + solution.replace('\n', ' ')
+        summary += "\nOther info:\n" + otherInfo.replace('\n', ' ')
+        summary += "\nreference:\n" + reference.replace('\n', ' ')
         summary += "\ncwe  id: " + issue.cweid
         summary += "\nwasc id: " + issue.wascid
         summary += "\nInstances:\n"
         issue.instances.instance.each {
-            summary += '- '+ it.url + '\n'
+            summary += '- ' + it.url + '\n'
         }
 
         return summary

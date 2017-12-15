@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity"
+          minHeight="-Infinity"
           minWidth="-Infinity" prefHeight="118.0"
           prefWidth="566.0" style="-fx-background-color: cornsilk; -fx-border-color: black; -fx-border-width: 2px;"
           vgap="5.0" xmlns="http://javafx.com/javafx/8.0.111" fx:id="root"

@@ -72,7 +72,7 @@ abstract class Parser {
             if (SSLyzeParser.identify(content)) return new SSLyzeParser(content)
             if (ZAPParser.identify(content)) return new ZAPParser(content)
             if (OpenVASParser.identify(content)) return new OpenVASParser(content)
-            if(NexposeParser.identify(content)) return new NexposeParser(content)
+            if (NexposeParser.identify(content)) return new NexposeParser(content)
 
         } catch (Exception e) {
             log.warning e.getMessage()

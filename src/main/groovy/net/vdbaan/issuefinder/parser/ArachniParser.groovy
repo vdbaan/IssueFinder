@@ -31,7 +31,7 @@ class ArachniParser extends Parser {
 
     static boolean identify(GPathResult contents) {
         boolean hasIssues = false
-        contents.'**'.each {if ('issues'.equals(it.name())) hasIssues = true}
+        contents.'**'.each { if ('issues'.equals(it.name())) hasIssues = true }
         return IDENTIFIER.equalsIgnoreCase(contents.name()) && hasIssues
     }
 
