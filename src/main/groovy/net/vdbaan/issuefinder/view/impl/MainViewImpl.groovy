@@ -35,6 +35,7 @@ import net.vdbaan.issuefinder.db.DbListener
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.presenter.MainPresenter
 import net.vdbaan.issuefinder.util.RetentionFileChooser
+import net.vdbaan.issuefinder.util.TableUtils
 import net.vdbaan.issuefinder.view.MainView
 
 @CompileStatic
@@ -217,6 +218,7 @@ class MainViewImpl extends AbstractMainView implements MainView, DbListener {
     // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         presenter = new MainPresenter(this)
+        TableUtils.installCopyPasteHandler(mainTable)
     }
 
     @Override

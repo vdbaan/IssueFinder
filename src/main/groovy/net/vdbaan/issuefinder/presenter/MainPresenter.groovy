@@ -73,8 +73,6 @@ class MainPresenter {
         masterView.setSelectItemPropertyListener(this.&showContent)
         masterView.setTableSelectionMode(SelectionMode.MULTIPLE)
 
-//        TableUtils.installCopyPasteHandler(masterView.getTableKeyEvent())
-
         masterView.setNewAction(this.&newAction)
         masterView.setOpenAction(this.&openAction)
         masterView.setExportAction(this.&exportAction)
