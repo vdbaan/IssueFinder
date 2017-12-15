@@ -136,7 +136,7 @@ class MainPresenterTest {
         MainView mock = new MainViewMock()
         mock.setFilterText('risk == CRITICAL')
         mock.getFilterTableAction().handle(null)
-        assert mock.getFilterTextItems().contains("RISK == 'CRITICAL'")
+        assert mock.getFilterTextItems().contains("risk == CRITICAL")
         // check if filtertext = present in filters
         mock.getClearAction().handle(null)
         // check if filtertext == clear again
@@ -381,7 +381,7 @@ class MainViewMock extends AbstractMainView implements MainView {
     RetentionFileChooser getRetentionFileChooser() {
         return new RetentionFileChooser() {
             @Override
-            List<File> showOpenMultipleDialog(Window ownerWindow) {
+            List<File> showOpenMultipleDialog(Window ownerWindow, String title) {
                 return retentionResult
             }
         }

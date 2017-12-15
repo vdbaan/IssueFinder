@@ -265,4 +265,14 @@ class DbHandlerMock implements DbHandler {
     void resetJdbc() {
 
     }
+
+    @Override
+    void saveDb(String fileName) {
+
+    }
+
+    @Override
+    void loadDb(String fileName) {
+
+    }
 }
