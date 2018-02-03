@@ -7,7 +7,7 @@
  *  License, or (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  but WITHOUT ANY WARRANTY without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero General Public License for more details.
  *
@@ -35,15 +35,15 @@ class SummaryDialogController implements SummaryDialogView {
 
     @FXML
     // fx:id="treeTable"
-    private TreeTableView<?> treeTable; // Value injected by FXMLLoader
+    private TreeTableView<?> treeTable // Value injected by FXMLLoader
 
     @FXML
     // fx:id="prop"
-    private TreeTableColumn<?, ?> prop; // Value injected by FXMLLoader
+    private TreeTableColumn<?, ?> prop // Value injected by FXMLLoader
 
     @FXML
     // fx:id="val"
-    private TreeTableColumn<?, ?> val; // Value injected by FXMLLoader
+    private TreeTableColumn<?, ?> val // Value injected by FXMLLoader
 
     @FXML
     void initialize() {
@@ -70,7 +70,7 @@ class SummaryDialogController implements SummaryDialogView {
                         graphic = text
 
                     } else {
-                        this.text = ''
+                        this.setText('')
                         graphic = null
                     }
                 }

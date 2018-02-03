@@ -43,6 +43,7 @@ expr: expr AND expr              # andExpr
 column
     : SCANNER
     | IP
+    | HOSTNAME
     | PORT
     | STATUS
     | PROTOCOL
@@ -52,7 +53,6 @@ column
     | DESCRIPTION
     | PLUGIN
     | CVSS
-    | HOSTNAME
     ;
 
 groupOperator: IN;

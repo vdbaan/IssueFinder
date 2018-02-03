@@ -68,10 +68,10 @@
         <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearFilter" text="Clear" />
     </HBox>
     <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-        <Tab closable="false" text="Issues">
+        <Tab closable="false" text="Findings">
             <fx:include fx:id="findingTab" source="findingTab.fxml" VBox.vgrow="ALWAYS" />
         </Tab>
-        <Tab closable="false" disable="true" onSelectionChanged="#tabChanged" text="Findings">
+        <Tab closable="false" disable="true" onSelectionChanged="#tabChanged" text="Issues">
             <fx:include fx:id="issueTab" source="issueTab.fxml" VBox.vgrow="ALWAYS" />
         </Tab>
     </TabPane>
