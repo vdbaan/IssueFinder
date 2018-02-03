@@ -23,16 +23,16 @@ class BurpParser extends Parser {
     static IDENTIFIER = "issues"
     static scanner = "Burp"
 
-    BurpParser(content) {
+    BurpParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {
-        String version = content.@burpVersion
+        final String version = content.@burpVersion
         if (version.compareTo("1.7.27") >= 0) {
             return parse1727()
         } else
@@ -40,14 +40,14 @@ class BurpParser extends Parser {
     }
 
     List<Finding> parseOther() {
-        List<Finding> result = new ArrayList<>()
-        content.issue.each { issue ->
+        final List<Finding> result = new ArrayList<>()
+        content.issue.each { final issue ->
             // scanner, ip, port, service, plugin, severity, summary
-            def url = new URL(issue.host as String)
-            def ip = (issue.host.@ip ?: url.getHost()) as String
-            def port = url.getPort() as String
-            def service = url.protocol.toUpperCase()
-            result << new Finding([scanner: scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: service,
+            final def url = new URL(issue.host as String)
+            final def ip = (issue.host.@ip ?: url.getHost()) as String
+            final def port = url.getPort() as String
+            final def service = url.protocol.toUpperCase()
+            result << new Finding([scanner: scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: service, location: issue.location,
                                    plugin : issue.name as String, severity: calc(issue.severity, issue.confidence),
                                    summary: buildSummary(issue)])
 
@@ -60,7 +60,7 @@ class BurpParser extends Parser {
         Set<String> locations = new HashSet()
 
         String toString() {
-            StringBuilder sb = new StringBuilder()
+            final StringBuilder sb = new StringBuilder()
             sb.append(finding.fullDescription())
             sb.append(locations.join(', '))
             return sb.toString()
@@ -68,52 +68,58 @@ class BurpParser extends Parser {
     }
 
     List<Finding> parse1727() {
-        List<Finding> result = new ArrayList<>()
-        Map<String, Map> base = new HashMap<>()
+        final List<Finding> result = new ArrayList<>()
+        final Map<String, Map> base = new HashMap<>()
 
-        content.issue.each { issue ->
+        content.issue.each { final issue ->
             // scanner, ip, port, service, plugin, severity, summary
-            def url = new URL(issue.host as String)
-            def ip = (issue.host.@ip ?: url.getHost()) as String
+            final def url = new URL(issue.host as String)
+            final def ip = (issue.host.@ip ?: url.getHost()) as String
             def port = url.getPort() as String
 
-            def service = url.protocol.toUpperCase()
-            def plugin = String.format("(%s) %s", issue.type, issue.name)
+            final def service = url.protocol.toUpperCase()
+            final def plugin = String.format("(%s) %s", issue.type, issue.name)
             if (port == '-1') port = (service == 'HTTPS') ? '443' : '80'
-            String location = issue.location
-            def f = new Finding([scanner: scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: service,
-                                 plugin : plugin, severity: calc(issue.severity, issue.confidence),
-                                 summary: buildSummary1727(issue)])
+            final String location = String.format("%s%s", issue.host, issue.location)
+            final String response = issue.requestresponse.response
+            final String description = issue.issueBackground ?: ''
+            final String remediation = issue.remediationBackground ?: ''
+            def f = new Finding([scanner    : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: service, location: location,
+                                 plugin     : plugin, severity: calc(issue.severity, issue.confidence), pluginOutput: response,
+                                 description: description, solution: remediation,
+//                                 description: issue.issueBackground, remediation: issue.remediationBackground,
+                                 summary    : buildSummary1727(issue)])
+            result << f
 
-            def key = ip + ':' + port
-
-            Map<String, FindingWrapper> temp
-            if (base.containsKey(key)) {
-                temp = base.get(key)
-            } else {
-                temp = new HashMap<>()
-            }
-            FindingWrapper fw
-            if (temp.containsKey(plugin)) {
-                fw = temp.get(plugin)
-            } else {
-                fw = new FindingWrapper(finding: f)
-            }
-            fw.locations.add(location)
-            temp.put(plugin, fw)
-            base.put(key, temp)
+//            final def key = ip + ':' + port
+//
+//            Map<String, FindingWrapper> temp
+//            if (base.containsKey(key)) {
+//                temp = base.get(key)
+//            } else {
+//                temp = new HashMap<>()
+//            }
+//            FindingWrapper fw
+//            if (temp.containsKey(plugin)) {
+//                fw = temp.get(plugin)
+//            } else {
+//                fw = new FindingWrapper(finding: f)
+//            }
+//            fw.locations.add(location)
+//            temp.put(plugin, fw)
+//            base.put(key, temp)
         }
-        base.each { url, map ->
-            map.each { plugin, wrap ->
-                Finding find = wrap.finding
-                find.summary = find.summary.replace('PLACEHOLDER', '\n' + wrap.locations.join('\n'))
-                result << find
-            }
-        }
+//        base.each { final url, final map ->
+//            map.each { final plugin, final wrap ->
+//                final Finding find = wrap.finding
+//                find.summary = find.summary.replace('PLACEHOLDER', '\n' + wrap.locations.join('\n'))
+//                result << find
+//            }
+//        }
         return result
     }
 
-    private Finding.Severity calc(severity, confidence) {
+    private Finding.Severity calc(final severity, final confidence) {
         switch (severity) {
             case 'High': return Finding.Severity.HIGH
             case 'Medium': return Finding.Severity.MEDIUM
@@ -123,7 +129,7 @@ class BurpParser extends Parser {
         }
     }
 
-    private String buildSummary(issue) {
+    private String buildSummary(final issue) {
         String summary = "Name   : " + issue.name
         summary += "\nDetail     : " + issue.issueDetail
         summary += "\npath       : " + issue.path
@@ -135,7 +141,7 @@ class BurpParser extends Parser {
         return summary
     }
 
-    private String buildSummary1727(issue) {
+    private String buildSummary1727(final issue) {
         String summary = "Name   : " + issue.name
         summary += "\nDetail     : " + issue.issueDetail
         summary += "\npath       : PLACEHOLDER"
@@ -148,7 +154,7 @@ class BurpParser extends Parser {
     }
 
     // TODO implement (when I remember what I meant here ;) )
-    List<Finding> mergeFindings(List<Finding> result) {
+    List<Finding> mergeFindings(final List<Finding> result) {
 
         result.each {
 

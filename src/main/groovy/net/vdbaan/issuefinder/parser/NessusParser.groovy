@@ -25,25 +25,25 @@ class NessusParser extends Parser {
     static String IDENTIFIER = "NessusClientData_v2"
     static String scanner = "Nessus"
 
-    NessusParser(content) {
+    NessusParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
 
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
-        content.Report.ReportHost.each { host ->
+        final List<Finding> result = new ArrayList<>()
+        content.Report.ReportHost.each { final host ->
 
-            def IPTag = host.HostProperties.tag.find { it.@name == 'host-ip' }
-            String hostIp = IPTag
-            def FQDNTag = host.HostProperties.tag.find { it.@name == 'host-fqdn' }
-            String hostName = FQDNTag ?: hostIp
+            final def IPTag = host.HostProperties.tag.find { it.@name == 'host-ip' }
+            final String hostIp = IPTag
+            final def FQDNTag = host.HostProperties.tag.find { it.@name == 'host-fqdn' }
+            final String hostName = FQDNTag ?: hostIp
 
-            for (item in host.ReportItem) {
+            for (final item in host.ReportItem) {
                 String portnr = item.@port
                 String protocol = item.@protocol
                 String plugin = item.@pluginID
@@ -91,7 +91,7 @@ class NessusParser extends Parser {
         return result
     }
 
-    String buildSummary(item) {
+    String buildSummary(final item) {
         return """
 ${item.synopsis}
 RiskFactor           : ${item.risk_factor}

@@ -26,22 +26,22 @@ import java.util.logging.Level
 class TestSSLParser extends Parser {
     static String scanner = "TestSSL"
 
-    TestSSLParser(content) {
+    TestSSLParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         try {
             if (contents instanceof List) {
                 if (contents[0] instanceof Map) {
-                    Map m = contents[0]
+                    final Map m = contents[0]
                     if (m.size() == 5 && m.containsKey('finding') && m.containsKey('ip')
                             && m.containsKey('port') && m.containsKey('severity') && m.containsKey('finding'))
                         return true
                 }
             }
             return false
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.log(Level.FINE, 'Got an exception', e)
             return false
         }
@@ -49,9 +49,9 @@ class TestSSLParser extends Parser {
 
     @Override
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
+        final List<Finding> result = new ArrayList<>()
         boolean doClients = false, doCiphers = false, doOrder = false
-        content.each { issue ->
+        content.each { final issue ->
             if (issue.id.startsWith('order')) doOrder = true
             if (issue.id.startsWith('client_')) doClients = true
             if (issue.id.startsWith('cipher_')) doCiphers = true
@@ -62,17 +62,21 @@ class TestSSLParser extends Parser {
             result.add(buildCiphers())
         if (doOrder && allowed(Finding.Severity.INFO))
             result.add(order())
-        content.each { issue ->
+        content.each { final issue ->
+            String ip, hostName
+            (hostName, ip) = issue.ip.split('/')
             if (!issue.id.startsWith('order') && !issue.id.startsWith('client_') && !issue.id.startsWith('cipher_')) {
                 if (allowed(calcRisk(issue.severity)))
-                    result << new Finding([scanner : scanner, ip: issue.ip, port: issue.port, portStatus: 'open', protocol: 'tcp', service: "none", plugin: issue.id,
-                                           severity: calcRisk(issue.severity), summary: issue.finding])
+//                    result << new Finding([scanner : scanner, ip: ip, hostName: hostName, port: issue.port, portStatus: 'open', protocol: 'tcp', service: "none", plugin: issue.id,
+//                                           severity: calcRisk(issue.severity), summary: issue.finding])
+                    result << new Finding([scanner : scanner, ip: ip, hostName: hostName, port: issue.port, portStatus: 'open', protocol: 'tcp', service: "none", plugin: issue.finding,
+                                           severity: calcRisk(issue.severity), summary: issue.id])
             }
         }
         return result
     }
 
-    private Finding.Severity calcRisk(String severity) {
+    private Finding.Severity calcRisk(final String severity) {
         switch (severity.toLowerCase()) {
 
             case "high": return Finding.Severity.HIGH
@@ -90,46 +94,47 @@ class TestSSLParser extends Parser {
 
     private Finding order() {
         String summary = "Cipher orders"
-        String ip, port
-        content.each { issue ->
+        String ip, hostName, port
+        content.each { final issue ->
             if (issue.id.startsWith('order')) {
                 summary += "\n"
                 summary += issue.finding
-                ip = issue.ip.split('/')[1]
+
+                (hostName, ip) = issue.ip.split('/')
                 port = issue.port
             }
         }
-        return new Finding([scanner: scanner, ip: ip, port: "generic/SSL", service: "none",
+        return new Finding([scanner: scanner, ip: ip, hostName: hostName, port: "generic/SSL", service: "none",
                             plugin : "TestSSL Cipher order info", severity: Finding.Severity.INFO, summary: summary])
     }
 
     private Finding buildClients() {
         String summary = "Browser simulations"
-        String ip, port
-        content.each { issue ->
+        String ip, hostName, port
+        content.each { final issue ->
             if (issue.id.startsWith('client_')) {
                 summary += "\n"
                 summary += issue.finding
-                ip = issue.ip
+                (hostName, ip) = issue.ip.split('/')
                 port = issue.port
             }
         }
-        return new Finding([scanner: scanner, ip: ip, port: "generic/SSL", service: "none",
+        return new Finding([scanner: scanner, ip: ip, hostName: hostName, port: "generic/SSL", service: "none",
                             plugin : "TestSSL Client info", severity: Finding.Severity.INFO, summary: summary])
     }
 
     private Finding buildCiphers() {
         String summary = "Supported Ciphers"
-        String ip, port
-        content.each { issue ->
+        String ip, hostName, port
+        content.each { final issue ->
             if (issue.id.startsWith('cipher_')) {
                 summary += "\n"
                 summary += issue.finding
-                ip = issue.ip
+                (hostName, ip) = issue.ip.split('/')
                 port = issue.port
             }
         }
-        return new Finding([scanner: scanner, ip: ip, port: "generic/SSL", service: "none",
+        return new Finding([scanner: scanner, ip: ip, hostName: hostName, port: "generic/SSL", service: "none",
                             plugin : "TestSSL supported Ciphers", severity: Finding.Severity.INFO, summary: summary])
     }
 }

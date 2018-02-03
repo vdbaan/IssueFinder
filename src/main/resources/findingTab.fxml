@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~  Copyright (C) 2017  S. van der Baan
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU Affero General Public License as
+  ~  published by the Free Software Foundation, either version 3 of the
+  ~  License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU Affero General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU Affero General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!--<?import net.vdbaan.issuefinder.util.FormattedTableCellFactory?>-->
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.web.WebView?>
+<SplitPane dividerPositions="0.85" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.111" stylesheets="@style.css"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.FindingTabController">
+    <TableView fx:id="issueTable" editable="true" tableMenuButtonVisible="true">
+        <columns>
+            <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Scanner">
+                <cellValueFactory>
+                    <PropertyValueFactory property="scanner"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="IP">
+                <cellValueFactory>
+                    <PropertyValueFactory property="ip"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Hostname" visible="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="hostName"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Port">
+                <cellValueFactory>
+                    <PropertyValueFactory property="port"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Status" visible="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="status"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Protocol" visible="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="protocol"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Service">
+                <cellValueFactory>
+                    <PropertyValueFactory property="service"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Plugin">
+                <cellValueFactory>
+                    <PropertyValueFactory property="plugin"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Base CVSS" visible="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="baseCVSS"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Risk" fx:id="riskColumn">
+                <cellValueFactory>
+                    <PropertyValueFactory property="severity"/>
+                </cellValueFactory>
+                <!--<cellFactory>-->
+                    <!--<net.vdbaan.issuefinder.util.FormattedTableCellFactory/>-->
+                <!--</cellFactory>-->
+            </TableColumn>
+        </columns>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#editSelection" text="Edit Selected item(s)" />
+                    <SeparatorMenuItem/>
+                    <Menu mnemonicParsing="false" text="Filter options">
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnScanner" text="Filter on Scanner"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnIP" text="Filter on IP"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnPort" text="Filter on Port"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnProtocol" text="Filter on Protocol"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnPortStatus" text="Filter on PortStatus"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnService" text="Filter on Service"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnPlugin" text="Filter on Plugin"/>
+                        <MenuItem mnemonicParsing="false" onAction="#filterOnRisk" text="Filter on Risk"/>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Copy options">
+                        <MenuItem mnemonicParsing="false" onAction="#copySelectedIps" text="Copy Selected IPs"/>
+                        <MenuItem mnemonicParsing="false" onAction="#copySelectedPortsAndIps"
+                                  text="Copy Selected Ports and IPs"/>
+                    </Menu>
+                </items>
+            </ContextMenu>
+        </contextMenu>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <WebView fx:id="textArea" prefHeight="200.0" prefWidth="200.0"/>
+</SplitPane>

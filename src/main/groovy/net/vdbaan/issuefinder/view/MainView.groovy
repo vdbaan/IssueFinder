@@ -1,218 +1,104 @@
 /*
  *  Copyright (C) 2017  S. van der Baan
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package net.vdbaan.issuefinder.view
 
-import groovy.transform.CompileStatic
-import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.value.ChangeListener
 import javafx.collections.ObservableList
 import javafx.event.ActionEvent
+import javafx.event.Event
 import javafx.event.EventHandler
-import javafx.scene.control.SelectionMode
-import javafx.scene.input.ClipboardContent
+import javafx.scene.control.ComboBox
+import javafx.scene.control.ListCell
+import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.stage.Window
-import net.vdbaan.issuefinder.MainApp
-import net.vdbaan.issuefinder.db.DbListener
-import net.vdbaan.issuefinder.model.Finding
+import javafx.util.Callback
 import net.vdbaan.issuefinder.util.RetentionFileChooser
 
-@CompileStatic
-interface MainView extends BaseView, DbListener {
-    void setMainApp(MainApp mainApp)
+import javax.swing.text.html.ListView
 
-    void aboutHelp(ActionEvent event)
+interface MainView {
 
-    void aboutAction(ActionEvent event)
+    RetentionFileChooser getRetentionFileChooser()
 
-    void buildSummary(ActionEvent event)
+    Window getWindow()
 
-    void clearFilter(ActionEvent event)
+    void setNewActionHandler(EventHandler<ActionEvent> newActionHandler)
 
-    void closeAction(ActionEvent event)
+    void setLoadReportHandler(EventHandler<ActionEvent> loadReportHandler)
 
-    void copyUniqueIps(ActionEvent event)
+    void setSaveDatabaseHandler(EventHandler<ActionEvent> saveDatabaseHandler)
 
-    void copyUniquePortsAndIps(ActionEvent event)
+    void setLoadDatabaseHandler(EventHandler<ActionEvent> loadDatabaseHandler)
 
-    void exportAction(ActionEvent event)
+    void setShowPreferencesHandler(EventHandler<ActionEvent> showPreferencesHandler)
 
-    void filterOnIp(ActionEvent event)
+    void setExitApplicationHandler(EventHandler<ActionEvent> exitApplicationHandler)
 
-    void filterOnPlugin(ActionEvent event)
+    void setShowHelpHandler(EventHandler<ActionEvent> showHelpHandler)
 
-    void filterOnPort(ActionEvent event)
+    void setShowStatisticsHandler(EventHandler<ActionEvent> showStatisticsHandler)
 
-    void filterOnService(ActionEvent event)
+    void setShowAboutHandler(EventHandler<ActionEvent> showAboutHandler)
 
-    void filterOnScanner(ActionEvent event)
+    void setFilterClickedHandler(EventHandler<MouseEvent> filterClickedHandler)
 
-    void filterOnPortStatus(ActionEvent event)
+    void setDoFilterHandler(EventHandler<ActionEvent> doFilterHandler)
 
-    void filterOnProtocol(ActionEvent event)
+    void setClearFilterHandler(EventHandler<ActionEvent> clearFilterHandler)
 
-    void filterOnRisk(ActionEvent event)
+    void setCopyUniqueIPsHandler(EventHandler<ActionEvent> copyUniqueIPsHandler)
 
-    void filterTable(ActionEvent event)
+    void setCopyUniquePortAndIPsHandler(EventHandler<ActionEvent> copyUniquePortAndIPsHandler)
 
-    void modifyEntry(ActionEvent event)
+    void setTabChangedHandler(EventHandler<Event> tabChangedHandler)
 
-    void copySelectedIps(ActionEvent event)
+    ObservableList<String> getFilterTextStyleClass()
 
-    void copySelectedIpsPorts(ActionEvent event)
+    Object getFilterTextValue()
 
-    void newAction(ActionEvent event)
-
-    void openAction(ActionEvent event)
-
-    void openSettings(ActionEvent event)
-
-    EventHandler<ActionEvent> getAboutAction()
-
-
-    void setAboutHelpAction(EventHandler<ActionEvent> aboutHelpAction)
-
-    EventHandler<ActionEvent> getAboutHelpAction()
-
-    void setAboutAction(EventHandler<ActionEvent> aboutAction)
-
-    EventHandler<ActionEvent> getSummaryAction()
-
-    void setSummaryAction(EventHandler<ActionEvent> summaryAction)
-
-    EventHandler<ActionEvent> getClearAction()
-
-    void setClearAction(EventHandler<ActionEvent> clearAction)
-
-    EventHandler<ActionEvent> getCloseAction()
-
-    void setCloseAction(EventHandler<ActionEvent> closeAction)
-
-    EventHandler<ActionEvent> getCopyIpAction()
-
-    void setCopyIpAction(EventHandler<ActionEvent> copyIpAction)
-
-    EventHandler<ActionEvent> getCopyIpPortAction()
-
-    void setCopyIpPortAction(EventHandler<ActionEvent> copyIpPortAction)
-
-    EventHandler<ActionEvent> getExportAction()
-
-    void setExportAction(EventHandler<ActionEvent> exportAction)
-
-    EventHandler<ActionEvent> getFilterIpAction()
-
-    void setFilterIpAction(EventHandler<ActionEvent> filterIpAction)
-
-    EventHandler<ActionEvent> getFilterPortAction()
-
-    void setFilterPortAction(EventHandler<ActionEvent> filterPortAction)
-
-    EventHandler<ActionEvent> getFilterPluginAction()
-
-    void setFilterPluginAction(EventHandler<ActionEvent> filterPluginAction)
-
-    EventHandler<ActionEvent> getFilterServiceAction()
-
-    void setFilterServiceAction(EventHandler<ActionEvent> filterServiceAction)
-
-    EventHandler<ActionEvent> getFilterOnScannerAction()
-
-    void setFilterOnScannerAction(EventHandler<ActionEvent> filterOnScannerAction)
-
-    EventHandler<ActionEvent> getFilterOnPortStatusAction()
-
-    void setFilterOnPortStatusAction(EventHandler<ActionEvent> filterOnPortStatusAction)
-
-    EventHandler<ActionEvent> getFilterOnProtocolAction()
-
-    void setFilterOnProtocolAction(EventHandler<ActionEvent> filterOnProtocolAction)
-
-    EventHandler<ActionEvent> getFilterOnRiskAction()
-
-    void setFilterOnRiskAction(EventHandler<ActionEvent> filterOnRiskAction)
-
-    EventHandler<ActionEvent> getSettingsAction()
-
-    void setSettingsAction(EventHandler<ActionEvent> settingsAction)
-
-    EventHandler<ActionEvent> getOpenAction()
-
-    void setOpenAction(EventHandler<ActionEvent> openAction)
-
-    void setLoadAction(EventHandler<ActionEvent> loadAction)
-
-    void setSaveAction(EventHandler<ActionEvent> saveAction)
-
-    EventHandler<ActionEvent> getNewAction()
-
-    void setNewAction(EventHandler<ActionEvent> newAction)
-
-    EventHandler<ActionEvent> getModifyAction()
-
-    EventHandler<ActionEvent> getFilterTableAction()
-
-    void setFilterTableAction(EventHandler<ActionEvent> filterTable)
-
-    void setModifyAction(EventHandler<ActionEvent> modifyAction)
-
-    void setCopySelectedIpsPortsAction(EventHandler<ActionEvent> copySelectedIpsPortsAction)
-
-    void setCopySelectedIpsAction(EventHandler<ActionEvent> copySelectedIpsAction)
-
-    void setRowInfoLabel(String text)
-
-    void setIpInfoLabel(String text)
-
-    void setStatusLabel(String text)
+    void setFilterText(Object text)
 
     void setFilterTextItems(List<String> items)
 
     List<String> getFilterTextItems()
 
-    void addFiterTextListener(ChangeListener listener)
+    void setStatusLabel(String label)
 
-    void setFilterText(String text)
+    void setRowInfoLabel(String label)
 
-    void setMainTableItems(ObservableList items)
+    void setIpInfoLabel(String label)
 
-    void setSelectItemPropertyListener(ChangeListener listener)
+    void selectSelectIssueTab()
 
-    void setTableSelectionMode(SelectionMode mode)
+    void disableFindingsTab()
 
-    ObservableList<String> getFilterTextStyleClass()
+    void enableFindingsTab()
 
-    void addFilterTextMouseClicked(EventHandler handler)
+    def addFilterTextListener(ChangeListener listener)
 
-    ObjectProperty<EventHandler> getTableKeyEvent()
+    void setOnActionHandler(EventHandler<ActionEvent> onChangedHandler)
 
-    void textArealoadContent(String content)
+    void setHandleReturnHandler(EventHandler<KeyEvent> handleReturnHandler)
 
-    Finding getSelectedFinding()
+    void refresh()
 
-    Window getWindow()
+    void setComboCellFactory(Callback<ListView, ListCell> cellFactory)
 
-    List<Finding> getSelectedFindings()
-
-    String getFilterTextValue()
-
-    ReadOnlyObjectProperty<Comparator> getTableComparatorProperty()
-
-    RetentionFileChooser getRetentionFileChooser()
-
-    void setClipboardContent(ClipboardContent content)
+    ComboBox getMainFilter()
 }

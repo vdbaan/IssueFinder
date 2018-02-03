@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.web.WebView?>
+<SplitPane dividerPositions="0.7" prefHeight="599.0" prefWidth="839.0" xmlns="http://javafx.com/javafx/8.0.111"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.IssueTabController">
+    <items>
+        <TableView fx:id="findingsTable" prefHeight="200.0" prefWidth="200.0" stylesheets="@style.css">
+
+            <columns>
+                <TableColumn fx:id="findingColumn" prefWidth="75.0" sortable="false" text="Finding">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="plugin"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="riskColumn" prefWidth="75.0" text="Risk" visible="false" maxWidth="0">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="severity"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <SplitPane dividerPositions="0.5, 0.5, 0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+            <items>
+                <TitledPane animated="false" collapsible="false" prefHeight="200.0" text="Description">
+                    <content>
+                        <WebView fx:id="descriptionView" prefHeight="200.0" prefWidth="200.0"/>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" collapsible="false" prefHeight="200.0" text="Remediation">
+                    <content>
+                        <WebView fx:id="remediationView" prefHeight="-1.0" prefWidth="-1.0"/>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="200.0"
+                            text="Plugin output">
+                    <content>
+                        <WebView fx:id="outputView" prefHeight="-1.0" prefWidth="-1.0"/>
+                    </content>
+                </TitledPane>
+                <TableView fx:id="ipTable" prefWidth="200.0" tableMenuButtonVisible="true">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="ip">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="ip"/>
+                        </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn prefWidth="75.0" text="port">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="port"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn text="location" visible="false">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="location"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </items>
+        </SplitPane>
+    </items>
+</SplitPane>

@@ -27,16 +27,16 @@ class SSLyzeParser extends Parser {
     static scanner = "SSLyze"
     static service = 'ssl'
 
-    SSLyzeParser(content) {
+    SSLyzeParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
+        final List<Finding> result = new ArrayList<>()
 
         // for a weird reason, content.result.target.each barfs out with an Exception
         for (def i = 0; i < content.results.target.size(); i++) {
@@ -57,51 +57,51 @@ class SSLyzeParser extends Parser {
         return result
     }
 
-    private Finding reportCert(target) {
-        def ip = target.@ip
-        def port = target.@port
-        def plugin = target.certinfo_basic.@title
-        def severity = Finding.Severity.INFO
+    private Finding reportCert(final target) {
+        final def ip = target.@ip
+        final def port = target.@port
+        final def plugin = target.certinfo_basic.@title
+        final def severity = Finding.Severity.INFO
         def summary = "Received Certificate:"
         summary += "\nissuer OU" + target.certinfo_basic.receivedCertificateChain.certificate.organizationalUnitName
 //        summary
         return null
     }
 
-    private Finding reportSSLv2(target) {
-        def ip = target.@ip
-        def port = target.@port
+    private Finding reportSSLv2(final target) {
+        final def ip = target.@ip
+        final def port = target.@port
         return buildSuite(ip, port, target.sslv2, Finding.Severity.HIGH)
     }
 
-    private Finding reportSSLv3(target) {
-        def ip = target.@ip
-        def port = target.@port
+    private Finding reportSSLv3(final target) {
+        final def ip = target.@ip
+        final def port = target.@port
         return buildSuite(ip, port, target.sslv3, Finding.Severity.HIGH)
     }
 
-    private Finding reportTLSv1(target) {
-        def ip = target.@ip
-        def port = target.@port
+    private Finding reportTLSv1(final target) {
+        final def ip = target.@ip
+        final def port = target.@port
         return buildSuite(ip, port, target.tlsv1, Finding.Severity.MEDIUM)
     }
 
-    private Finding reportTLSv1_1(target) {
-        def ip = target.@ip
-        def port = target.@port
+    private Finding reportTLSv1_1(final target) {
+        final def ip = target.@ip
+        final def port = target.@port
         return buildSuite(ip, port, target.tlsv1_1, Finding.Severity.INFO)
     }
 
-    private Finding reportTLSv1_2(target) {
-        def ip = target.@ip
-        def port = target.@port
+    private Finding reportTLSv1_2(final target) {
+        final def ip = target.@ip
+        final def port = target.@port
         return buildSuite(ip, port, target.tlsv1_2, Finding.Severity.INFO)
     }
 
-    private void reportOther(results, target) {
+    private void reportOther(final results, final target) {
         // scanner, ip, port, service, plugin, severity, summary
-        def ip = target.@ip as String
-        def port = target.@port as String
+        final def ip = (target.@ip as String)
+        final def port = (target.@port as String)
         results << new Finding([scanner: scanner, ip: ip, port: port + '/open/tcp', service: 'ssl', plugin: target.heartbleed.@title as String,
                                 risk   : target.heartbleed.openSslHeartbleed.@isVulnerable == 'True' ? Finding.Severity.HIGH : Finding.Severity.INFO,
                                 summary: ''])
@@ -123,22 +123,22 @@ class SSLyzeParser extends Parser {
 //        </resum>
     }
 
-    private Finding buildSuite(ip, port, suite, risk) {
+    private Finding buildSuite(final ip, final port, final suite, final risk) {
 
-        def plugin = suite.@title
-        def severity = suite.@isProtocolSupported == 'True' ? risk : Finding.Severity.INFO
+        final def plugin = suite.@title
+        final def severity = suite.@isProtocolSupported == 'True' ? risk : Finding.Severity.INFO
         def summary = "CipherSuites"
-        def prefered = '' + suite.preferredCipherSuite.cipherSuite.cipher.@name
+        final def prefered = '' + suite.preferredCipherSuite.cipherSuite.cipher.@name
         summary += "\n- Preferred: " + (prefered ?: 'None')
         summary += "\n- Accepted: "
         def accepted = ''
-        suite.acceptedCipherSuites.cipherSuite.each { cipher ->
+        suite.acceptedCipherSuites.cipherSuite.each { final cipher ->
             accepted += "\n" + cipher.@name
         }
         summary += accepted ?: 'None'
         summary += "\n\n- Rejected: "
         def rejected = ''
-        suite.rejectedCipherSuites.cipherSuite.each { cipher ->
+        suite.rejectedCipherSuites.cipherSuite.each { final cipher ->
             rejected += "\n" + cipher.@name
         }
         summary += rejected ?: 'None'

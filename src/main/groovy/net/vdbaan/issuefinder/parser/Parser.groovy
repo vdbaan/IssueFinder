@@ -47,20 +47,20 @@ abstract class Parser {
         jsonSlurper = new JsonSlurper()
     }
 
-    static Parser getParser(File file) {
+    static Parser getParser(final File file) {
         try {
             return getParser(file.getText())
-        } catch (Exception e) {
+        } catch (final Exception e) {
             if (BurpStateParser.identify(file)) return new BurpStateParser(file)
             else return null
         }
     }
 
-    static Parser getParser(String text) {
+    static Parser getParser(final String text) {
         preload = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
         try {
-            def parser = parserPool.borrowObject()
-            def content = new XmlSlurper(parser).parseText(text)
+            final def parser = parserPool.borrowObject()
+            final def content = new XmlSlurper(parser).parseText(text)
 
             parserPool.returnObject(parser)
             if (NessusParser.identify(content)) return new NessusParser(content)
@@ -74,12 +74,12 @@ abstract class Parser {
             if (OpenVASParser.identify(content)) return new OpenVASParser(content)
             if (NexposeParser.identify(content)) return new NexposeParser(content)
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warning e.getMessage()
             try {
-                def json = jsonSlurper.parseText(text)
+                final def json = jsonSlurper.parseText(text)
                 if (TestSSLParser.identify(json)) return new TestSSLParser(json)
-            } catch (Exception e2) {
+            } catch (final Exception e2) {
                 log.warning e2.getMessage()
                 throw e2
             }
@@ -90,11 +90,11 @@ abstract class Parser {
 
     abstract List<Finding> parse()
 
-    static boolean identify(content) { throw RuntimeException('Need to implement this') }
+    static boolean identify(final content) { throw RuntimeException('Need to implement this') }
 
     static Map preload = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
 
-    boolean allowed(Finding.Severity severity) {
+    boolean allowed(final Finding.Severity severity) {
         return preload.get(severity)
     }
 }
@@ -116,7 +116,7 @@ class XmlParserPoolableObjectFactory extends BasePooledObjectFactory {
     }
 
     @Override
-    PooledObject wrap(Object obj) {
+    PooledObject wrap(final Object obj) {
         return new DefaultPooledObject(obj)
     }
 // Other methods left empty
@@ -125,8 +125,8 @@ class XmlParserPoolableObjectFactory extends BasePooledObjectFactory {
 class XmlParserPool {
     private final GenericObjectPool pool
 
-    XmlParserPool(int maxActive) {
-        def gen = new GenericObjectPoolConfig()
+    XmlParserPool(final int maxActive) {
+        final def gen = new GenericObjectPoolConfig()
         gen.setBlockWhenExhausted(true)
         gen.setMaxTotal(maxActive)
         gen.setMaxWaitMillis(0)
@@ -137,7 +137,7 @@ class XmlParserPool {
         return pool.borrowObject()
     }
 
-    void returnObject(Object obj) throws Exception {
+    void returnObject(final Object obj) throws Exception {
         pool.returnObject(obj)
     }
 }

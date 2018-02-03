@@ -19,23 +19,25 @@ package net.vdbaan.issuefinder.util
 
 import java.util.logging.*
 
+import static java.lang.Thread.currentThread
+
 class IssueLogger {
-    static void setup(String... args) throws IOException {
+    static void setup(final String... args) throws IOException {
 
         // suppress the logging output to the console
-        Logger rootLogger = Logger.getLogger("")
-        rootLogger.getHandlers().each {
+        final Logger rootLogger = Logger.getLogger("")
+        rootLogger.handlers.each {
             rootLogger.removeHandler(it)
         }
 
         final ConsoleHandler consoleHandler = new ConsoleHandler()
-        consoleHandler.setLevel(Level.FINEST)
-        consoleHandler.setFormatter(new IssueFormatter())
+        consoleHandler.level = Level.FINEST
+        consoleHandler.formatter = new IssueFormatter()
         rootLogger.addHandler(consoleHandler)
         if (args.contains('--debug')) {
-            rootLogger.setLevel(Level.FINER)
+            rootLogger.level = Level.FINER
         } else
-            rootLogger.setLevel(Level.INFO)
+            rootLogger.level = Level.INFO
     }
 }
 
@@ -43,30 +45,30 @@ class IssueFormatter extends SimpleFormatter {
     private static final String format = '%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] (%2$s) %5$s %6$s%n'
     private final Date dat = new Date()
 
-    synchronized String format(LogRecord record) {
-        dat.setTime(record.getMillis())
-        String source = getSource()
-        String message = formatMessage(record)
+    synchronized String format(final LogRecord record) {
+        dat.time = record.millis
+        final String source = source
+        final String message = formatMessage(record)
         String throwable = ""
-        if (record.getThrown() != null) {
-            StringWriter sw = new StringWriter()
-            PrintWriter pw = new PrintWriter(sw)
+        if (record.thrown != null) {
+            final StringWriter sw = new StringWriter()
+            final PrintWriter pw = new PrintWriter(sw)
             pw.println()
-            record.getThrown().printStackTrace(pw)
+            record.thrown.printStackTrace(pw)
             pw.close()
             throwable = sw.toString()
         }
         return String.format(format,
                 dat,
                 source,
-                record.getLoggerName(),
-                record.getLevel().getLocalizedLevelName(),
+                record.loggerName,
+                record.level.getLocalizedLevelName(),
                 message,
                 throwable)
     }
 
     String getSource() {
-        def st = Thread.currentThread().getStackTrace()
+        final def st = currentThread().stackTrace
         int pos = 0
         while (!st[pos].declaringClass.equals('java.util.logging.Logger') && !st[pos].methodName.equals('doLog'))
             pos += 1

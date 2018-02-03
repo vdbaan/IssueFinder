@@ -24,7 +24,7 @@ import net.vdbaan.issuefinder.db.DbListener
 interface BaseView {
     void close()
 
-    void setMasterView(MainView view)
+    void setMasterView(LayoutView view)
 
     void addDbListener(DbListener listener)
 

@@ -28,23 +28,23 @@ class EditorPresenter {
     private EditorView editorView
     private List<Finding> data
 
-    EditorPresenter(EditorView view) {
+    EditorPresenter(final EditorView view) {
         this.editorView = view
         this.editorView.setCancelAction(this.&cancel)
         this.editorView.setOkAction(this.&ok)
 
         // for a weird reason, when you make it into a one lines, it treats it as an error
-        List values = Arrays.asList(Finding.Severity.values())
+        final List values = Arrays.asList(Finding.Severity.values())
         this.editorView.setEditRiskOptions(values)
     }
 
-    private cancel(ActionEvent event) {
+    private cancel(final ActionEvent event) {
         editorView.close()
     }
 
-    private ok(ActionEvent event) {
-        DbHandler db = editorView.getDbHandler()
-        data.each { finding ->
+    private ok(final ActionEvent event) {
+        final DbHandler db = editorView.getDbHandler()
+        data.each { final finding ->
             finding.scanner = editorView.getEditScanner() ?: finding.scanner
             finding.hostName = editorView.getEditHostname() ?: finding.hostName
             finding.ip = editorView.getEditIp() ?: finding.ip
@@ -58,10 +58,10 @@ class EditorPresenter {
         editorView.close()
     }
 
-    void setEditData(List<Finding> data) {
+    void setEditData(final List<Finding> data) {
         this.data = data
         if (data.size() == 1) {
-            Finding finding = data.get(0)
+            final Finding finding = data[0]
             editorView.setEditScanner(finding.scanner)
             editorView.setEditIp(finding.ip)
             editorView.setEditHostname(finding.hostName)

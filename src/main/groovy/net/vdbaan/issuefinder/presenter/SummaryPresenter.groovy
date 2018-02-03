@@ -27,17 +27,17 @@ class SummaryPresenter {
 
     private SummaryView summaryView
 
-    SummaryPresenter(SummaryView view) {
+    SummaryPresenter(final SummaryView view) {
         this.summaryView = view
     }
 
-    void setSummary(Map<String, Container> summary) {
-        TreeItem<Wrapper> treeRoot = new TreeItem(new Wrapper(key: String.format("IPs (%d)", summary.size()), value: ""))
-        summary.each { k, Container v ->
-            TreeItem<Wrapper> ip = new TreeItem(new Wrapper(key: k, value: ""))
+    void setSummary(final Map<String, Container> summary) {
+        final TreeItem<Wrapper> treeRoot = new TreeItem(new Wrapper(key: String.format("Location (%d)", summary.size()), value: ""))
+        summary.each { final k, final Container v ->
+            final TreeItem<Wrapper> ip = new TreeItem(new Wrapper(key: k, value: ""))
             ip.children << new TreeItem(new Wrapper(key: String.format("open ports (%d)", v.listedports.size()), value: v.listedports.join(", ")))
             ip.children << new TreeItem(new Wrapper(key: String.format("found services (%d)", v.listedservices.size()), value: v.listedservices.join(", ")))
-            TreeItem<Wrapper> vulns = new TreeItem(new Wrapper(key: String.format("Highest vulnerability (%d)", v.plugins.size()), value: v.highest.toString()))
+            final TreeItem<Wrapper> vulns = new TreeItem(new Wrapper(key: String.format("Highest vulnerability (%d)", v.plugins.size()), value: v.highest.toString()))
             v.plugins.each { vulns.children << new TreeItem(new Wrapper(key: "", value: it)) }
             ip.children << vulns
             treeRoot.children << ip

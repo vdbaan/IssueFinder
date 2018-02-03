@@ -45,15 +45,19 @@ class SummaryViewImpl extends AbstractSummaryView implements SummaryView {
 
         TableUtils.installCopyPasteHandler(treeTable)
 
-        prop.setCellValueFactory({ TreeTableColumn.CellDataFeatures<Wrapper, String> param -> new ReadOnlyStringWrapper(param.getValue().getValue().getKey()) })
-        val.setCellValueFactory({ TreeTableColumn.CellDataFeatures<Wrapper, String> param -> new ReadOnlyStringWrapper(param.getValue().getValue().getValue()) })
+        prop.setCellValueFactory({
+            final TreeTableColumn.CellDataFeatures<Wrapper, String> param -> new ReadOnlyStringWrapper(param.getValue().getValue().getKey())
+        })
+        val.setCellValueFactory({
+            final TreeTableColumn.CellDataFeatures<Wrapper, String> param -> new ReadOnlyStringWrapper(param.getValue().getValue().getValue())
+        })
 
-        val.setCellFactory({ TreeTableColumn<Object, String> param ->
+        val.setCellFactory({ final TreeTableColumn<Object, String> param ->
             new TreeTableCell<Object, String>() {
                 private Text text
 
                 @Override
-                void updateItem(String item, boolean empty) {
+                void updateItem(final String item, final boolean empty) {
                     super.updateItem(item, empty)
                     if (!isEmpty() && !("" == item.toString())) {
                         text = new Text(item.toString())
@@ -71,7 +75,7 @@ class SummaryViewImpl extends AbstractSummaryView implements SummaryView {
     }
 
     @Override
-    void setTreeRoot(TreeItem root) {
+    void setTreeRoot(final TreeItem root) {
         treeTable.setRoot(root)
     }
 
@@ -87,7 +91,7 @@ abstract class AbstractSummaryView extends BaseViewImpl implements SummaryView {
     SummaryPresenter presenter
 
     @Override
-    void setSummary(Map<String, Container> summary) {
+    void setSummary(final Map<String, Container> summary) {
         presenter.setSummary(summary)
     }
 }

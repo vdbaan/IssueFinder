@@ -22,7 +22,7 @@ import net.vdbaan.issuefinder.db.DbHandler
 import net.vdbaan.issuefinder.db.DbHandlerImpl
 import net.vdbaan.issuefinder.db.DbListener
 import net.vdbaan.issuefinder.view.BaseView
-import net.vdbaan.issuefinder.view.MainView
+import net.vdbaan.issuefinder.view.LayoutView
 
 
 class BaseViewImpl implements BaseView {
@@ -36,7 +36,7 @@ class BaseViewImpl implements BaseView {
         root?.getScene()?.getWindow()?.hide()
     }
 
-    void addDbListener(DbListener listener) {
+    void addDbListener(final DbListener listener) {
         listeners.add(listener)
     }
 
@@ -46,7 +46,7 @@ class BaseViewImpl implements BaseView {
         }
     }
 
-    void setMasterView(MainView view) {
+    void setMasterView(final LayoutView view) {
     }
 
     DbHandler getDbHandler() {

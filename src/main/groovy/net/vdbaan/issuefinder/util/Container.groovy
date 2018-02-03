@@ -27,7 +27,7 @@ class Container {
     Set<String> plugins = new HashSet<>()
 
     String toString() {
-        StringBuilder sb = new StringBuilder()
+        final StringBuilder sb = new StringBuilder()
         sb.append(String.format("open ports (%d)", listedports.size()))
         sb.append("\t")
         sb.append(listedports.join(","))

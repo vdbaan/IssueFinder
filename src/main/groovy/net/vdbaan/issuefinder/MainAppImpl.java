@@ -33,7 +33,7 @@ import net.vdbaan.issuefinder.model.Finding;
 import net.vdbaan.issuefinder.util.BrowserPopupHandler;
 import net.vdbaan.issuefinder.util.Container;
 import net.vdbaan.issuefinder.view.EditorView;
-import net.vdbaan.issuefinder.view.MainView;
+import net.vdbaan.issuefinder.view.LayoutView;
 import net.vdbaan.issuefinder.view.ProgressView;
 import net.vdbaan.issuefinder.view.SummaryView;
 
@@ -44,9 +44,29 @@ import java.util.Map;
 
 
 public class MainAppImpl extends Application implements MainApp {
+    private static MainAppImpl instance;
     private Stage primaryStage;
+    private LayoutView layoutView;
 
-    private MainView mainView;
+    MainAppImpl() {
+        instance = this;
+    }
+
+    public static synchronized MainAppImpl getInstance() {
+        if (instance == null) {
+            Thread t = new Thread(() -> MainAppImpl.launch(null));
+            t.start();
+            while (instance == null) {
+                try {
+                    t.wait(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        return instance;
+    }
 
     public static void startup(String[] args) {
         launch(args);
@@ -65,8 +85,8 @@ public class MainAppImpl extends Application implements MainApp {
         primaryStage.setMaximized(true);
         primaryStage.setScene(mainScene);
 
-        mainView = fxmlLoader.getController();
-        mainView.setMainApp(this);
+        layoutView = fxmlLoader.getController();
+        layoutView.setMainApp(this);
 
         primaryStage.getIcons().add(new Image(MainAppImpl.class.getResourceAsStream("/539822430.jpg")));
 
@@ -97,8 +117,8 @@ public class MainAppImpl extends Application implements MainApp {
 
         ProgressView controller = loader.getController();
         controller.setFileList(files);
-        controller.setMasterView(mainView);
-        controller.addDbListener(mainView);
+        controller.setMasterView(layoutView);
+        controller.addDbListener(layoutView);
 
         dialog.showAndWait();
     }
@@ -151,7 +171,7 @@ public class MainAppImpl extends Application implements MainApp {
         WebView view = new WebView();
 
         view.getEngine().load(MainAppImpl.class.getResource("/helptext.html").toExternalForm());
-        view.getEngine().setCreatePopupHandler(new BrowserPopupHandler(this));
+        view.getEngine().setCreatePopupHandler(new BrowserPopupHandler(MainAppImpl.getInstance()));
         dialog.initModality(Modality.NONE);
         dialog.setScene(new Scene(view));
         dialog.show();

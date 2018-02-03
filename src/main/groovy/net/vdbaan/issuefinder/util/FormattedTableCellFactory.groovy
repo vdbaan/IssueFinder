@@ -27,18 +27,18 @@ import net.vdbaan.issuefinder.model.Finding
 @CompileStatic
 class FormattedTableCellFactory<S, T> implements Callback<TableColumn<Finding, Finding.Severity>, TableCell<Finding, Finding.Severity>> {
     @Override
-    TableCell<S, T> call(TableColumn<Finding, Finding.Severity> param) {
+    TableCell<S, T> call(final TableColumn<Finding, Finding.Severity> param) {
 
-        List<String> cellStyles = ['cell', 'indexed-cell', 'table-cell', 'table-column']
-        List<String> rowStyles = ['cell', 'indexed-cell', 'table-row-cell']
-        TableCell result = new TableCell<Finding, Finding.Severity>() {
+        final List<String> cellStyles = ['cell', 'indexed-cell', 'table-cell', 'table-column']
+        final List<String> rowStyles = ['cell', 'indexed-cell', 'table-row-cell']
+        final TableCell result = new TableCell<Finding, Finding.Severity>() {
 
             @Override
-            protected void updateItem(Finding.Severity item, boolean empty) {
+            protected void updateItem(final Finding.Severity item, final boolean empty) {
                 super.updateItem(item, empty)
                 getStyleClass().clear()
                 getStyleClass().addAll(cellStyles)
-                TableRow<Finding> row = getTableRow()
+                final TableRow<Finding> row = getTableRow()
                 row.getStyleClass().clear()
                 row.getStyleClass().addAll(rowStyles)
                 if (item != null) {

@@ -28,32 +28,32 @@ class NetsparkerParser extends Parser {
     static String IDENTIFIER = "netsparker"
     static String scanner = "Netsparker"
 
-    NetsparkerParser(content) {
+    NetsparkerParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
 
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
-        content.target.each { scan ->
-            String summary = "Target URL: " + scan.url + '\n' + 'Scan time : ' + scan.scantime + '\n'
+        final List<Finding> result = new ArrayList<>()
+        content.target.each { final scan ->
+            final String summary = "Target URL: " + scan.url + '\n' + 'Scan time : ' + scan.scantime + '\n'
             result << new Finding([scanner : scanner, ip: 'none', port: 'generic', service: 'none', plugin: 'scaninfo',
                                    severity: Finding.Severity.INFO, summary: summary])
         }
 
-        content.vulnerability.each { vuln ->
-            def url = new URL(vuln.url.toString())
+        content.vulnerability.each { final vuln ->
+            final def url = new URL(vuln.url.toString())
             int port = url.port
-            String service = url.protocol.toUpperCase()
+            final String service = url.protocol.toUpperCase()
             if (port == -1) {
                 port = service == 'HTTPS' ? 443 : 80
             }
-            String plugin = vuln.type
-            Finding.Severity severity = calcSeverity('' + vuln.severity)
+            final String plugin = vuln.type
+            final Finding.Severity severity = calcSeverity('' + vuln.severity)
             String summary = 'URL: ' + vuln.url + '\n'
             summary += 'Severity:' + vuln.severity + ' (' + vuln.certainty + '%)\n'
             summary += 'Classification:' + classification(vuln.classification) + '\n'
@@ -67,19 +67,19 @@ class NetsparkerParser extends Parser {
         return result
     }
 
-    private Finding.Severity calcSeverity(String risk) {
-        Finding.Severity result
+    private Finding.Severity calcSeverity(final String risk) {
+        final Finding.Severity result
         try {
             result = Finding.Severity.valueOf(Finding.Severity, risk.toUpperCase())
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             log.log(Level.FINE, 'Got an exception', e)
             result = Finding.Severity.INFO
         }
         return result
     }
 
-    private String classification(xml) {
-        def sb = new StringBuilder()
+    private String classification(final xml) {
+        final def sb = new StringBuilder()
         sb << "OWASP:" + xml.OWASP
         sb << " ,WASC:" + xml.WASC
         sb << " ,CWE:" + xml.CWE

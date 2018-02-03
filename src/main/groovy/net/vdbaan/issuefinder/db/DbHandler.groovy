@@ -30,6 +30,8 @@ import java.util.logging.Level
 interface DbHandler {
     List<Finding> getAllFinding(String where)
 
+    List<Finding> getAllFinding(String where, int maxRows)
+
     void saveFindings(List<Finding> list)
 
     void deleteAll()
@@ -47,6 +49,8 @@ interface DbHandler {
     void saveDb(String fileName)
 
     void loadDb(String fileName)
+
+    List<String> getAllPlugins(String where)
 }
 
 @Log
@@ -59,10 +63,10 @@ class DbHandlerImpl implements DbHandler {
 
         JdbcDataSource getDataSource() {
             if (jdbcDataSource == null) {
-                Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE).clone()
-                String dbName = Config.getInstance().getProperty(Config.DB_NAME)
+                final Object dataSource = Config.getInstance().getProperty(Config.DATA_SOURCE).clone()
+                final String dbName = Config.getInstance().getProperty(Config.DB_NAME)
                 if (!Config.getInstance().hasPropertyFor('LEAVE_DB')) {
-                    String name
+                    final String name
                     name = dbName + '-' + System.currentTimeMillis()
                     Config.getInstance().setProperty('VOLATILE-DB', name)
                     dataSource.database = dataSource.database.replace(dbName, name)
@@ -86,7 +90,7 @@ class DbHandlerImpl implements DbHandler {
             if (MyDataSource.create) {
                 try {
                     createTable(sql)
-                } catch (JdbcSQLException e) {
+                } catch (final JdbcSQLException e) {
                     log.warning(' Database wasn\'t deleted.....something went wrong')
                     log.log(Level.FINE, 'Got this exception', e)
                 }
@@ -97,7 +101,7 @@ class DbHandlerImpl implements DbHandler {
         return sql
     }
 
-    private def createTable(Sql sql) {
+    private def createTable(final Sql sql) {
         sql.execute Finding.CREATE
     }
 
@@ -107,34 +111,38 @@ class DbHandlerImpl implements DbHandler {
         return numrows
     }
 
-    List<Finding> getAllFinding(String where) {
+    List<Finding> getAllFinding(final String where) {
+        return getAllFinding(where, Config.getInstance().getProperty(Config.MAX_ROWS))
+    }
+
+    List<Finding> getAllFinding(final String where, int maxRows) {
         log.info(String.format('Filtering on <%s>', where))
-        def response = getSql().firstRow(buildQry(where, Finding.COUNT))
+        final def response = getSql().firstRow(buildQry(where, Finding.COUNT))
         numrows = response.'COUNT(*)'
-        List<Finding> result = new ArrayList<>()
-        int maxRows = Config.getInstance().getProperty(Config.MAX_ROWS)
-        getSql().eachRow(buildQry(where), 1, maxRows) { row ->
+        final List<Finding> result = new ArrayList<>()
+        if (maxRows == -1) maxRows = numrows
+        getSql().eachRow(buildQry(where), 1, maxRows) { final row ->
             result << buildFinding((GroovyResultSet) row)
         }
         return result
     }
 
-    Finding buildFinding(GroovyResultSet p) {
-        return new Finding(id: p.id, scanner: p.scanner, ip: p.ip, port: p.port, portStatus: p.status,
+    Finding buildFinding(final GroovyResultSet p) {
+        return new Finding(id: p.id, scanner: p.scanner, ip: p.ip, port: p.port, portStatus: p.status, location: p.location,
                 protocol: p.protocol, hostName: p.hostName, service: p.service, plugin: p.plugin, baseCVSS: p.cvss,
                 severity: getSeverity(p.risk), summary: p.summary, description: p.description, reference: p.reference, pluginOutput: p.pluginOutput,
                 solution: p.solution, cvssVector: p.cvssVector)
     }
 
-    Finding.Severity getSeverity(String risk) {
+    Finding.Severity getSeverity(final String risk) {
         return Finding.Severity.valueOf(risk)
     }
 
-    void saveFindings(List<Finding> list) {
+    void saveFindings(final List<Finding> list) {
         log.info String.format("Saving %s findings", list.size())
         if (list.size() > 0) {
-            getSql().withBatch(100, Finding.INSERT) { ps ->
-                list.each { f ->
+            getSql().withBatch(100, Finding.INSERT) { final ps ->
+                list.each { final f ->
                     ps.addBatch(f)
                 }
             }
@@ -145,12 +153,12 @@ class DbHandlerImpl implements DbHandler {
         getSql().execute(Finding.DELETE_ALL)
     }
 
-    void updateFinding(Finding finding) {
+    void updateFinding(final Finding finding) {
         getSql().executeUpdate(Finding.UPDATE, finding)
     }
 
-    private String buildQry(String where, String base = Finding.SELECT) {
-        StringBuilder sb = new StringBuilder(base)
+    private String buildQry(final String where, final String base = Finding.SELECT) {
+        final StringBuilder sb = new StringBuilder(base)
         if (where != null && !"".equalsIgnoreCase(where)) {
             sb.append(' WHERE ')
             sb.append(where.replace(' == ', ' = ').replace(' && ', ' AND ').replace(' || ', ' OR '))
@@ -163,12 +171,12 @@ class DbHandlerImpl implements DbHandler {
         getSql().execute('TRUNCATE TABLE finding')
         try {
             getSql().execute('SHUTDOWN')
-        } catch (JdbcSQLException e) {
+        } catch (final JdbcSQLException e) {
             log.log(Level.FINE, 'Got this exception', e)
         } finally {
-            File dir = new File(Config.getInstance().getProperty(Config.DATA_DIR).toString())
-            dir.eachFile(FileType.FILES) { File f ->
-                String name = Config.getInstance().getProperty('VOLATILE-DB')
+            final File dir = new File(Config.getInstance().getProperty(Config.DATA_DIR).toString())
+            dir.eachFile(FileType.FILES) { final File f ->
+                final String name = Config.getInstance().getProperty('VOLATILE-DB')
                 if (f?.getName()?.startsWith(name)) {
                     log.fine 'Deleting ' + f.getAbsolutePath()
                     f.delete()
@@ -184,7 +192,7 @@ class DbHandlerImpl implements DbHandler {
                 try {
                     deleteAll()
                     deleteDB()
-                } catch (JdbcSQLException e) {
+                } catch (final JdbcSQLException e) {
                     log.warning 'Table already deleted'
                     log.log(Level.FINE, 'Got this exception', e)
                 }
@@ -196,11 +204,22 @@ class DbHandlerImpl implements DbHandler {
         MyDataSource.INSTANCE.resetJdbc()
     }
 
-    void saveDb(String fileName) {
+    void saveDb(final String fileName) {
         getSql().execute("SCRIPT NOPASSWORDS NOSETTINGS DROP TO '$fileName'")
     }
 
-    void loadDb(String fileName) {
+    void loadDb(final String fileName) {
         getSql().execute("RUNSCRIPT FROM '$fileName'")
+        getSql().execute(Finding.UPDATE_TABLE)
+    }
+
+    List<String> getAllPlugins(final String where) {
+        log.info(String.format('Filtering on <%s>', where))
+
+        final List<String> result = new ArrayList()
+        getSql().eachRow(buildQry(where, 'SELECT DISTINCT plugin,risk FROM finding')) { final row ->
+            result << row.plugin
+        }
+        return result
     }
 }

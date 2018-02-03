@@ -10,32 +10,31 @@ class BurpStateParser extends Parser {
 
     static scanner = "BurpState"
 
-    BurpStateParser(File file) {
+    BurpStateParser(final File file) {
         this.content = file
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         try {
-            ZipFile zipFile = new ZipFile(contents, ZipFile.OPEN_READ)
+            final ZipFile zipFile = new ZipFile(contents, ZipFile.OPEN_READ)
 
-            ZipEntry state = zipFile.getEntry('burp')
+            final ZipEntry state = zipFile.getEntry('burp')
 
             return state.size > 0
-        } catch (ZipException z) {
+        } catch (final ZipException z) {
             return false
         }
     }
 
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
-        ZipFile zipFile = new ZipFile(content, ZipFile.OPEN_READ)
-        ZipEntry state = zipFile.getEntry('burp')
-        InputStream is = zipFile.getInputStream(state)
+        final List<Finding> result = new ArrayList<>()
+        final ZipFile zipFile = new ZipFile(content, ZipFile.OPEN_READ)
+        final ZipEntry state = zipFile.getEntry('burp')
+        final InputStream is = zipFile.getInputStream(state)
 
-        final byte[] buf
-        BurpByteBuffer tmp = new BurpByteBuffer()
+        final byte[] buf = new byte[8196]
+        final BurpByteBuffer tmp = new BurpByteBuffer()
         while (true) {
-            buf = new byte[8196]
             int i = is.read(buf)
             boolean search = true
             tmp.append(buf)
@@ -56,15 +55,15 @@ class BurpStateParser extends Parser {
         return result
     }
 
-    private Finding process(BurpByteBuffer input) {
-        int type = getInt(getBytes(input, '<type>', '</type>'), 1)
-        int sc = getInt(getBytes(input, '<sc>', '</sc>'), 1)
-        int ss = getInt(getBytes(input, '<ss>', '</ss>'), 1)
-        String host = new String(getBytes(input, '<httpService><host>', '</host>')).trim()
-        int port = getInt(getBytes(input, '</host><port>', '</port>'), 1)
-        boolean https = getBoolean(getBytes(input, '<https>', '</https>'), 1)
-        String path = new String(getBytes(input, '<path>', '</path>')).trim()
-        Map<Long, String> kv = new HashMap<>()
+    private Finding process(final BurpByteBuffer input) {
+        final int type = getInt(getBytes(input, '<type>', '</type>'), 1)
+        final int sc = getInt(getBytes(input, '<sc>', '</sc>'), 1)
+        final int ss = getInt(getBytes(input, '<ss>', '</ss>'), 1)
+        final String host = new String(getBytes(input, '<httpService><host>', '</host>')).trim()
+        final int port = getInt(getBytes(input, '</host><port>', '</port>'), 1)
+        final boolean https = getBoolean(getBytes(input, '<https>', '</https>'), 1)
+        final String path = new String(getBytes(input, '<path>', '</path>')).trim()
+        final Map<Long, String> kv = new HashMap<>()
         while (input.contains('<longkey>')) {
             long key = getLong(getBytes(input, '<longkey>', '</longkey>'), 1)
             input.delete(0, input.indexOf('</longkey>') + 10)
@@ -80,13 +79,13 @@ class BurpStateParser extends Parser {
             }
         }
 
-        def plugin = type + ':' + (kv.get(15l) ?: 'UNKNOWN')
+        final def plugin = type + ':' + (kv.get(15l) ?: 'UNKNOWN')
         return new Finding([scanner: scanner, ip: host, port: port as String, portStatus: 'open', protocol: 'tcp', service: (https) ? 'HTTPS' : 'HTTP',
                             plugin : plugin, severity: calc(ss),
                             summary: buildSummary(path, ss, sc, kv)])
     }
 
-    private String buildSummary(String path, int sev, int conf, Map<Long, String> keyValues) {
+    private String buildSummary(final String path, final int sev, final int conf, final Map<Long, String> keyValues) {
         return """
 Note        : Not all information can be extracted from the state file. For full info, please use a burp report.
 Name        : ${keyValues.get(15l)}
@@ -99,7 +98,7 @@ Remediation : ${keyValues.get(17l)}
 """
     }
 
-    private String cc(int confidence) {
+    private String cc(final int confidence) {
         switch (confidence) {
             case 3: return 'Certain'
             case 2: return 'Firm'
@@ -108,7 +107,7 @@ Remediation : ${keyValues.get(17l)}
         }
     }
 
-    private Finding.Severity calc(int severity) {
+    private Finding.Severity calc(final int severity) {
         switch (severity) {
             case 4: return Finding.Severity.HIGH
             case 3: return Finding.Severity.MEDIUM
@@ -119,14 +118,14 @@ Remediation : ${keyValues.get(17l)}
     }
 
 
-    private static byte[] getBytes(BurpByteBuffer input, String startTag, String stopTag) {
+    private static byte[] getBytes(final BurpByteBuffer input, final String startTag, final String stopTag) {
 
-        int start = input.indexOf(startTag)
-        int stop = input.indexOf(stopTag)
+        final int start = input.indexOf(startTag)
+        final int stop = input.indexOf(stopTag)
         return input.range(start + startTag.size(), stop)
     }
 
-    private static long getLong(byte[] b, int off) {
+    private static long getLong(final byte[] b, final int off) {
         return ((b[off + 7] & 0xFFL)) +
                 ((b[off + 6] & 0xFFL) << 8) +
                 ((b[off + 5] & 0xFFL) << 16) +
@@ -137,14 +136,14 @@ Remediation : ${keyValues.get(17l)}
                 (((long) b[off]) << 56);
     }
 
-    private static int getInt(byte[] b, int off) {
+    private static int getInt(final byte[] b, final int off) {
         return ((b[off + 3] & 0xFF)) +
                 ((b[off + 2] & 0xFF) << 8) +
                 ((b[off + 1] & 0xFF) << 16) +
                 ((b[off]) << 24);
     }
 
-    private static boolean getBoolean(byte[] b, int off) {
+    private static boolean getBoolean(final byte[] b, final int off) {
         return b[off] != 0;
     }
 }
@@ -152,39 +151,39 @@ Remediation : ${keyValues.get(17l)}
 class BurpByteBuffer {
     byte[] buffer = new byte[0]
 
-    void append(byte[] bytes) {
-        int position = buffer.size()
+    void append(final byte[] bytes) {
+        final int position = buffer.size()
         increaseCapacity(bytes.size())
         for (int i = 0; i < bytes.size(); i++) {
             buffer[i + position] = bytes[i]
         }
     }
 
-    boolean contains(String value) {
+    boolean contains(final String value) {
         return indexOf(value) != -1
     }
 
-    int indexOf(String value) {
+    int indexOf(final String value) {
         return indexOf(buffer, value.getBytes())
     }
 
-    BurpByteBuffer newBuffer(int start, int stop) {
-        BurpByteBuffer result = new BurpByteBuffer()
+    BurpByteBuffer newBuffer(final int start, final int stop) {
+        final BurpByteBuffer result = new BurpByteBuffer()
         result.append(range(start, stop))
         return result
     }
 
-    byte[] range(int start, int stop) {
+    byte[] range(final int start, final int stop) {
         return Arrays.copyOfRange(buffer, start, stop)
     }
 
-    void delete(int start, int stop) {
-        int last = buffer.size()
+    void delete(final int start, final int stop) {
+        final int last = buffer.size()
         buffer = Arrays.copyOfRange(buffer, stop, last)
     }
 
-    private void increaseCapacity(int size) {
-        int capacity = buffer.size()
+    private void increaseCapacity(final int size) {
+        final int capacity = buffer.size()
         buffer = Arrays.copyOf(buffer, capacity + size)
     }
 
@@ -192,7 +191,7 @@ class BurpByteBuffer {
         return new String(buffer)
     }
 
-    int indexOf(byte[] outerArray, byte[] smallerArray) {
+    int indexOf(final byte[] outerArray, final byte[] smallerArray) {
         for (int i = 0; i < outerArray.length - smallerArray.length + 1; ++i) {
             boolean found = true
             for (int j = 0; j < smallerArray.length; ++j) {

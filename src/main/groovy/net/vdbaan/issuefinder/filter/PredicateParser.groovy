@@ -27,7 +27,7 @@ import java.util.logging.Level
 
 @CompileStatic
 class FindingPredicateParserRuntimeException extends RuntimeException {
-    FindingPredicateParserRuntimeException(String message) {
+    FindingPredicateParserRuntimeException(final String message) {
         super(message)
     }
 }
@@ -35,25 +35,28 @@ class FindingPredicateParserRuntimeException extends RuntimeException {
 @Log
 @CompileStatic
 class FindingPredicateParser {
-    FindingPredicate parse(String text) {
-        PredicateLexer lexer = new PredicateLexer(CharStreams.fromString(text))
-        CommonTokenStream tokens = new CommonTokenStream(lexer)
-        PredicateParser parser = new PredicateParser(tokens)
+    FindingPredicate parse(final String text) {
+        final PredicateLexer lexer = new PredicateLexer(CharStreams.fromString(text))
+        final CommonTokenStream tokens = new CommonTokenStream(lexer)
+        final PredicateParser parser = new PredicateParser(tokens)
         parser.removeErrorListeners()
         parser.addErrorListener(new BaseErrorListener() {
             @Override
-            void syntaxError(Recognizer<?, ? extends ATNSimulator> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+            void syntaxError(
+                    final Recognizer<?, ? extends ATNSimulator> recognizer,
+                    final Object offendingSymbol,
+                    final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
                 super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
                 throw new FindingPredicateParserRuntimeException("error")
             }
         })
         parser.getInterpreter().setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION)
-        ParseTree tree = parser.expr()
-        FindingPredicateVisitor v = new FindingPredicateVisitor()
+        final ParseTree tree = parser.expr()
+        final FindingPredicateVisitor v = new FindingPredicateVisitor()
         try {
-            FindingPredicate fp = (FindingPredicate) v.visit(tree)
+            final FindingPredicate fp = (FindingPredicate) v.visit(tree)
             return fp
-        } catch (FindingPredicateParserRuntimeException r) {
+        } catch (final FindingPredicateParserRuntimeException r) {
             log.log(Level.FINE, 'Got an exception', r)
             return null
         }
@@ -64,40 +67,40 @@ class FindingPredicateParser {
 class FindingPredicateVisitor extends PredicateBaseVisitor {
 
     @Override
-    Object visitAndExpr(PredicateParser.AndExprContext ctx) { // expr AND expr
+    Object visitAndExpr(final PredicateParser.AndExprContext ctx) { // expr AND expr
         return new FindingPredicate(visit(ctx.expr(0)), FindingPredicate.LogicalOperation.AND, visit(ctx.expr(1)))
     }
 
     @Override
-    Object visitOrExpr(PredicateParser.OrExprContext ctx) { // expr OR expr
+    Object visitOrExpr(final PredicateParser.OrExprContext ctx) { // expr OR expr
         return new FindingPredicate(visit(ctx.expr(0)), FindingPredicate.LogicalOperation.OR, visit(ctx.expr(1)))
     }
 
     @Override
-    Object visitEnclosedExpr(PredicateParser.EnclosedExprContext ctx) { // LPAREN expr RPAREN
+    Object visitEnclosedExpr(final PredicateParser.EnclosedExprContext ctx) { // LPAREN expr RPAREN
         return visit(ctx.expr())
     }
 
 
     @Override
-    Object visitAssign(PredicateParser.AssignContext ctx) { // column operator STRING
+    Object visitAssign(final PredicateParser.AssignContext ctx) { // column operator STRING
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.operator()), stripQuotes(ctx.STRING().text))
     }
 
     @Override
-    Object visitRange(PredicateParser.RangeContext ctx) { // column rangeOperator RANGE
-        List list = buildList(ctx.GROUP().text)
+    Object visitRange(final PredicateParser.RangeContext ctx) { // column rangeOperator RANGE
+        final List list = buildList(ctx.GROUP().text)
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.rangeOperator()), list)
     }
 
     @Override
-    Object visitGroup(PredicateParser.GroupContext ctx) { // column groupOperator GROUP
+    Object visitGroup(final PredicateParser.GroupContext ctx) { // column groupOperator GROUP
         return new FindingPredicate(visit(ctx.column()), (FindingPredicate.LogicalOperation) visit(ctx.groupOperator()), buildList(ctx.GROUP().text))
     }
 
     @Override
-    Object visitExploitableExpr(PredicateParser.ExploitableExprContext ctx) { //EXPLOITABLE
-        FindingPredicate result = new FindingPredicate(ColumnName.EXPLOITABLE, null, null)
+    Object visitExploitableExpr(final PredicateParser.ExploitableExprContext ctx) { //EXPLOITABLE
+        final FindingPredicate result = new FindingPredicate(ColumnName.EXPLOITABLE, null, null)
         if (ctx.childCount == 2) {
             result.operation = FindingPredicate.LogicalOperation.NOT
         }
@@ -105,12 +108,12 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
     }
 
     @Override
-    Object visitColumn(PredicateParser.ColumnContext ctx) {
+    Object visitColumn(final PredicateParser.ColumnContext ctx) {
         return ColumnName.get(ctx.text.toUpperCase())
     }
 
     @Override
-    Object visitOperator(PredicateParser.OperatorContext ctx) {
+    Object visitOperator(final PredicateParser.OperatorContext ctx) {
         if (ctx.childCount == 2) {
             return FindingPredicate.LogicalOperation.NLIKE
         } else
@@ -118,32 +121,32 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
     }
 
     @Override
-    Object visitGroupOperator(PredicateParser.GroupOperatorContext ctx) {
+    Object visitGroupOperator(final PredicateParser.GroupOperatorContext ctx) {
         return FindingPredicate.LogicalOperation.get(ctx.text.toUpperCase())
     }
 
     @Override
-    Object visitRangeOperator(PredicateParser.RangeOperatorContext ctx) {
+    Object visitRangeOperator(final PredicateParser.RangeOperatorContext ctx) {
         return FindingPredicate.LogicalOperation.get(ctx.text.toUpperCase())
     }
 
-    protected Object aggregateResult(Object aggregate, Object nextResult) {
+    protected Object aggregateResult(final Object aggregate, final Object nextResult) {
         if (nextResult == null) return aggregate
         return super.aggregateResult(aggregate, nextResult)
     }
 
-    private String stripQuotes(String text) {
+    private String stripQuotes(final String text) {
         if (text.startsWith('"') || text.startsWith("'")) {
-            def len = text.length()
+            final def len = text.length()
             return text.substring(1, len - 1)
         } else return text
     }
 
-    private List buildList(String list) {
-        ArrayList result = new ArrayList()
-        def len = list.length()
-        String workable = list.substring(1, len - 1)
-        workable.tokenize(",").each { token ->
+    private List buildList(final String list) {
+        final ArrayList result = new ArrayList()
+        final def len = list.length()
+        final String workable = list.substring(1, len - 1)
+        workable.tokenize(",").each { final token ->
             result << stripQuotes(token)
         }
         return result

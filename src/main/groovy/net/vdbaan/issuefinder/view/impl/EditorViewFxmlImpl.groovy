@@ -50,12 +50,12 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
     }
 
     @FXML
-    void ok(ActionEvent event) {
+    void ok(final ActionEvent event) {
         okAction?.handle(event)
     }
 
     @FXML
-    void cancel(ActionEvent event) {
+    void cancel(final ActionEvent event) {
         cancelAction?.handle(event)
     }
 
@@ -63,7 +63,7 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editScanner.text
     }
 
-    void setEditScanner(String editScanner) {
+    void setEditScanner(final String editScanner) {
         this.editScanner.text = editScanner
     }
 
@@ -71,7 +71,7 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editHostname.text
     }
 
-    void setEditHostname(String editHostname) {
+    void setEditHostname(final String editHostname) {
         this.editHostname.text = editHostname
     }
 
@@ -79,7 +79,7 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editIp.text
     }
 
-    void setEditIp(String editIp) {
+    void setEditIp(final String editIp) {
         this.editIp.text = editIp
     }
 
@@ -87,7 +87,7 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editPort.text
     }
 
-    void setEditPort(String editPort) {
+    void setEditPort(final String editPort) {
         this.editPort.text = editPort
     }
 
@@ -95,7 +95,7 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editService.text
     }
 
-    void setEditService(String editService) {
+    void setEditService(final String editService) {
         this.editService.text = editService
     }
 
@@ -103,7 +103,7 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editPlugin.text
     }
 
-    void setEditPlugin(String editPlugin) {
+    void setEditPlugin(final String editPlugin) {
         this.editPlugin.text = editPlugin
     }
 
@@ -111,16 +111,16 @@ class EditorViewFxmlImpl extends AbstractEditorView implements EditorView {
         return editRisk.getValue()
     }
 
-    void setEditRisk(Finding.Severity editRisk) {
+    void setEditRisk(final Finding.Severity editRisk) {
         this.editRisk.value = editRisk
     }
 
-    void setEditRiskOptions(List<Finding.Severity> options) {
+    void setEditRiskOptions(final List<Finding.Severity> options) {
         this.editRisk.items.addAll(options)
     }
 
 
-    void setEditData(List<Finding> data) {
+    void setEditData(final List<Finding> data) {
         presenter.setEditData(data)
     }
 }
@@ -135,7 +135,7 @@ abstract class AbstractEditorView extends BaseViewImpl implements EditorView {
         return okAction
     }
 
-    void setOkAction(EventHandler<ActionEvent> okAction) {
+    void setOkAction(final EventHandler<ActionEvent> okAction) {
         this.okAction = okAction
     }
 
@@ -143,7 +143,7 @@ abstract class AbstractEditorView extends BaseViewImpl implements EditorView {
         return cancelAction
     }
 
-    void setCancelAction(EventHandler<ActionEvent> cancelAction) {
+    void setCancelAction(final EventHandler<ActionEvent> cancelAction) {
         this.cancelAction = cancelAction
     }
 }

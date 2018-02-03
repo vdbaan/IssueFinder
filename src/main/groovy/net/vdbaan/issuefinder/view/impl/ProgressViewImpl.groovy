@@ -21,7 +21,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.fxml.FXML
 import javafx.scene.control.ProgressBar
 import net.vdbaan.issuefinder.presenter.ProgressPresenter
-import net.vdbaan.issuefinder.view.MainView
+import net.vdbaan.issuefinder.view.LayoutView
 import net.vdbaan.issuefinder.view.ProgressView
 
 @CompileStatic
@@ -37,11 +37,11 @@ class ProgressViewImpl extends AbstractProgressView implements ProgressView {
         presenter = new ProgressPresenter(this)
     }
 
-    void bindWorkingProgressIndicator(javafx.beans.binding.Binding binding) {
+    void bindWorkingProgressIndicator(final javafx.beans.binding.Binding binding) {
         working.progressProperty().bind(binding)
     }
 
-    void bindFilesProgressIndicator(SimpleDoubleProperty binding) {
+    void bindFilesProgressIndicator(final SimpleDoubleProperty binding) {
         files.progressProperty().bind(binding)
     }
 
@@ -51,12 +51,12 @@ class ProgressViewImpl extends AbstractProgressView implements ProgressView {
 abstract class AbstractProgressView extends BaseViewImpl implements ProgressView {
     ProgressPresenter presenter
 
-    void setFileList(List<File> files) {
+    void setFileList(final List<File> files) {
         presenter.process(files)
     }
 
     @Override
-    void setMasterView(MainView view) {
+    void setMasterView(final LayoutView view) {
         presenter.setMasterView(view)
     }
 }

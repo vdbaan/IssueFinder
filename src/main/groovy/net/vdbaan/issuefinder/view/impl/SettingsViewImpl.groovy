@@ -61,27 +61,27 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
     }
 
     @FXML
-    void addFilter(ActionEvent event) {
+    void addFilter(final ActionEvent event) {
         addFilterAction?.handle(event)
     }
 
     @FXML
-    void cancelAll(ActionEvent event) {
+    void cancelAll(final ActionEvent event) {
         cancelAllAction?.handle(event)
     }
 
     @FXML
-    void deleteFilter(ActionEvent event) {
+    void deleteFilter(final ActionEvent event) {
         deleteFilterAction?.handle(event)
     }
 
     @FXML
-    void editFilter(ActionEvent event) {
+    void editFilter(final ActionEvent event) {
         editFilterAction?.handle(event)
     }
 
     @FXML
-    void saveAll(ActionEvent event) {
+    void saveAll(final ActionEvent event) {
         saveAllAction?.handle(event)
     }
 
@@ -93,15 +93,15 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return filterList.items
     }
 
-    void addToListItems(List items) {
+    void addToListItems(final List items) {
         filterList.items.addAll(items)
     }
 
-    void addToListItems(String item) {
+    void addToListItems(final String item) {
         filterList.items << item
     }
 
-    void removeItem(String item) {
+    void removeItem(final String item) {
         filterList.items.remove(item)
     }
 
@@ -113,7 +113,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return isCritical.selected
     }
 
-    void setIsCritical(boolean isCritical) {
+    void setIsCritical(final boolean isCritical) {
         this.isCritical.selected = isCritical
     }
 
@@ -121,7 +121,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return isHigh.selected
     }
 
-    void setIsHigh(boolean isHigh) {
+    void setIsHigh(final boolean isHigh) {
         this.isHigh.selected = isHigh
     }
 
@@ -129,7 +129,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return isMedium.selected
     }
 
-    void setIsMedium(boolean isMedium) {
+    void setIsMedium(final boolean isMedium) {
         this.isMedium.selected = isMedium
     }
 
@@ -137,7 +137,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return isLow.selected
     }
 
-    void setIsLow(boolean isLow) {
+    void setIsLow(final boolean isLow) {
         this.isLow.selected = isLow
     }
 
@@ -145,7 +145,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return isInfo.selected
     }
 
-    void setIsInfo(boolean isInfo) {
+    void setIsInfo(final boolean isInfo) {
         this.isInfo.selected = isInfo
     }
 
@@ -153,7 +153,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return filterText.text
     }
 
-    void setFilterText(String filterText) {
+    void setFilterText(final String filterText) {
         this.filterText.text = filterText
     }
 
@@ -161,7 +161,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return batchSize.text
     }
 
-    void setBatchSize(String batchSize) {
+    void setBatchSize(final String batchSize) {
         this.batchSize.text = batchSize
     }
 
@@ -169,7 +169,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return maxRows.text
     }
 
-    void setMaxRows(String maxRows) {
+    void setMaxRows(final String maxRows) {
         this.maxRows.text = maxRows
     }
 
@@ -177,7 +177,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
         return copyString.text
     }
 
-    void setCopyString(String copyString) {
+    void setCopyString(final String copyString) {
         this.copyString.text = copyString
     }
 
@@ -187,7 +187,7 @@ class SettingsViewImpl extends AbstractSettingsView implements SettingsView {
     }
 
     @Override
-    void setColouredRow(boolean coloured) {
+    void setColouredRow(final boolean coloured) {
         coloredRows.selected = coloured
     }
 }
@@ -205,7 +205,7 @@ abstract class AbstractSettingsView extends BaseViewImpl implements SettingsView
         return addFilterAction
     }
 
-    void setAddFilterAction(EventHandler<ActionEvent> addFilterAction) {
+    void setAddFilterAction(final EventHandler<ActionEvent> addFilterAction) {
         this.addFilterAction = addFilterAction
     }
 
@@ -213,7 +213,7 @@ abstract class AbstractSettingsView extends BaseViewImpl implements SettingsView
         return cancelAllAction
     }
 
-    void setCancelAllAction(EventHandler<ActionEvent> cancelAllAction) {
+    void setCancelAllAction(final EventHandler<ActionEvent> cancelAllAction) {
         this.cancelAllAction = cancelAllAction
     }
 
@@ -221,7 +221,7 @@ abstract class AbstractSettingsView extends BaseViewImpl implements SettingsView
         return deleteFilterAction
     }
 
-    void setDeleteFilterAction(EventHandler<ActionEvent> deleteFilterAction) {
+    void setDeleteFilterAction(final EventHandler<ActionEvent> deleteFilterAction) {
         this.deleteFilterAction = deleteFilterAction
     }
 
@@ -229,7 +229,7 @@ abstract class AbstractSettingsView extends BaseViewImpl implements SettingsView
         return editFilterAction
     }
 
-    void setEditFilterAction(EventHandler<ActionEvent> editFilterAction) {
+    void setEditFilterAction(final EventHandler<ActionEvent> editFilterAction) {
         this.editFilterAction = editFilterAction
     }
 
@@ -237,7 +237,7 @@ abstract class AbstractSettingsView extends BaseViewImpl implements SettingsView
         return saveAllAction
     }
 
-    void setSaveAllAction(EventHandler<ActionEvent> saveAllAction) {
+    void setSaveAllAction(final EventHandler<ActionEvent> saveAllAction) {
         this.saveAllAction = saveAllAction
     }
 }

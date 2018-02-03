@@ -24,13 +24,13 @@ import java.util.jar.Manifest
 class AboutPresenter {
     private AboutView aboutView
 
-    AboutPresenter(AboutView view) {
+    AboutPresenter(final AboutView view) {
         this.aboutView = view
 
         String version
-        getClass().classLoader.getResources('META-INF/MANIFEST.MF').each { uri ->
-            uri.openStream().withStream { is ->
-                def attributes = new Manifest(is).mainAttributes
+        getClass().classLoader.getResources('META-INF/MANIFEST.MF').each { final uri ->
+            uri.openStream().withStream { final is ->
+                final def attributes = new Manifest(is).mainAttributes
                 version = attributes.getValue('version') ?: 'Dev'
             }
         }
@@ -38,7 +38,7 @@ class AboutPresenter {
         aboutView.setCloseAction(this.&close)
     }
 
-    void close(ActionEvent event) {
+    void close(final ActionEvent event) {
         aboutView.close()
     }
 }
