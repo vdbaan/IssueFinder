@@ -33,7 +33,7 @@ enum ColumnName {
     private String value
     private static final Map<String, ColumnName> ENUM_MAP
 
-    ColumnName(String value) {
+    ColumnName(final String value) {
         this.value = value
     }
 
@@ -47,29 +47,29 @@ enum ColumnName {
     }
 
     static {
-        Map<String, ColumnName> map = new ConcurrentHashMap<>()
-        for (ColumnName instance : values()) {
-            map.put(instance.getValue(), instance)
+        final Map<String, ColumnName> map = new ConcurrentHashMap<>()
+        for (final ColumnName instance : values()) {
+            map[instance.value] = instance
         }
         ENUM_MAP = Collections.unmodifiableMap(map)
     }
 
-    static ColumnName get(String name) {
-        return ENUM_MAP.get(name)
+    static ColumnName get(final String name) {
+        return ENUM_MAP[name]
     }
 
-    Object get(Finding f) {
+    Object get(final Finding finding) {
         switch (this) {
-            case SCANNER: return f.scanner
-            case IP: return f.ip
-            case PORT: return f.port
-            case SERVICE: return f.service
-            case RISK: return f.severity.toString()
-            case EXPLOITABLE: return f.exploitable
-            case DESCRIPTION: return f.fullDescription()
-            case STATUS: return f.portStatus
-            case PROTOCOL: return f.protocol
-            case HOSTNAME: return f.hostName
+            case SCANNER: return finding.scanner
+            case IP: return finding.ip
+            case PORT: return finding.port
+            case SERVICE: return finding.service
+            case RISK: return finding.severity.toString()
+            case EXPLOITABLE: return finding.exploitable
+            case DESCRIPTION: return finding.fullDescription()
+            case STATUS: return finding.portStatus
+            case PROTOCOL: return finding.protocol
+            case HOSTNAME: return finding.hostName
             default: return null
         }
     }
@@ -84,7 +84,7 @@ class FindingPredicate implements Predicate<Finding> {
 
         private static final Map<String, LogicalOperation> ENUM_MAP
 
-        LogicalOperation(String s) {
+        LogicalOperation(final String s) {
             representation = s
         }
 
@@ -93,19 +93,21 @@ class FindingPredicate implements Predicate<Finding> {
         }
 
         static {
-            Map<String, LogicalOperation> map = new ConcurrentHashMap<>()
-            for (LogicalOperation instance : values()) {
-                map.put(instance.getRepresentation(), instance)
+            final Map<String, LogicalOperation> map = new ConcurrentHashMap<>()
+            for (final LogicalOperation instance : values()) {
+                map[instance.representation] = instance
             }
             ENUM_MAP = Collections.unmodifiableMap(map)
         }
 
-        static LogicalOperation get(String name) {
-            return ENUM_MAP.get(name)
+        static LogicalOperation get(final String name) {
+            return ENUM_MAP[name]
         }
     }
 
-    FindingPredicate(Object left, LogicalOperation operation, Object right) {
+    FindingPredicate() {}
+
+    FindingPredicate(final Object left, final LogicalOperation operation, final Object right) {
         this.left = left
         this.operation = operation
         this.right = right
@@ -115,14 +117,14 @@ class FindingPredicate implements Predicate<Finding> {
     LogicalOperation operation
     Object right
 
-    boolean test(Finding f) {
+    boolean test(final Finding finding) {
         Object lValue = this.left, rValue = this.right
         if (left instanceof ColumnName) {
-            lValue = ((ColumnName) left).get(f)
+            lValue = ((ColumnName) left).get(finding)
         }
 
         if (right instanceof ColumnName) {
-            rValue = ((ColumnName) right).get(f)
+            rValue = ((ColumnName) right).get(finding)
         }
         if (lValue == null || (rValue == null && operation != LogicalOperation.NOT)) {
             return false
@@ -131,8 +133,8 @@ class FindingPredicate implements Predicate<Finding> {
             rValue = rValue.toString().toUpperCase()
         }
         switch (operation) {
-            case LogicalOperation.AND: return ((FindingPredicate) lValue).and((FindingPredicate) rValue).test(f)
-            case LogicalOperation.OR: return ((FindingPredicate) lValue).or((FindingPredicate) rValue).test(f)
+            case LogicalOperation.AND: return ((FindingPredicate) lValue).and((FindingPredicate) rValue).test(finding)
+            case LogicalOperation.OR: return ((FindingPredicate) lValue).or((FindingPredicate) rValue).test(finding)
 
             case LogicalOperation.EQ: return lValue.equals(rValue)
             case LogicalOperation.NE: return !lValue.equals(rValue)
@@ -144,7 +146,7 @@ class FindingPredicate implements Predicate<Finding> {
             case LogicalOperation.GE: return compare(lValue, rValue) >= 0
 
             case LogicalOperation.NOT: return (lValue instanceof FindingPredicate) ?
-                    ((FindingPredicate) lValue).negate().test(f) : !((Boolean) lValue).booleanValue()
+                    ((FindingPredicate) lValue).negate().test(finding) : !((Boolean) lValue).booleanValue()
 
 
             case LogicalOperation.IN: return ((List) rValue).contains(lValue)
@@ -154,7 +156,7 @@ class FindingPredicate implements Predicate<Finding> {
         }
     }
 
-    private int compare(Object lValue, Object rValue) {
+    private int compare(final Object lValue, final Object rValue) {
         if (isInteger(lValue)) {
             return Integer.compare(lValue as Integer, rValue as Integer)
         }
@@ -164,13 +166,13 @@ class FindingPredicate implements Predicate<Finding> {
         }
     }
 
-    private boolean isInteger(String value) {
+    private boolean isInteger(final String value) {
         try {
             Integer.parseInt(value)
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             log.log(Level.FINE, 'Got an exception', e)
             return false
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             log.log(Level.FINE, 'Got an exception', e)
             return false
         }
@@ -178,15 +180,16 @@ class FindingPredicate implements Predicate<Finding> {
         return true
     }
 
-    boolean between(Object column, Object value) {
-        List list = (List) value
-        Object low = list.get(0)
-        Object high = list.get(1)
+    boolean between(final Object column, final Object value) {
+        final List list = (List) value
+        final Object low = list[0]
+        final Object high = list[1]
         return ((String) column).compareTo(low) >= 0 &&
                 ((String) column).compareTo(high) <= 0
     }
 
     String toString() {
+        if (left == null && operation == null && right == null) return "EMPTY INITIALIZED FINDING PREDICATE"
         if (left instanceof FindingPredicate && right instanceof FindingPredicate) {
             return String.format("(%s) %s (%s)", left, operation.representation, right)
         }

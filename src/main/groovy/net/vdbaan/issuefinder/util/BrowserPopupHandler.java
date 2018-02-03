@@ -30,13 +30,10 @@ public class BrowserPopupHandler implements Callback<PopupFeatures, WebEngine> {
     }
 
     private WebEngine getPopupHandler() {
-        if (popupHandlerEngine == null) // lazy init - so we only initialize it when needed ...
+        synchronized (this) // double checked synchronization
         {
-            synchronized (this) // double checked synchronization
-            {
-                if (popupHandlerEngine == null) {
-                    popupHandlerEngine = initEngine();
-                }
+            if (popupHandlerEngine == null) {
+                popupHandlerEngine = initEngine();
             }
         }
         return popupHandlerEngine;

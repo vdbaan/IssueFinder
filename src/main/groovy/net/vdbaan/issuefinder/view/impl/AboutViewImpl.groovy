@@ -29,7 +29,7 @@ class AboutViewImpl extends AbstractAboutView implements AboutView {
     @FXML
     Label version
 
-    void setVersion(String version) {
+    void setVersion(final String version) {
         this.version.text = version
     }
 
@@ -39,7 +39,7 @@ class AboutViewImpl extends AbstractAboutView implements AboutView {
     }
 
     @FXML
-    void close(ActionEvent event) {
+    void close(final ActionEvent event) {
         closeAction?.handle(event)
 
     }
@@ -57,7 +57,7 @@ abstract class AbstractAboutView extends BaseViewImpl implements AboutView {
         return closeAction
     }
 
-    void setCloseAction(EventHandler<ActionEvent> closeAction) {
+    void setCloseAction(final EventHandler<ActionEvent> closeAction) {
         this.closeAction = closeAction
     }
 }

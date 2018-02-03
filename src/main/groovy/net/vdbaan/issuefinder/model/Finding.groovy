@@ -34,6 +34,7 @@ hostName     VARCHAR(1024),
 port         VARCHAR(64),
 status       VARCHAR(64),
 protocol     VARCHAR(64),
+location     VARCHAR(128),
 service      VARCHAR(1024),
 plugin       LONGVARCHAR,
 risk         VARCHAR(64),
@@ -47,9 +48,15 @@ cvssVector   VARCHAR(128),
 exploitable  BOOLEAN
 );
 '''
-    static String INSERT = 'INSERT INTO finding (scanner,  ip,  hostName,  port,  status,      protocol,  service,  plugin,  risk,  summary,  description,  reference,  pluginOutput,  solution,  cvss,      cvssVector,  exploitable) ' +
-            'values (?.scanner,?.ip,?.hostName,?.port,?.portStatus,?.protocol,?.service,?.plugin,?.risk,?.summary,?.description,?.reference,?.pluginOutput,?.solution,?.baseCVSS,?.cvssVector,?.exploitable)'
-    static String UPDATE = 'UPDATE finding SET scanner=?.scanner, ip=?.ip, hostName=?.hostName, port=?.port, status=?.portStatus, protocol=?.protocol, service=?.service, plugin=?.plugin, risk=?.risk, ' +
+
+    static String UPDATE_TABLE = '''
+ALTER TABLE finding
+ADD IF NOT EXISTS location VARCHAR(128) AFTER protocol
+'''
+
+    static String INSERT = 'INSERT INTO finding (scanner, ip, hostName, port, status, protocol, location, service, plugin, risk, summary, description, reference, pluginOutput, solution, cvss, cvssVector, exploitable) ' +
+            'values (?.scanner,?.ip,?.hostName,?.port,?.portStatus,?.protocol,?.location,?.service,?.plugin,?.risk,?.summary,?.description,?.reference,?.pluginOutput,?.solution,?.baseCVSS,?.cvssVector,?.exploitable)'
+    static String UPDATE = 'UPDATE finding SET scanner=?.scanner, ip=?.ip, hostName=?.hostName, port=?.port, status=?.portStatus, protocol=?.protocol, location=?.location, service=?.service, plugin=?.plugin, risk=?.risk, ' +
             'summary=?.summary, description=?.description, reference=?.reference, pluginOutput=?.pluginOutput, solution=?.solution, cvss=?.baseCVSS, cvssVector=?.cvssVector, exploitable=?.exploitable WHERE id=?.id'
     static String SELECT = 'SELECT * FROM finding'
     static String COUNT = 'SELECT COUNT(*) FROM finding'
@@ -62,6 +69,7 @@ exploitable  BOOLEAN
     String port = ''
     String portStatus = ''
     String protocol = ''
+    String location = ''
     String service = ''
     String plugin = ''
     Severity severity = Severity.UNKNOWN
@@ -78,9 +86,9 @@ exploitable  BOOLEAN
         return severity.toString()
     }
 
-    String formatString(String str) {
-        SimpleTemplateEngine ste = new SimpleTemplateEngine()
-        def template = ste.createTemplate(str).make(getProperties())
+    String formatString(final String str) {
+        final SimpleTemplateEngine ste = new SimpleTemplateEngine()
+        final def template = ste.createTemplate(str).make(getProperties())
         return template.toString()
     }
 

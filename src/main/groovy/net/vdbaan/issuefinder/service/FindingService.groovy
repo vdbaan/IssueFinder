@@ -26,7 +26,7 @@ import net.vdbaan.issuefinder.parser.Parser
 class FindingService extends Service<List<Finding>> {
     File file
 
-    FindingService(File file) {
+    FindingService(final File file) {
         this.file = file
     }
 

@@ -8,27 +8,27 @@ class ZAPParser extends Parser {
     static String IDENTIFIER = "OWASPZAPReport"
     static String scanner = "ZAP"
 
-    ZAPParser(content) {
+    ZAPParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     @Override
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
+        final List<Finding> result = new ArrayList<>()
 
-        content.site.each { site ->
-            String host = site.@host
-            String port = site.@port
-            String ip = host
-            URL url = new URL(site.@name.toString())
-            String service = url.protocol.toUpperCase()
-            site.alerts.alertitem.each { issue ->
-                String plugin = issue.pluginid + ':' + issue.name
-                Finding.Severity severity = calc(issue.riskcode)
+        content.site.each { final site ->
+            final String host = site.@host
+            final String port = site.@port
+            final String ip = host
+            final URL url = new URL(site.@name.toString())
+            final String service = url.protocol.toUpperCase()
+            site.alerts.alertitem.each { final issue ->
+                final String plugin = issue.pluginid + ':' + issue.name
+                final Finding.Severity severity = calc(issue.riskcode)
                 if (allowed(severity))
                     result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', hostName: host,
                                            service : service, plugin: plugin,
@@ -39,7 +39,7 @@ class ZAPParser extends Parser {
         return result
     }
 
-    private Finding.Severity calc(severity) {
+    private Finding.Severity calc(final severity) {
 //        CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
         switch (severity) {
             case '3': return Finding.Severity.HIGH
@@ -50,12 +50,12 @@ class ZAPParser extends Parser {
         }
     }
 
-    private static String buildSummary(issue) {
+    private static String buildSummary(final issue) {
         String summary = "Name: " + issue.name
-        String description = '' + issue.description
-        String solution = '' + issue.solution
-        String otherInfo = '' + issue.otherinfo
-        String reference = '' + issue.reference
+        final String description = '' + issue.description
+        final String solution = '' + issue.solution
+        final String otherInfo = '' + issue.otherinfo
+        final String reference = '' + issue.reference
         summary += "\nDescription:\n " + description.replace('\n', ' ')
         summary += "\nSolution:\n" + solution.replace('\n', ' ')
         summary += "\nOther info:\n" + otherInfo.replace('\n', ' ')

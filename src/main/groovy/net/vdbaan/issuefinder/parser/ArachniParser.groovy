@@ -25,30 +25,30 @@ class ArachniParser extends Parser {
     static String IDENTIFIER = "report"
     static String scanner = "Arachni"
 
-    ArachniParser(content) {
+    ArachniParser(final content) {
         this.content = content
     }
 
-    static boolean identify(GPathResult contents) {
+    static boolean identify(final GPathResult contents) {
         boolean hasIssues = false
         contents.'**'.each { if ('issues'.equals(it.name())) hasIssues = true }
         return IDENTIFIER.equalsIgnoreCase(contents.name()) && hasIssues
     }
 
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
-        String url = content.sitemap.entry.@url
-        URL host = new URL(url)
-        def hostname = host.getHost()
+        final List<Finding> result = new ArrayList<>()
+        final String url = content.sitemap.entry.@url
+        final URL host = new URL(url)
+        final def hostname = host.getHost()
         def port = host.getPort()
-        String service = host.protocol.toUpperCase()
+        final String service = host.protocol.toUpperCase()
         if (port == -1) {
             port = service == 'HTTPS' ? 443 : 80
         }
-        content.issues.issue.each { issue ->
+        content.issues.issue.each { final issue ->
             // scanner, ip, port, service, plugin, severity, summary
-            def ip = issue.referring_page.response.ip_address
-            Finding.Severity severity = calc(issue.severity)
+            final def ip = issue.referring_page.response.ip_address
+            final Finding.Severity severity = calc(issue.severity)
             if (allowed(severity))
                 result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', hostName: hostname,
                                        service : service, plugin: issue.check.name + " v" + issue.check.version,
@@ -57,7 +57,7 @@ class ArachniParser extends Parser {
         return result
     }
 
-    private Finding.Severity calc(severity) {
+    private Finding.Severity calc(final severity) {
 //        CRITICAL, HIGH, MEDIUM, LOW, INFO, UNKNOWN
         switch (severity) {
             case 'high': return Finding.Severity.HIGH
@@ -68,14 +68,14 @@ class ArachniParser extends Parser {
         }
     }
 
-    private static String buildSummary(issue) {
+    private static String buildSummary(final issue) {
         String summary = "Name: " + issue.name
         summary += "\nDescription:\n " + issue.description
         summary += "\nRemedy:\n" + issue.remedy_guidance
         if (issue.cwe)
             summary += "\ncwe: " + issue.cwe
         summary += "\nReferences:"
-        issue?.references?.reference?.each { ref ->
+        issue?.references?.reference?.each { final ref ->
             summary += "- " + ref.url
         }
         return summary

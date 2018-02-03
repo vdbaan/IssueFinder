@@ -27,7 +27,7 @@ import javafx.concurrent.Worker
 import net.vdbaan.issuefinder.db.DbHandler
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.service.FindingService
-import net.vdbaan.issuefinder.view.MainView
+import net.vdbaan.issuefinder.view.LayoutView
 import net.vdbaan.issuefinder.view.ProgressView
 
 @Log
@@ -35,7 +35,7 @@ import net.vdbaan.issuefinder.view.ProgressView
 class ProgressPresenter {
 
     ProgressView progressView
-    MainView masterView
+    LayoutView masterView
 
 
     SimpleBooleanProperty finished = new SimpleBooleanProperty(false)
@@ -44,7 +44,7 @@ class ProgressPresenter {
     // Copied from ProgressBar to avoid IllegalStateException: Toolkit not initialized when running test
     public static final double INDETERMINATE_PROGRESS = -1
 
-    ProgressPresenter(ProgressView view) {
+    ProgressPresenter(final ProgressView view) {
         this.progressView = view
 
         progressView.bindWorkingProgressIndicator(
@@ -55,12 +55,12 @@ class ProgressPresenter {
         progressView.bindFilesProgressIndicator(progress)
     }
 
-    void process(List<File> fileList) {
-        DbHandler handler = progressView.getDbHandler()
-        int total = fileList?.size() ?: 0
+    void process(final List<File> fileList) {
+        final DbHandler handler = progressView.getDbHandler()
+        final int total = fileList?.size() ?: 0
         int done = 0
-        fileList?.each { it ->
-            Service<List<Finding>> service = new FindingService(it)
+        fileList?.each { final it ->
+            final Service<List<Finding>> service = new FindingService(it)
             service.stateProperty().addListener({
                 if (service.getState().equals(Worker.State.SUCCEEDED)) {
                     handler.saveFindings(service.getValue())
@@ -80,7 +80,7 @@ class ProgressPresenter {
         }
     }
 
-    void setMasterView(MainView masterView) {
+    void setMasterView(final LayoutView masterView) {
         this.masterView = masterView
     }
 }

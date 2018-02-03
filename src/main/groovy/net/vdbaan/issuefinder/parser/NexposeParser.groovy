@@ -25,53 +25,53 @@ class NexposeParser extends Parser {
     static String IDENTIFIER = "NexposeReport"
     static String scanner = "Nexpose"
 
-    static void main(String... args) {
-        File f = new File("testdata/nexpose/report-v2.xml")
-        Parser p = Parser.getParser(f)
+    static void main(final String... args) {
+        final File f = new File("testdata/nexpose/report-v2.xml")
+        final Parser p = Parser.getParser(f)
         assert p instanceof NexposeParser
-        long start = System.currentTimeMillis()
-        List<Finding> l = p.parse()
-        long stop = System.currentTimeMillis()
+        final long start = System.currentTimeMillis()
+        final List<Finding> l = p.parse()
+        final long stop = System.currentTimeMillis()
         println String.format("It took %d ms", (stop - start))
         l.each { println it.fullDescription() }
     }
 
-    NexposeParser(content) {
+    NexposeParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
 
     List<Finding> parse() {
-        List<Finding> result = new ArrayList<>()
-        long start = System.currentTimeMillis()
-        Map<String, NexposeVuln> vulns = getAllNexposeVulns()
-        long stop = System.currentTimeMillis()
+        final List<Finding> result = new ArrayList<>()
+        final long start = System.currentTimeMillis()
+        final Map<String, NexposeVuln> vulns = getAllNexposeVulns()
+        final long stop = System.currentTimeMillis()
         println String.format("getAllNexposeVulns took %d ms", (stop - start))
 //        vulns.each{k,v ->
 //            println String.format("[%s] => %s",k,v.title)
 //        }
-        content.nodes.node.each { host ->
-            def hostIp = host.@address
-            def hostName = host.names.name[0]
-            host.endpoints.endpoint.each { port ->
-                def protocol = port.@protocol
-                def portnr = port.@port
-                port.services.service.each { service ->
-                    def serviceName = service.@name
-                    service.tests.test.each { issue ->
-                        def pluginId = '' + issue.@id
-                        NexposeVuln v = vulns.get(pluginId.toString())
+        content.nodes.node.each { final host ->
+            final def hostIp = host.@address
+            final def hostName = host.names.name[0]
+            host.endpoints.endpoint.each { final port ->
+                final def protocol = port.@protocol
+                final def portnr = port.@port
+                port.services.service.each { final service ->
+                    final def serviceName = service.@name
+                    service.tests.test.each { final issue ->
+                        final def pluginId = '' + issue.@id
+                        final NexposeVuln v = vulns.get(pluginId.toString())
                         if (v != null) {
-                            def pluginName = v.title
-                            def cvssVector = v.cvssVector
+                            final def pluginName = v.title
+                            final def cvssVector = v.cvssVector
                             String cvssval = v.cvss ?: '0.0'
                             if (cvssval == '') cvssval = '0.0'
-                            BigDecimal cvss = new BigDecimal(cvssval)
-                            Finding.Severity severity = calcSeverity(cvss)
+                            final BigDecimal cvss = new BigDecimal(cvssval)
+                            final Finding.Severity severity = calcSeverity(cvss)
                             if (allowed(severity))
                                 result << new Finding([scanner     : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
                                                        service     : serviceName,
@@ -88,18 +88,18 @@ class NexposeParser extends Parser {
         return result
     }
 
-    private static String reformat(text) {
+    private static String reformat(final text) {
         return text.replaceAll('Paragraph', 'p').replaceAll('UnorderedList', 'ul').replaceAll('ListItem', 'li').replaceAll('ContainerBlockElement', 'div')
     }
 
-    private static String contentAsText(NodeChildren node) {
-        StringBuffer sb = new StringBuffer()
+    private static String contentAsText(final NodeChildren node) {
+        final StringBuffer sb = new StringBuffer()
         node.each { sb.append(contentAsText(it)) }
         return sb.toString()
     }
 
-    private static String contentAsText(NodeChild node) {
-        StringBuffer sb = new StringBuffer()
+    private static String contentAsText(final NodeChild node) {
+        final StringBuffer sb = new StringBuffer()
         sb.append(String.format("<%s>", node.name()))
 
         if (node.children().size() > 0) {
@@ -113,7 +113,7 @@ class NexposeParser extends Parser {
         return sb.toString()
     }
 
-    private String buildSummary(NexposeVuln item) {
+    private String buildSummary(final NexposeVuln item) {
         /*
     String , severity, , , , , pciSeverity, published, added, modified
     List<String> , tags, exploits, malware
@@ -129,7 +129,7 @@ Malware      : <ul>${item.malware.collect { String.format("<li>%s</li>", it) }.j
 """
     }
 
-    private Finding.Severity calcSeverity(BigDecimal cvss) {
+    private Finding.Severity calcSeverity(final BigDecimal cvss) {
         switch (cvss) {
             case { it <= 3.9 }: return Finding.Severity.LOW
             case { it <= 6.9 }: return Finding.Severity.MEDIUM
@@ -141,32 +141,32 @@ Malware      : <ul>${item.malware.collect { String.format("<li>%s</li>", it) }.j
 
 
     private Map<String, NexposeVuln> getAllNexposeVulns() {
-        Map<String, NexposeVuln> result = new HashMap()
+        final Map<String, NexposeVuln> result = new HashMap()
 //        <vulnerability id="mysql-bug-29801-remote-federated-engine-crash"
 //        title="MySQL Bug #29801: Remote Federated Engine Crash" severity="6" pciSeverity="4"
 //        cvssScore="6.0" cvssVector="(AV:N/AC:M/Au:S/C:P/I:P/A:P)" published="20070714T000000000"
 //        added="20100629T000000000" modified="20150130T000000000" riskScore="670.66736">
-        content.VulnerabilityDefinitions.vulnerability.each { vuln ->
-            def id = vuln.@id
-            def title = vuln.@title
-            def severity = vuln.@severity
-            def cvss = vuln.@cvssScore
-            def cvssVector = vuln.@cvssVector
-            def pciSeverity = vuln.@pciSeverity
-            def published = vuln.@published
-            def added = vuln.@added
-            def modified = vuln.@modified
-            List<String> tags = vuln.tags?.tag?.collect { it }
-            List<String> malware = vuln.malware?.name?.collect { it }
-            List<String> refs = vuln.references?.reference?.collect { String.format("[%s] %s", it.@source, it) }
+        content.VulnerabilityDefinitions.vulnerability.each { final vuln ->
+            final def id = vuln.@id
+            final def title = vuln.@title
+            final def severity = vuln.@severity
+            final def cvss = vuln.@cvssScore
+            final def cvssVector = vuln.@cvssVector
+            final def pciSeverity = vuln.@pciSeverity
+            final def published = vuln.@published
+            final def added = vuln.@added
+            final def modified = vuln.@modified
+            final List<String> tags = vuln.tags?.tag?.collect { it }
+            final List<String> malware = vuln.malware?.name?.collect { it }
+            final List<String> refs = vuln.references?.reference?.collect { String.format("[%s] %s", it.@source, it) }
             // <exploit id="4978" title="dhclient 4.1 - Bash Environment Variable Command Injection (PoC) (Shellshock)"
 //            type="exploitdb" link="http://www.exploit-db.com/exploits/36933" skillLevel="Expert"/>
-            List exploits = vuln?.exploits?.exploit?.collect {
+            final List exploits = vuln?.exploits?.exploit?.collect {
                 String.format("Exploit [%s:%s] %s (%s) - %s", it.@type, it.@id, it.@title, it.@skillLevel, it.@link)
             }
 
-            def description = reformat(contentAsText(vuln.description.ContainerBlockElement))
-            def solution = reformat(contentAsText(vuln.solution))
+            final def description = reformat(contentAsText(vuln.description.ContainerBlockElement))
+            final def solution = reformat(contentAsText(vuln.solution))
 
             result.put(id.toString(), new NexposeVuln([title      : title, severity: severity, cvss: cvss, cvssVector: cvssVector,
                                                        description: description, solution: solution,

@@ -20,14 +20,14 @@ import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.parser.NessusParser
 
 class FindingHtmlViewer {
-    static String asHtml(Finding finding) {
+    static String asHtml(final Finding finding) {
         if (finding.scanner.equalsIgnoreCase(NessusParser.scanner)) {
             return nessusHTMLDescription(finding)
         } else
             return otherHTMLDescription(finding)
     }
 
-    static String nessusHTMLDescription(Finding finding) {
+    static String nessusHTMLDescription(final Finding finding) {
         return """
 <table border=1 width='100%' style='border-collapse:collapse;font-family:arial;'>
 <tr><td width='15%' style='border:1px solid black;'><b>Scanner</b></td><td style='border:1px solid black;'>${
@@ -64,7 +64,7 @@ class FindingHtmlViewer {
 """
     }
 
-    static String otherHTMLDescription(Finding finding) {
+    static String otherHTMLDescription(final Finding finding) {
         return """
 <table border=1 width='100%' style='border-collapse:collapse;font-family:arial;'>
 <tr><td width='15%' style='border:1px solid black;'><b>Scanner</b></td><td style='border:1px solid black;'>${
@@ -91,7 +91,7 @@ class FindingHtmlViewer {
 """
     }
 
-    static String getSeverityStyle(Finding finding) {
+    static String getSeverityStyle(final Finding finding) {
         switch (finding.severity) {
             case Finding.Severity.CRITICAL: return 'background:#fec7c6'
             case Finding.Severity.HIGH: return 'background:#ffdebd'

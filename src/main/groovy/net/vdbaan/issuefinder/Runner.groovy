@@ -27,12 +27,12 @@ import java.util.logging.Logger
 class Runner {
     private final static Logger logger = Logger.getLogger(Runner.class.getCanonicalName())
 
-    static void main(String... args) {
+    static void main(final String... args) {
         IssueLogger.setup(args)
         logger.info('starting')
-        Map<String, String> sortedMap = new TreeMap(System.getProperties())
-        for (String key : sortedMap.keySet()) {
-            logger.info(key + "=" + sortedMap.get(key))
+        final Map<String, String> sortedMap = new TreeMap(System.getProperties())
+        for (final String key : sortedMap.keySet()) {
+            logger.info(key + "=" + sortedMap[key])
         }
         // Show OS, JAVA_HOME, java impl and version ( for debugging
         testJavaFX()
@@ -42,7 +42,7 @@ class Runner {
             Config.getInstance().loadConfig()
         }
         Config.getInstance().checkDataDirectory()
-        MainAppImpl.startup(args)
+        Main2.startup(args)
     }
 
     static void testJavaFX() {
@@ -50,7 +50,7 @@ class Runner {
         try {
             Class.forName('javafx.stage.Stage')
             Class.forName('javafx.scene.control.Alert')
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             logger.severe 'JavaFX8 Missing'
             logger.severe 'Please install JavaFX, for example:'
             logger.severe '- sudo apt-get install openjfx'

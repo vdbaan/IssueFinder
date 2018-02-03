@@ -23,21 +23,21 @@ class NMapParser extends Parser {
     static String IDENTIFIER = "nmaprun"
     static String scanner = "NMap"
 
-    NMapParser(content) {
+    NMapParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
-        content.host.each { host ->
-            def hostNode = host.address.find { it.@addrtype == 'ipv4' }
-            String hostIp = hostNode.@addr
+        content.host.each { final host ->
+            final def hostNode = host.address.find { it.@addrtype == 'ipv4' }
+            final String hostIp = hostNode.@addr
             String hostName
-            host.hostnames.hostname.each { hostname ->
+            host.hostnames.hostname.each { final hostname ->
                 if (hostname.@type == 'user') {
                     hostName = hostname.@name
                 } else if (hostname.@type == 'PTR') {
@@ -56,21 +56,21 @@ class NMapParser extends Parser {
             if (allowed(Finding.Severity.INFO))
                 result += summary(content, hostIp, hostName, protocol)
             if (host.ports?.extraports?.@state == 'closed') {
-                String summary = "Amount of closed ports: " + host.ports.extraports.@count
+                final String summary = "Amount of closed ports: " + host.ports.extraports.@count
 
                 result << new Finding(([scanner: scanner, ip: hostIp, port: 0, portStatus: 'closed', protocol: protocol, service: "none", hostName: hostName,
                                         plugin : "NMap closed ports", severity: Finding.Severity.MEDIUM, summary: summary]))
             }
-            host.ports.port.each { port ->
-                String portnr = port.@portid
+            host.ports.port.each { final port ->
+                final String portnr = port.@portid
                 protocol = port.@protocol
-                String state = port.state.@state
-                String service = port.service.@name
+                final String state = port.state.@state
+                final String service = port.service.@name
                 String product = port.service.@product
                 if (product != "") product = ' (' + product + ')'
                 String summary = ""
 
-                port.script.each { script ->
+                port.script.each { final script ->
                     summary += 'script ('
                     summary += script.@id
                     summary += '):\n'
@@ -88,7 +88,7 @@ class NMapParser extends Parser {
         return result
     }
 
-    private Finding scanInfo(xml, String ip, String hostName, String protocol) {
+    private Finding scanInfo(final xml, final String ip, final String hostName, final String protocol) {
         String summary = "Protocol       : " + protocol
         summary += "\nNumber of ports: " + xml.scaninfo.@numservices
         summary += "\nPorts scanned  : " + xml.scaninfo.@services
@@ -99,7 +99,7 @@ class NMapParser extends Parser {
                             plugin : "NMap scan info", severity: Finding.Severity.INFO, summary: summary])
     }
 
-    private Finding runStats(xml, String ip, String hostName, String protocol) {
+    private Finding runStats(final xml, final String ip, final String hostName, final String protocol) {
         String summary = "Number of hosts"
         summary += "\nScanned: " + xml.runstats.hosts.@total
         summary += "\nUp     : " + xml.runstats.hosts.@up
@@ -109,8 +109,8 @@ class NMapParser extends Parser {
                             plugin : "NMap stats", severity: Finding.Severity.INFO, summary: summary])
     }
 
-    private Finding summary(xml, String ip, String hostName, String protocol) {
-        String summary = xml.runstats.finished.@summary ?:
+    private Finding summary(final xml, final String ip, final String hostName, final String protocol) {
+        final String summary = xml.runstats.finished.@summary ?:
                 "Scan Execution Stats" +
                         "\nCompleted: " + xml.runstats.finished.@timestr +
                         "\nDuration : " + xml.runstats.finished.@elapsed +

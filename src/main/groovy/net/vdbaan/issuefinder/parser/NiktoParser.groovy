@@ -24,24 +24,24 @@ class NiktoParser extends Parser {
     static String IDENTIFIER = "niktoscan"
     static String scanner = "Nikto"
 
-    NiktoParser(content) {
+    NiktoParser(final content) {
         this.content = content
     }
 
-    static boolean identify(contents) {
+    static boolean identify(final contents) {
         return IDENTIFIER.equalsIgnoreCase(contents.name())
     }
 
     List<Finding> parse() {
         List<Finding> result = new ArrayList<>()
-        String ip = content.scandetails.@targetip
-        String hostName = content.scandetails.@targethostname
-        String port = content.scandetails.@targetport
+        final String ip = content.scandetails.@targetip
+        final String hostName = content.scandetails.@targethostname
+        final String port = content.scandetails.@targetport
         if (allowed(Finding.Severity.INFO))
             result += scanInfo(content, ip, hostName, port)
 
-        content.scandetails.item.each { item ->
-            String desc = item.description.toString()
+        content.scandetails.item.each { final item ->
+            final String desc = item.description.toString()
             String plugin = item.@id
             plugin += ": " + desc
             def summary = "METHOD: " + item.@method
@@ -55,7 +55,7 @@ class NiktoParser extends Parser {
         return result
     }
 
-    private Finding scanInfo(xml, String ip, String hostName, String port) {
+    private Finding scanInfo(final xml, final String ip, final String hostName, final String port) {
         String summary = "Nikto options: " + xml.@options
         summary += "\nBanner       : " + xml.scandetails.@targetbanner
         summary += "\nVersion      : " + xml.scandetails.@version

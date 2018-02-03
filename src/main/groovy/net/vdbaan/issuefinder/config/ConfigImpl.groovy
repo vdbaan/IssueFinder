@@ -46,7 +46,7 @@ abstract class Config {
         return configInstance
     }
 
-    static void setInstance(Config instance) {
+    static void setInstance(final Config instance) {
         configInstance = instance
     }
 
@@ -78,79 +78,79 @@ class ConfigImpl extends Config {
     ConfigObject configObject = new ConfigObject()
 
     ConfigImpl() {
-        CONFIGFILE_NAME = CONFIGFILE_NAME.replace('VERSION', getApplicationVersionString())
-        configObject.put(MAX_ROWS, 5000)
-        configObject.put(FILTERS, ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE'])
+        CONFIGFILE_NAME = CONFIGFILE_NAME.replace('VERSION', applicationVersionString)
+        configObject[MAX_ROWS] = 5000
+        configObject[FILTERS] = ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE']
         configObject.put(PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
                                           (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
-        configObject.put(BATCH_SIZE, 100)
-        configObject.put(IP_PORT_FORMAT_STRING, '$ip:$port')
-        configObject.put(COLOURED_ROWS, true)
-        configObject.put(DATA_DIR, System.getProperty("user.home") + '/.issuefinder/data/')
-        configObject.put(DB_NAME, 'issueDB')
+        configObject[BATCH_SIZE] = 100
+        configObject[IP_PORT_FORMAT_STRING] = '$ip:$port'
+        configObject[COLOURED_ROWS] = true
+        configObject[DATA_DIR] = System.getProperty("user.home") + '/.issuefinder/data/'
+        configObject[DB_NAME] = 'issueDB'
 
         configObject.put(DATA_SOURCE, [database: 'jdbc:h2:' + configObject.get(DATA_DIR) + configObject.get(DB_NAME), user: 'sa', password: ''])
     }
 
     @Override
-    Object getProperty(String key) {
+    Object getProperty(final String key) {
         return configObject?.get(key)
     }
 
     @Override
-    void setProperty(String key, Object value) {
+    void setProperty(final String key, final Object value) {
         if (value == null) {
             configObject.remove(key)
         } else {
-            configObject.put(key, value)
+            configObject[key] = value
         }
     }
 
     @Override
-    boolean hasPropertyFor(String key) {
+    boolean hasPropertyFor(final String key) {
         return configObject.containsKey(key)
     }
 
     @Override
     void attachShutDownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        Runtime.runtime.addShutdownHook(new Thread() {
             @Override
             void run() {
-                getInstance().saveConfig()
+                instance.saveConfig()
             }
         })
     }
 
     @Override
     void saveConfig() {
-        File configFile = new File(getUserDataDirectory(), CONFIGFILE_NAME)
+        final File configFile = new File(userDataDirectory, CONFIGFILE_NAME)
         if (!configFile.exists()) {
             configFile.parentFile.mkdirs()
         }
-        ConfigObject saver = configObject.clone()
-        saver.keySet().each { key ->
+        final ConfigObject saver = configObject.clone()
+        saver.keySet().each { final key ->
             if (key.toString().startsWith('VOLATILE')) {
                 saver.remove(key)
             }
         }
-        new StringWriter().with { sw ->
-            saver.writeTo(sw)
-            configFile.write(sw.toString())
+        new StringWriter().with { final stringWriter ->
+            saver.writeTo(stringWriter)
+            configFile.write(stringWriter.toString())
         }
     }
 
     @Override
     void loadConfig() {
-        File configFile = new File(getUserDataDirectory(), CONFIGFILE_NAME)
+        final File configFile = new File(userDataDirectory, CONFIGFILE_NAME)
         if (configFile.exists()) {
             configObject = new ConfigSlurper().parse(configFile.text)
-            Map<String, Boolean> preload_filter = (Map) getInstance().getProperty(PRELOAD_FILTER)
-            Map<Finding.Severity, Boolean> parsed = new HashMap<>()
-            parsed.put(Finding.Severity.CRITICAL, preload_filter.get(Finding.Severity.CRITICAL.toString()))
-            parsed.put(Finding.Severity.HIGH, preload_filter.get(Finding.Severity.HIGH.toString()))
-            parsed.put(Finding.Severity.MEDIUM, preload_filter.get(Finding.Severity.MEDIUM.toString()))
-            parsed.put(Finding.Severity.LOW, preload_filter.get(Finding.Severity.LOW.toString()))
-            parsed.put(Finding.Severity.INFO, preload_filter.get(Finding.Severity.INFO.toString()))
+            final Map<String, Boolean> preload_filter = (Map) instance.getProperty(PRELOAD_FILTER)
+            final Map<Finding.Severity, Boolean> parsed = new HashMap<>()
+            parsed[Finding.Severity.CRITICAL] = preload_filter[Finding.Severity.CRITICAL.toString()]
+            parsed[Finding.Severity.HIGH] = preload_filter[Finding.Severity.HIGH.toString()]
+            parsed[Finding.Severity.MEDIUM] = preload_filter[Finding.Severity.MEDIUM.toString()]
+            parsed[Finding.Severity.LOW] = preload_filter[Finding.Severity.LOW.toString()]
+            parsed[Finding.Severity.INFO] = preload_filter[Finding.Severity.INFO.toString()]
             configObject.put(PRELOAD_FILTER, parsed)
             // TODO Find a way to merge with original configObject
         }
@@ -158,10 +158,10 @@ class ConfigImpl extends Config {
 
 
     String getApplicationVersionString() {
-        Manifest mf = new Manifest()
-        mf.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"))
-        Attributes atts = mf.getMainAttributes()
-        configVersion = atts.getValue('Version') ?: 'DEVELOPMENT'
+        final Manifest manifest = new Manifest()
+        manifest.read(Thread.currentThread().contextClassLoader.getResourceAsStream("META-INF/MANIFEST.MF"))
+        final Attributes attributes = manifest.mainAttributes
+        configVersion = attributes['Version'] ?: 'DEVELOPMENT'
         log.fine('Version: ' + configVersion)
         return configVersion
     }
@@ -173,7 +173,7 @@ class ConfigImpl extends Config {
     @Override
     void checkDataDirectory() {
         log.info('Checking data dir')
-        File directory = new File(configObject.getProperty(DATA_DIR).toString())
+        final File directory = new File(configObject.getProperty(DATA_DIR).toString())
         if (!directory.exists()) {
             directory.mkdirs()
         }

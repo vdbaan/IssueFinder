@@ -26,68 +26,67 @@ import net.vdbaan.issuefinder.view.SettingsView
 class SettingsPresenter {
     private SettingsView settingsView
 
-    SettingsPresenter(SettingsView view) {
+    SettingsPresenter(final SettingsView view) {
         this.settingsView = view
 
-        settingsView.setMaxRows(Config.getInstance().getProperty(Config.MAX_ROWS) as String)
-        settingsView.setBatchSize(Config.getInstance().getProperty(Config.BATCH_SIZE) as String)
-        settingsView.setCopyString(Config.getInstance().getProperty(Config.IP_PORT_FORMAT_STRING) as String)
-        Map<Finding.Severity, Boolean> preload_filter = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
-        settingsView.setIsCritical(preload_filter.get(Finding.Severity.CRITICAL))
-        settingsView.setIsHigh((Boolean) preload_filter.get(Finding.Severity.HIGH))
-        settingsView.setIsMedium((Boolean) preload_filter.get(Finding.Severity.MEDIUM))
-        settingsView.setIsLow((Boolean) preload_filter.get(Finding.Severity.LOW))
-        settingsView.setIsInfo((Boolean) preload_filter.get(Finding.Severity.INFO))
-        settingsView.setColouredRow(Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean)
+        settingsView.maxRows = Config.instance.getProperty(Config.MAX_ROWS) as String
+        settingsView.batchSize = Config.instance.getProperty(Config.BATCH_SIZE) as String
+        settingsView.copyString = Config.instance.getProperty(Config.IP_PORT_FORMAT_STRING) as String
+        final Map<Finding.Severity, Boolean> preload_filter = (Map) Config.instance.getProperty(Config.PRELOAD_FILTER)
+        settingsView.isCritical = preload_filter[Finding.Severity.CRITICAL]
+        settingsView.isHigh = (Boolean) preload_filter[Finding.Severity.HIGH]
+        settingsView.isMedium = (Boolean) preload_filter[Finding.Severity.MEDIUM]
+        settingsView.isLow = (Boolean) preload_filter[Finding.Severity.LOW]
+        settingsView.isInfo = (Boolean) preload_filter[Finding.Severity.INFO]
+        settingsView.colouredRow = Config.instance.getProperty(Config.COLOURED_ROWS) as boolean
         settingsView.removeListItems()
-        List list = (List) Config.getInstance().getProperty(Config.FILTERS)
+        final List list = (List) Config.instance.getProperty(Config.FILTERS)
         list.each {
             settingsView.addToListItems(it.toString())
         }
 
-        settingsView.setAddFilterAction(this.&addFilter)
-        settingsView.setEditFilterAction(this.&editFilter)
-        settingsView.setDeleteFilterAction(this.&deleteFilter)
-        settingsView.setSaveAllAction(this.&save)
-        settingsView.setCancelAllAction(this.&cancel)
+        settingsView.addFilterAction = this.&addFilter
+        settingsView.editFilterAction = this.&editFilter
+        settingsView.deleteFilterAction = this.&deleteFilter
+        settingsView.saveAllAction = this.&save
+        settingsView.cancelAllAction = this.&cancel
     }
 
-    private void addFilter(ActionEvent event) {
-        def text = settingsView.getFilterText()
+    private void addFilter(final ActionEvent event) {
+        final def text = settingsView.filterText
         if (!text?.equals(""))
             settingsView.addToListItems(text)
     }
 
-    private void editFilter(ActionEvent event) {
-        def filter = settingsView.getSelectedListItem()
-        settingsView.setFilterText(filter)
+    private void editFilter(final ActionEvent event) {
+        final def filter = settingsView.selectedListItem
+        settingsView.filterText = filter
     }
 
-    private void deleteFilter(ActionEvent event) {
-        def filter = settingsView.getSelectedListItem()
+    private void deleteFilter(final ActionEvent event) {
+        final def filter = settingsView.selectedListItem
         settingsView.removeItem(filter)
     }
 
-    private void save(ActionEvent event) {
-        Map<Finding.Severity, Boolean> loadfilter = new HashMap()
-        loadfilter.put(Finding.Severity.CRITICAL, settingsView.getIsCritical())
-        loadfilter.put(Finding.Severity.HIGH, settingsView.getIsHigh())
-        loadfilter.put(Finding.Severity.MEDIUM, settingsView.getIsMedium())
-        loadfilter.put(Finding.Severity.LOW, settingsView.getIsLow())
-        loadfilter.put(Finding.Severity.INFO, settingsView.getIsInfo())
-        Config.getInstance().setProperty(Config.PRELOAD_FILTER, loadfilter)
+    private void save(final ActionEvent event) {
+        final Map<Finding.Severity, Boolean> loadfilter = new HashMap()
+        loadfilter[Finding.Severity.CRITICAL] = settingsView.isCritical
+        loadfilter[Finding.Severity.HIGH] = settingsView.isHigh
+        loadfilter[Finding.Severity.MEDIUM] = settingsView.isMedium
+        loadfilter[Finding.Severity.LOW] = settingsView.isLow
+        loadfilter[Finding.Severity.INFO] = settingsView.isInfo
+        Config.instance.setProperty(Config.PRELOAD_FILTER, loadfilter)
 
-        Config.getInstance().setProperty(Config.COLOURED_ROWS, settingsView.isColouredRow())
-        Config.getInstance().setProperty(Config.MAX_ROWS, settingsView.getMaxRows() as Integer)
-        Config.getInstance().setProperty(Config.BATCH_SIZE, settingsView.getBatchSize() as Integer)
-        Config.getInstance().setProperty(Config.IP_PORT_FORMAT_STRING, settingsView.getCopyString())
-//        ((List) ConfigHandler.getIFProperty(Config.FILTERS)).clear()
-        Config.getInstance().setProperty(Config.FILTERS, settingsView.getAllItems())
+        Config.instance.setProperty(Config.COLOURED_ROWS, settingsView.colouredRow)
+        Config.instance.setProperty(Config.MAX_ROWS, settingsView.maxRows as Integer)
+        Config.instance.setProperty(Config.BATCH_SIZE, settingsView.batchSize as Integer)
+        Config.instance.setProperty(Config.IP_PORT_FORMAT_STRING, settingsView.copyString)
+        Config.instance.setProperty(Config.FILTERS, settingsView.allItems)
 
         settingsView.close()
     }
 
-    private void cancel(ActionEvent event) {
+    private void cancel(final ActionEvent event) {
         settingsView.close()
     }
 }
