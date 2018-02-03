@@ -1,85 +1,39 @@
-.CRITICAL {
--fx-background-color: #d9534f;
-}
-.CRITICAL:odd {
--fx-background-color: #ca4440;
-}
+.CRITICAL     { -fx-background-color: #d9534f; }
+.CRITICAL:odd { -fx-background-color: #ca4440; }
+.HIGH         { -fx-background-color: #f0ad4e; }
+.HIGH:odd     { -fx-background-color: #e19e3f; }
+.MEDIUM       { -fx-background-color: #5bc0de; }
+.MEDIUM:odd   { -fx-background-color: #4cb1cf; }
+.LOW          { -fx-background-color: #5cb85c; }
+.LOW:odd      { -fx-background-color: #4da94d; }
 
-.HIGH {
--fx-background-color: #f0ad4e;
-}
-.HIGH:odd {
--fx-background-color: #e19e3f;
-}
-
-.MEDIUM {
--fx-background-color: #5bc0de;
-}
-.MEDIUM:odd {
--fx-background-color: #4cb1cf;
-}
-
-.LOW {
--fx-background-color: #5cb85c;
-}
-.LOW:odd {
--fx-background-color: #4da94d;
-}
 selected {
 -fx-background-color: blue ;
 -fx-text-background-color: yellow ;
 }
 
-.CRITICALROW {
--fx-background-color: #fec7c6;
-}
-.CRITICALROW:odd {
--fx-background-color: #EFB8B7;
-}
-.HIGHROW {
--fx-background-color: #ffdebd;
-}
-.HIGHROW:odd {
--fx-background-color: #F0CFAE;
-}
-.MEDIUMROW {
--fx-background-color: #ffffa3;
-}
-.MEDIUMROW:odd{
--fx-background-color: #F0F094;
-}
-.LOWROW {
--fx-background-color: #d5eaff;
-}
-.LOWROW:odd{
--fx-background-color: #C6DBF0;
-}
+.CRITICALROW     { -fx-background-color: #fec7c6; }
+.CRITICALROW:odd { -fx-background-color: #EFB8B7; }
+.HIGHROW         { -fx-background-color: #ffdebd; }
+.HIGHROW:odd     { -fx-background-color: #F0CFAE; }
+.MEDIUMROW       { -fx-background-color: #ffffa3; }
+.MEDIUMROW:odd   { -fx-background-color: #F0F094; }
+.LOWROW          { -fx-background-color: #d5eaff; }
+.LOWROW:odd      { -fx-background-color: #C6DBF0; }
 
 /*
-.INFO {
--fx-background-color: #ffffff;
-}
-.INFO:odd {
--fx-background-color: #f5f5f5;
-}
+.INFO            { -fx-background-color: #ffffff; }
+.INFO:odd        { -fx-background-color: #f5f5f5; }
 */
 
-.text-input-wrong {
-  -fx-control-inner-background: #d9534f;
-}
+.text-input-wrong {   -fx-control-inner-background: #d9534f; }
 
-.tree-table-row-cell {
--fx-background-color: #ffffff;
-}
+.tree-table-row-cell     { -fx-background-color: #ffffff; }
+.tree-table-row-cell:odd { -fx-background-color: #f5f5f5; }
+.cell:empty              { -fx-text-background-color: white ; }
 
-.tree-table-row-cell:odd {
--fx-background-color: #f5f5f5;
-}
+.table-row-cell:selected , .tree-table-row-cell:selected { -fx-background-color: steelblue; }
 
-.cell:empty {
--fx-text-background-color: white ;
-}
-
-.table-row-cell:selected , .tree-table-row-cell:selected {
-    -fx-background-color: steelblue;
+.first{
+    -fx-font: bold italic 10pt sans-serif ;
 }
