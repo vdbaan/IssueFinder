@@ -19,11 +19,15 @@ package net.vdbaan.issuefinder.view.impl
 
 import javafx.beans.value.ChangeListener
 import javafx.collections.ObservableList
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
+import javafx.scene.input.Clipboard
+import javafx.scene.input.ClipboardContent
 import javafx.scene.web.WebView
 import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
@@ -62,6 +66,17 @@ class IssueTabController implements IssueTabView {
 
     private IssueTabPresenter presenter
 
+    @Override
+    @FXML
+    void copySelectedIps(final ActionEvent event) {
+        copySelectedIpsHandler?.handle(event)
+    }
+
+    @Override
+    @FXML
+    void copySelectedPortsAndIps(final ActionEvent event) {
+        copySelectedPortsAndIpsHandler?.handle(event)
+    }
 
     @FXML
     // This method is called by the FXMLLoader when initialization is complete
@@ -70,6 +85,17 @@ class IssueTabController implements IssueTabView {
         findingsTable.sortOrder.clear()
         findingsTable.sortOrder.addAll(riskColumn)
         findingsTable.sortOrder.addAll(findingColumn)
+    }
+
+    private EventHandler<ActionEvent> copySelectedIpsHandler
+    private EventHandler<ActionEvent> copySelectedPortsAndIpsHandler
+
+    void setCopySelectedIpsHandler(EventHandler<ActionEvent> copySelectedIpsHandler) {
+        this.copySelectedIpsHandler = copySelectedIpsHandler
+    }
+
+    void setCopySelectedPortsAndIpsHandler(EventHandler<ActionEvent> copySelectedPortsAndIpsHandler) {
+        this.copySelectedPortsAndIpsHandler = copySelectedPortsAndIpsHandler
     }
 
     void bindMasterData(final ObservableList<Finding> masterData) {
@@ -131,5 +157,9 @@ class IssueTabController implements IssueTabView {
 
     void changeTab() {
         presenter.changeTab()
+    }
+
+    void setClipboardContent(final ClipboardContent content) {
+        Clipboard.systemClipboard.content = (content)
     }
 }
