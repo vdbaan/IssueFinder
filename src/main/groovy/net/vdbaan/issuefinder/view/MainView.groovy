@@ -22,6 +22,7 @@ import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.event.EventHandler
+import javafx.fxml.FXML
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ListCell
 import javafx.scene.input.KeyEvent
@@ -35,6 +36,57 @@ import javax.swing.text.html.ListView
 interface MainView {
 
     RetentionFileChooser getRetentionFileChooser()
+
+    @FXML
+    void newAction(ActionEvent event)
+
+    @FXML
+    void loadReport(ActionEvent event)
+
+    @FXML
+    void saveDatabase(ActionEvent event)
+
+    @FXML
+    void loadDatabase(ActionEvent event)
+
+    @FXML
+    void showPreferences(ActionEvent event)
+
+    @FXML
+    void exitApplication(ActionEvent event)
+
+    @FXML
+    void showHelp(ActionEvent event)
+
+    @FXML
+    void showStatistics(ActionEvent event)
+
+    @FXML
+    void showAbout(ActionEvent event)
+
+    @FXML
+    void filterClicked(MouseEvent event)
+
+    @FXML
+    void doFilter(ActionEvent event)
+
+    @FXML
+    void clearFilter(ActionEvent event)
+
+    @FXML
+    void copyUniqueIPs(ActionEvent event)
+
+    @FXML
+    void copyUniquePortAndIPs(ActionEvent event)
+
+    @FXML
+    tabChanged(Event event)
+
+    @FXML
+    void onAction(ActionEvent event)
+
+    @FXML
+    void handleReturn(KeyEvent event)
 
     Window getWindow()
 

@@ -22,6 +22,7 @@ import javafx.beans.value.ChangeListener
 import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.fxml.FXML
 import javafx.scene.control.SelectionMode
 import javafx.scene.input.ClipboardContent
 import javafx.stage.Window
@@ -29,6 +30,39 @@ import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
 
 interface FindingTabView {
+    @FXML
+    void copySelectedIps(ActionEvent event)
+
+    @FXML
+    void copySelectedPortsAndIps(ActionEvent event)
+
+    @FXML
+    void filterOnIP(ActionEvent event)
+
+    @FXML
+    void filterOnPlugin(ActionEvent event)
+
+    @FXML
+    void filterOnPort(ActionEvent event)
+
+    @FXML
+    void filterOnProtocol(ActionEvent event)
+
+    @FXML
+    void filterOnPortStatus(ActionEvent event)
+
+    @FXML
+    void filterOnRisk(ActionEvent event)
+
+    @FXML
+    void filterOnScanner(ActionEvent event)
+
+    @FXML
+    void filterOnService(ActionEvent event)
+
+    @FXML
+    void editSelection(ActionEvent event)
+
     void setCopySelectedIpsHandler(EventHandler<ActionEvent> copySelectedIpsHandler)
 
     void setCopySelectedPortsAndIpsHandler(EventHandler<ActionEvent> copySelectedPortsAndIpsHandler)

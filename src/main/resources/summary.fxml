@@ -3,7 +3,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
-<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" stylesheets="@style.css"
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
+            stylesheets="@style.css"
             vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="net.vdbaan.issuefinder.view.impl.SummaryViewImpl">
     <TreeTableView fx:id="treeTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"

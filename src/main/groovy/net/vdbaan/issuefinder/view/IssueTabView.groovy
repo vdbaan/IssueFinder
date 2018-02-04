@@ -19,14 +19,25 @@ package net.vdbaan.issuefinder.view
 
 import javafx.beans.value.ChangeListener
 import javafx.collections.ObservableList
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
+import javafx.fxml.FXML
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
+import javafx.scene.input.ClipboardContent
 import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.presenter.Location
 
 interface IssueTabView {
+
+    @FXML
+    void copySelectedIps(ActionEvent event)
+
+    @FXML
+    void copySelectedPortsAndIps(ActionEvent event)
+
     void bindMasterData(ObservableList<Finding> masterData)
 
     void setSelectItemPropertyListener(ChangeListener listener)
@@ -46,5 +57,11 @@ interface IssueTabView {
     void setTableSelectionMode(SelectionMode selectionMode)
 
 
+    void setCopySelectedIpsHandler(EventHandler<ActionEvent> copySelectedIpsHandler)
+
+    void setCopySelectedPortsAndIpsHandler(EventHandler<ActionEvent> copySelectedPortsAndIpsHandler)
+
     void setTableCellFactory(Callback<TableColumn<Finding, String>, TableCell<Finding, String>> call)
+
+    void setClipboardContent(ClipboardContent content)
 }

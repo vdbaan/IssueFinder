@@ -21,8 +21,9 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.web.WebView?>
-<SplitPane dividerPositions="0.85" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.111" stylesheets="@style.css"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.FindingTabController">
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" dividerPositions="0.85" orientation="VERTICAL"
+           xmlns="http://javafx.com/javafx/8.0.111"
+           stylesheets="@style.css" fx:controller="net.vdbaan.issuefinder.view.impl.FindingTabController">
     <TableView fx:id="issueTable" editable="true" tableMenuButtonVisible="true">
         <columns>
             <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Scanner">
@@ -75,14 +76,14 @@
                     <PropertyValueFactory property="severity"/>
                 </cellValueFactory>
                 <!--<cellFactory>-->
-                    <!--<net.vdbaan.issuefinder.util.FormattedTableCellFactory/>-->
+                <!--<net.vdbaan.issuefinder.util.FormattedTableCellFactory/>-->
                 <!--</cellFactory>-->
             </TableColumn>
         </columns>
         <contextMenu>
             <ContextMenu>
                 <items>
-                    <MenuItem mnemonicParsing="false" onAction="#editSelection" text="Edit Selected item(s)" />
+                    <MenuItem mnemonicParsing="false" onAction="#editSelection" text="Edit Selected item(s)"/>
                     <SeparatorMenuItem/>
                     <Menu mnemonicParsing="false" text="Filter options">
                         <MenuItem mnemonicParsing="false" onAction="#filterOnScanner" text="Filter on Scanner"/>

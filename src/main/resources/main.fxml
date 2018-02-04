@@ -21,71 +21,78 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.MainViewImpl">
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="675.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111"
+      fx:controller="net.vdbaan.issuefinder.view.impl.MainViewImpl">
 
     <MenuBar>
         <Menu text="_File">
             <MenuItem onAction="#newAction" text="_New...">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
             <MenuItem onAction="#loadReport" text="_Load Report">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem onAction="#saveDatabase" text="Save Database" />
-            <MenuItem onAction="#loadDatabase" text="Load Database" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem onAction="#showPreferences" text="_Preferences" />
-            <SeparatorMenuItem mnemonicParsing="false" />
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem onAction="#saveDatabase" text="Save Database"/>
+            <MenuItem onAction="#loadDatabase" text="Load Database"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem onAction="#showPreferences" text="_Preferences"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem onAction="#exitApplication" text="E_xit">
                 <accelerator>
-                    <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
         </Menu>
         <Menu text="_Help">
             <MenuItem onAction="#showHelp" text="_Help">
                 <accelerator>
-                    <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#showStatistics" text="Statistics" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem onAction="#showAbout" text="_About" />
+            <MenuItem mnemonicParsing="false" onAction="#showStatistics" text="Statistics"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem onAction="#showAbout" text="_About"/>
         </Menu>
     </MenuBar>
     <HBox alignment="CENTER" spacing="2.0" stylesheets="@style.css">
         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </VBox.margin>
-        <Label text="Filter" />
-        <ComboBox fx:id="mainFilter" editable="true" maxWidth="1.7976931348623157E308" onAction="#onAction" onKeyPressed="#handleReturn" onMouseClicked="#filterClicked" promptText="Enter Filter..." stylesheets="@style.css" HBox.hgrow="ALWAYS" />
-        <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#doFilter" text="Go" />
-        <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearFilter" text="Clear" />
+        <Label text="Filter"/>
+        <ComboBox fx:id="mainFilter" editable="true" maxWidth="1.7976931348623157E308" onAction="#onAction"
+                  onKeyPressed="#handleReturn" onMouseClicked="#filterClicked" promptText="Enter Filter..."
+                  stylesheets="@style.css" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#doFilter" text="Go"/>
+        <Button maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearFilter" text="Clear"/>
     </HBox>
     <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <Tab closable="false" text="Findings">
-            <fx:include fx:id="findingTab" source="findingTab.fxml" VBox.vgrow="ALWAYS" />
+            <fx:include fx:id="findingTab" source="findingTab.fxml" VBox.vgrow="ALWAYS"/>
         </Tab>
         <Tab closable="false" disable="true" onSelectionChanged="#tabChanged" text="Issues">
-            <fx:include fx:id="issueTab" source="issueTab.fxml" VBox.vgrow="ALWAYS" />
+            <fx:include fx:id="issueTab" source="issueTab.fxml" VBox.vgrow="ALWAYS"/>
         </Tab>
     </TabPane>
-    <HBox spacing="5.0" style="-fx-border-radius: 1; -fx-border-color: darkgray; -fx-border-style: solid inside; -fx-border-insets: 1; -fx-padding: 3;">
-        <Label fx:id="mainStatus" maxWidth="1.7976931348623157E308" text="mainStatus" HBox.hgrow="ALWAYS" />
-        <Separator orientation="VERTICAL" />
-        <Label fx:id="mainIssueInfo" alignment="CENTER_RIGHT" minWidth="100.0" prefHeight="17.0" prefWidth="197.0" text="mainIssueInfo" HBox.hgrow="ALWAYS" />
-        <Separator orientation="VERTICAL" />
+    <HBox spacing="5.0"
+          style="-fx-border-radius: 1; -fx-border-color: darkgray; -fx-border-style: solid inside; -fx-border-insets: 1; -fx-padding: 3;">
+        <Label fx:id="mainStatus" maxWidth="1.7976931348623157E308" text="mainStatus" HBox.hgrow="ALWAYS"/>
+        <Separator orientation="VERTICAL"/>
+        <Label fx:id="mainIssueInfo" alignment="CENTER_RIGHT" minWidth="100.0" prefHeight="17.0" prefWidth="197.0"
+               text="mainIssueInfo" HBox.hgrow="ALWAYS"/>
+        <Separator orientation="VERTICAL"/>
         <Label fx:id="mainIpInfo" alignment="CENTER_RIGHT" maxWidth="100.0" minWidth="100.0" text="mainIpInfo">
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#copyUniqueIPs" text="Copy Unique IPs" />
-                        <MenuItem mnemonicParsing="false" onAction="#copyUniquePortAndIPs" text="Copy Unique Port and IPs" />
+                        <MenuItem mnemonicParsing="false" onAction="#copyUniqueIPs" text="Copy Unique IPs"/>
+                        <MenuItem mnemonicParsing="false" onAction="#copyUniquePortAndIPs"
+                                  text="Copy Unique Port and IPs"/>
                     </items>
                 </ContextMenu>
             </contextMenu>

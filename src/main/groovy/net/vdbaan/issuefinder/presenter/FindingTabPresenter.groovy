@@ -104,6 +104,7 @@ class FindingTabPresenter {
     private Dialog editorDialog
     private EditorDialogView editorController
 
+
     void editSelection(final ActionEvent e) {
         if (editorDialog == null) {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource('/editorDialog.fxml'))

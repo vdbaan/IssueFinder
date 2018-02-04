@@ -62,88 +62,104 @@ class MainViewImpl implements MainView {
     @FXML
     private IssueTabController issueTabController
 
+    @Override
     @FXML
     void newAction(final ActionEvent event) {
         newActionHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void loadReport(final ActionEvent event) {
         loadReportHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void saveDatabase(final ActionEvent event) {
         saveDatabaseHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void loadDatabase(final ActionEvent event) {
         loadDatabaseHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void showPreferences(final ActionEvent event) {
         showPreferencesHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void exitApplication(final ActionEvent event) {
         exitApplicationHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void showHelp(final ActionEvent event) {
         showHelpHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void showStatistics(final ActionEvent event) {
         showStatisticsHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void showAbout(final ActionEvent event) {
         showAboutHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterClicked(final MouseEvent event) {
         filterClickedHandler?.handle(event)
     }
 
 
+    @Override
     @FXML
     void doFilter(final ActionEvent event) {
         doFilterHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void clearFilter(final ActionEvent event) {
         clearFilterHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void copyUniqueIPs(final ActionEvent event) {
         copyUniqueIPsHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void copyUniquePortAndIPs(final ActionEvent event) {
         copyUniquePortAndIPsHandler?.handle(event)
     }
 
+    @Override
     @FXML
     tabChanged(final Event event) {
         tabChangedHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void onAction(final ActionEvent event) {
         onActionHandler?.handle(event)
     }
 
-
+    @Override
     @FXML
     void handleReturn(final KeyEvent event) {
         handleReturnHandler?.handle(event)

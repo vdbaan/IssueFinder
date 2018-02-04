@@ -22,9 +22,11 @@ import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
+import javafx.event.ActionEvent
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableRow
+import javafx.scene.input.ClipboardContent
 import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.view.IssueTabView
@@ -38,12 +40,8 @@ class IssueTabPresenter {
     IssueTabPresenter(final IssueTabView view) {
         this.view = view
         view.tableSelectionMode = SelectionMode.MULTIPLE
-    }
-
-    void bindMasterData(final ObservableList<Finding> mData) {
-        this.masterData = mData
-        view.selectItemPropertyListener = this.&showContent
-
+        view.copySelectedIpsHandler = this.&copySelectedIps
+        view.copySelectedPortsAndIpsHandler = this.&copySelectedPortsAndIps
         view.tableCellFactory = { final val ->
             return new TableCell<Finding, String>() {
                 List<String> cellStyles = ['cell', 'indexed-cell', 'table-cell', 'table-column']
@@ -71,7 +69,11 @@ class IssueTabPresenter {
                 }
             }
         }
+    }
 
+    void bindMasterData(final ObservableList<Finding> mData) {
+        this.masterData = mData
+        view.selectItemPropertyListener = this.&showContent
     }
 
 
@@ -110,6 +112,56 @@ class IssueTabPresenter {
     void changeTab() {
         masterData.addListener(this.&dataListener as ListChangeListener)
         dataListener(null)
+    }
+
+    void copySelectedIps(final ActionEvent event) {
+//        copyUniqueIPs(view.selectedFindingsList)
+    }
+
+    void copySelectedPortsAndIps(final ActionEvent e) {
+//        copyUniquePortAndIPs(view.selectedFindingsList)
+    }
+
+    void copyUniqueIPs(final ObservableList<Finding> data) {
+        final Set<String> ips = new TreeSet<>()
+        data.each { ips << it.ip }
+        ips.remove('none') // FIXME due to NetSparkerParser
+        final def sorted = ips.sort { final a, final b ->
+            final def ip1 = a.split("\\.")
+            final def ip2 = b.split("\\.")
+            final def uip1 = String.format("%3s.%3s.%3s.%3s", ip1[0], ip1[1], ip1[2], ip1[3])
+            final def uip2 = String.format("%3s.%3s.%3s.%3s", ip2[0], ip2[1], ip2[2], ip2[3])
+            uip1 <=> uip2
+        }
+        final ClipboardContent clipboardContent = new ClipboardContent()
+        clipboardContent.putString(sorted.join("\n"))
+        view.clipboardContent = clipboardContent
+    }
+
+    void copyUniquePortAndIPs(final ObservableList<Finding> data) {
+        final Map<String, String> ips = new TreeMap<>()
+        final String formatString = Config.instance.getProperty(Config.IP_PORT_FORMAT_STRING)
+        data.each { final f ->
+            final String port = f.port.split('/')[0]
+            if (port.number && port != '0') {
+                if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
+                    ips[f.ip + ":" + port] = f.formatString(formatString)
+            }
+        }
+        final Map<String, String> sorted = ips.sort({ final Map.Entry a, final Map.Entry b ->
+            final def ip1 = a.key.toString().split(":")[0].split("\\.")
+            final def port1 = a.key.toString().split(":")[1]
+            final def ip2 = b.key.toString().split(":")[0].split("\\.")
+            final def port2 = b.key.toString().split(":")[1]
+            final
+            def uip1 = String.format("%03d.%03d.%03d.%03d.%05d", ip1[0] as int, ip1[1] as int, ip1[2] as int, ip1[3] as int, port1 as int)
+            final
+            def uip2 = String.format("%03d.%03d.%03d.%03d.%05d", ip2[0] as int, ip2[1] as int, ip2[2] as int, ip2[3] as int, port2 as int)
+            uip1 <=> uip2
+        })
+        final ClipboardContent clipboardContent = new ClipboardContent()
+        clipboardContent.putString(sorted.values().join("\n"))
+        view.clipboardContent = clipboardContent
     }
 }
 
