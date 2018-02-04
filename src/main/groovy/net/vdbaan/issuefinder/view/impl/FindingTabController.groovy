@@ -51,56 +51,67 @@ class FindingTabController implements FindingTabView {
     // fx:id="riskColumn"
     private TableColumn riskColumn
 
+    @Override
     @FXML
     void copySelectedIps(final ActionEvent event) {
         copySelectedIpsHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void copySelectedPortsAndIps(final ActionEvent event) {
         copySelectedPortsAndIpsHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnIP(final ActionEvent event) {
         filterOnIPHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnPlugin(final ActionEvent event) {
         filterOnPluginHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnPort(final ActionEvent event) {
         filterOnPortHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnProtocol(final ActionEvent event) {
         filterOnProtocolHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnPortStatus(final ActionEvent event) {
         filterOnPortStatusHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnRisk(final ActionEvent event) {
         filterOnRiskHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnScanner(final ActionEvent event) {
         filterOnScannerHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void filterOnService(final ActionEvent event) {
         filterOnServiceHandler?.handle(event)
     }
 
+    @Override
     @FXML
     void editSelection(final ActionEvent event) {
         editSelectionHandler?.handle(event)

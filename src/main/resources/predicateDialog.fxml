@@ -2,55 +2,62 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<DialogPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.PredicateDialogController">
-   <buttonTypes>
-      <ButtonType fx:constant="APPLY" />
-      <ButtonType fx:constant="CANCEL" />
-   </buttonTypes>
-   <content>
-      <GridPane alignment="CENTER_RIGHT" hgap="5.0">
-        <columnConstraints>
-          <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Scanner: " textAlignment="RIGHT" GridPane.halignment="RIGHT" />
-            <Label text="IP: " GridPane.rowIndex="1" GridPane.halignment="RIGHT" />
-            <Label text="Service: " GridPane.columnIndex="3" GridPane.halignment="RIGHT" />
-            <Label text="Hostname: " GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
-            <Label text="Port: " GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
-            <Label text="Status: " GridPane.rowIndex="4" GridPane.halignment="RIGHT" />
-            <Label text="Description: " GridPane.rowIndex="6" GridPane.halignment="RIGHT" />
-            <Label text="Plugin: " GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="RIGHT" />
-            <Label text="CVSS: " GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.halignment="RIGHT" />
-            <Label text="Risk: " GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.halignment="RIGHT" />
-            <Label text="Protocol: " GridPane.rowIndex="5" GridPane.halignment="RIGHT" />
-            <TextField fx:id="scanner" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-            <TextField fx:id="ip" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <TextField fx:id="hostname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-            <TextField fx:id="port" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <TextField fx:id="status" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-            <TextField fx:id="protocol" prefHeight="25.0" prefWidth="154.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-            <TextField fx:id="service" GridPane.columnIndex="4" GridPane.columnSpan="2" />
-            <TextField fx:id="plugin" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-            <TextField fx:id="cvss" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-            <ComboBox fx:id="risk" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-            <CheckBox fx:id="exploitabe" mnemonicParsing="false" text="Exploit available" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
-            <TextField fx:id="description" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
-         </children>
-      </GridPane>
-   </content>
+<DialogPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111"
+            fx:controller="net.vdbaan.issuefinder.view.impl.PredicateDialogController">
+    <buttonTypes>
+        <ButtonType fx:constant="APPLY"/>
+        <ButtonType fx:constant="CANCEL"/>
+    </buttonTypes>
+    <content>
+        <GridPane alignment="CENTER_RIGHT" hgap="5.0">
+            <columnConstraints>
+                <ColumnConstraints minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label text="Scanner: " textAlignment="RIGHT" GridPane.halignment="RIGHT"/>
+                <Label text="IP: " GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+                <Label text="Service: " GridPane.columnIndex="3" GridPane.halignment="RIGHT"/>
+                <Label text="Hostname: " GridPane.rowIndex="2" GridPane.halignment="RIGHT"/>
+                <Label text="Port: " GridPane.rowIndex="3" GridPane.halignment="RIGHT"/>
+                <Label text="Status: " GridPane.rowIndex="4" GridPane.halignment="RIGHT"/>
+                <Label text="Description: " GridPane.rowIndex="6" GridPane.halignment="RIGHT"/>
+                <Label text="Plugin: " GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+                <Label text="CVSS: " GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.halignment="RIGHT"/>
+                <Label text="Risk: " GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.halignment="RIGHT"/>
+                <Label text="Protocol: " GridPane.rowIndex="5" GridPane.halignment="RIGHT"/>
+                <TextField fx:id="scanner" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+                <TextField fx:id="ip" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+                <TextField fx:id="hostname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="port" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
+                <TextField fx:id="status" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4"/>
+                <TextField fx:id="protocol" prefHeight="25.0" prefWidth="154.0" GridPane.columnIndex="1"
+                           GridPane.columnSpan="2" GridPane.rowIndex="5"/>
+                <TextField fx:id="service" GridPane.columnIndex="4" GridPane.columnSpan="2"/>
+                <TextField fx:id="plugin" GridPane.columnIndex="4" GridPane.columnSpan="2147483647"
+                           GridPane.rowIndex="1"/>
+                <TextField fx:id="cvss" GridPane.columnIndex="4" GridPane.columnSpan="2147483647"
+                           GridPane.rowIndex="2"/>
+                <ComboBox fx:id="risk" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647"
+                          GridPane.rowIndex="3"/>
+                <CheckBox fx:id="exploitabe" mnemonicParsing="false" text="Exploit available" GridPane.columnIndex="4"
+                          GridPane.columnSpan="2147483647" GridPane.rowIndex="4"/>
+                <TextField fx:id="description" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                           GridPane.rowIndex="6"/>
+            </children>
+        </GridPane>
+    </content>
 </DialogPane>

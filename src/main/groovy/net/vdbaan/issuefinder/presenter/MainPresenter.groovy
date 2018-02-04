@@ -17,6 +17,7 @@
 
 package net.vdbaan.issuefinder.presenter
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 import javafx.application.Platform
 import javafx.beans.property.SimpleObjectProperty
@@ -55,7 +56,7 @@ import java.util.jar.Manifest
 import java.util.logging.Level
 
 @Log
-//@CompileStatic
+@CompileStatic
 class MainPresenter {
     final static String BUILD_FILTER = 'Build Filter ...'
 
@@ -119,7 +120,6 @@ class MainPresenter {
     void setFindingsTabController(final IssueTabController findingsTabController) {
         this.issueTabController = findingsTabController
         findingsTabController.bindMasterData(masterData)
-//        issueTabController.setMasterView(view)
     }
 
     void tabHandler(final Event event) {
@@ -175,7 +175,7 @@ class MainPresenter {
         settingsDialog.showAndWait()
     }
 
-    static void exitApplication(final ActionEvent event) { Platform.exit() }
+    void exitApplication(final ActionEvent event) { Platform.exit() }
 
     Stage helpDialog
 
@@ -371,7 +371,7 @@ class MainPresenter {
     Dialog predicateDialog
     PredicateDialogView predicateController
 
-    EventHandler<ActionEvent> filter = { e -> e.consume() }
+    EventHandler<ActionEvent> filter = { ActionEvent e -> e.consume() } as EventHandler
 
     void onAction(ActionEvent event) {
         final String value = view.filterTextValue ?: ''

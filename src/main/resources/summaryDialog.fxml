@@ -18,21 +18,25 @@
   -->
 
 <?import javafx.scene.control.*?>
-<DialogPane prefHeight="418.0" prefWidth="786.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.SummaryDialogController">
-   <content>
-      <!--<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="575.0" prefWidth="786.0" stylesheets="@style.css" vbarPolicy="ALWAYS">-->
-          <TreeTableView fx:id="treeTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" sortMode="ONLY_FIRST_LEVEL" stylesheets="@style.css">
-              <columns>
-                  <TreeTableColumn fx:id="prop" editable="false" minWidth="200.0" prefWidth="200.0" sortable="false" />
-                  <TreeTableColumn fx:id="val" editable="false" maxWidth="1.7976931348623157E308" prefWidth="570.5" sortable="false" text="Value" />
-              </columns>
+<DialogPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="418.0" prefWidth="786.0"
+            xmlns="http://javafx.com/javafx/8.0.111"
+            fx:controller="net.vdbaan.issuefinder.view.impl.SummaryDialogController">
+    <content>
+        <!--<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="575.0" prefWidth="786.0" stylesheets="@style.css" vbarPolicy="ALWAYS">-->
+        <TreeTableView fx:id="treeTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                       sortMode="ONLY_FIRST_LEVEL" stylesheets="@style.css">
+            <columns>
+                <TreeTableColumn fx:id="prop" editable="false" minWidth="200.0" prefWidth="200.0" sortable="false"/>
+                <TreeTableColumn fx:id="val" editable="false" maxWidth="1.7976931348623157E308" prefWidth="570.5"
+                                 sortable="false" text="Value"/>
+            </columns>
             <columnResizePolicy>
-               <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
-          </TreeTableView>
-      <!--</ScrollPane>-->
-   </content>
-   <buttonTypes>
-      <ButtonType fx:constant="CLOSE" />
-   </buttonTypes>
+        </TreeTableView>
+        <!--</ScrollPane>-->
+    </content>
+    <buttonTypes>
+        <ButtonType fx:constant="CLOSE"/>
+    </buttonTypes>
 </DialogPane>

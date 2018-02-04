@@ -3,8 +3,6 @@ package net.vdbaan.issuefinder.util;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebEngine;
 import javafx.util.Callback;
@@ -43,40 +41,22 @@ public class BrowserPopupHandler implements Callback<PopupFeatures, WebEngine> {
         final WebEngine popupHandlerEngine = new WebEngine();
 
         // this change listener will trigger when our secondary popupHandlerEngine starts to load the url ...
-        popupHandlerEngine.locationProperty().addListener(new ChangeListener<String>() {
+        popupHandlerEngine.locationProperty().addListener((observable, oldValue, location) -> {
+            if (!location.isEmpty()) {
+                Platform.runLater(() -> {
+                    popupHandlerEngine.loadContent(""); // stop loading and unload the url
+                    // -> does this internally: popupHandlerEngine.getLoadWorker().cancelAndReset();
+                });
 
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String location) {
-                if (!location.isEmpty()) {
-                    Platform.runLater(new Runnable() {
+                try {
 
-                        public void run() {
-                            popupHandlerEngine.loadContent(""); // stop loading and unload the url
-                            // -> does this internally: popupHandlerEngine.getLoadWorker().cancelAndReset();
-                        }
+                    HostServices hostServices = application.getHostServices();
+                    hostServices.showDocument(location);
 
-                    });
-
-                    try {
-//                        // Open URL in Browser:
-//                        Desktop desktop = Desktop.getDesktop();
-//                        if (desktop.isSupported(Desktop.Action.BROWSE))
-//                        {
-//                            URI uri = new URI(location);
-//                            desktop.browse(uri);
-//                        }
-//                        else
-//                        {
-//                            System.out.println("Could not load URL: " + location);
-//                        }
-                        HostServices hostServices = application.getHostServices();
-                        hostServices.showDocument(location);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-
         });
         return popupHandlerEngine;
     }
