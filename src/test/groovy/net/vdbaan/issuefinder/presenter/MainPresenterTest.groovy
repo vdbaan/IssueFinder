@@ -26,17 +26,17 @@ import net.vdbaan.issuefinder.view.MainView
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.junit.Assert.assertTrue
+import static org.junit.Assert.assertEquals
 
 @RunWith(JfxRunner.class)
 class MainPresenterTest {
-
+//
     @Test
     @TestInJfxThread
     void base() {
         MainView mock = new MainViewMock()
         mock.newAction(null)
-        mock.exitApplication(null)
+//        mock.exitApplication(null) // This will kill the JfxRunner, so do not test ;)
     }
 
     @Test
@@ -58,7 +58,7 @@ class MainPresenterTest {
             }
         }
         mock.loadReport(null)
-        assertTrue(true)
+        assertEquals([testFile], mock.progressFileList)
     }
 
     @Test

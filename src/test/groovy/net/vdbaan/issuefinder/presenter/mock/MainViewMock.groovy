@@ -40,6 +40,7 @@ class MainViewMock implements MainView {
 
     MainPresenter presenter
 
+    List<File> progressFileList
     MainViewMock() {
         presenter = new MainPresenter(this)
         presenter.progressDialog = new Stage() {
@@ -52,7 +53,7 @@ class MainViewMock implements MainView {
 
             @Override
             void setFileList(List<File> files) {
-
+                progressFileList = files
             }
 
             @Override
