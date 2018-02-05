@@ -3,8 +3,8 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.web.WebView?>
-<SplitPane dividerPositions="0.7" prefHeight="599.0" prefWidth="839.0" xmlns="http://javafx.com/javafx/8.0.111"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.vdbaan.issuefinder.view.impl.IssueTabController">
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" dividerPositions="0.7" prefHeight="599.0" prefWidth="839.0"
+           xmlns="http://javafx.com/javafx/8.0.111" fx:controller="net.vdbaan.issuefinder.view.impl.IssueTabController">
     <items>
         <TableView fx:id="findingsTable" prefHeight="200.0" prefWidth="200.0" stylesheets="@style.css">
 
@@ -23,6 +23,17 @@
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <Menu mnemonicParsing="false" text="Copy options">
+                            <MenuItem mnemonicParsing="false" onAction="#copySelectedIps" text="Copy Selected IPs"/>
+                            <MenuItem mnemonicParsing="false" onAction="#copySelectedPortsAndIps"
+                                      text="Copy Selected Ports and IPs"/>
+                        </Menu>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
         </TableView>
         <SplitPane dividerPositions="0.5, 0.5, 0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
             <items>
@@ -45,9 +56,9 @@
                 <TableView fx:id="ipTable" prefWidth="200.0" tableMenuButtonVisible="true">
                     <columns>
                         <TableColumn prefWidth="75.0" text="ip">
-                        <cellValueFactory>
-                            <PropertyValueFactory property="ip"/>
-                        </cellValueFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="ip"/>
+                            </cellValueFactory>
                         </TableColumn>
                         <TableColumn prefWidth="75.0" text="port">
                             <cellValueFactory>
