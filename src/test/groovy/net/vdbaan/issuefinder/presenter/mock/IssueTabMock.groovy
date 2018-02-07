@@ -113,4 +113,9 @@ class IssueTabMock implements IssueTabView {
     void setClipboardContent(ClipboardContent content) {
 
     }
+
+    @Override
+    ObservableList<Finding> getSelectedFindingsList() {
+        return null
+    }
 }
