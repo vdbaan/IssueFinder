@@ -64,4 +64,6 @@ interface IssueTabView {
     void setTableCellFactory(Callback<TableColumn<Finding, String>, TableCell<Finding, String>> call)
 
     void setClipboardContent(ClipboardContent content)
+
+    ObservableList<Finding> getSelectedFindingsList()
 }

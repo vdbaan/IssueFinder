@@ -115,11 +115,22 @@ class IssueTabPresenter {
     }
 
     void copySelectedIps(final ActionEvent event) {
-//        copyUniqueIPs(view.selectedFindingsList)
+        copyUniqueIPs(findFindings(view.selectedFindingsList))
     }
 
     void copySelectedPortsAndIps(final ActionEvent e) {
-//        copyUniquePortAndIPs(view.selectedFindingsList)
+        copyUniquePortAndIPs(findFindings(view.selectedFindingsList))
+    }
+
+    ObservableList<Finding> findFindings(ObservableList<Finding> selectedList) {
+        List<String> plugins = new ArrayList<>()
+        List<Finding> result = new ArrayList<>()
+        selectedList.each { plugins << it.plugin }
+
+        masterData.findAll { final finding ->
+            plugins.contains(finding.plugin)
+        }.each { result << it }
+        return FXCollections.observableList(result)
     }
 
     void copyUniqueIPs(final ObservableList<Finding> data) {

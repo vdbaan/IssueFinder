@@ -33,36 +33,37 @@ import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.presenter.IssueTabPresenter
 import net.vdbaan.issuefinder.presenter.Location
+import net.vdbaan.issuefinder.util.TableUtils
 import net.vdbaan.issuefinder.view.IssueTabView
 
 class IssueTabController implements IssueTabView {
     @FXML
     // fx:id="findingsTable"
-    private TableView<?> findingsTable; // Value injected by FXMLLoader
+    private TableView<?> findingsTable // Value injected by FXMLLoader
 
     @FXML
     // fx:id="riskColumn"
-    private TableColumn riskColumn
+    private TableColumn riskColumn // Value injected by FXMLLoader
 
     @FXML
     //fx:id="findingColumn"
-    private TableColumn findingColumn
+    private TableColumn findingColumn // Value injected by FXMLLoader
 
     @FXML
     // fx:id="descriptionView"
-    private WebView descriptionView; // Value injected by FXMLLoader
+    private WebView descriptionView // Value injected by FXMLLoader
 
     @FXML
     // fx:id="remediationView"
-    private WebView remediationView; // Value injected by FXMLLoader
+    private WebView remediationView // Value injected by FXMLLoader
 
     @FXML
     // fx:id="outputView"
-    private WebView outputView; // Value injected by FXMLLoader
+    private WebView outputView // Value injected by FXMLLoader
 
     @FXML
     // fx:id="ipTable"
-    private TableView<?> ipTable; // Value injected by FXMLLoader
+    private TableView<?> ipTable // Value injected by FXMLLoader
 
     private IssueTabPresenter presenter
 
@@ -85,6 +86,8 @@ class IssueTabController implements IssueTabView {
         findingsTable.sortOrder.clear()
         findingsTable.sortOrder.addAll(riskColumn)
         findingsTable.sortOrder.addAll(findingColumn)
+
+        TableUtils.installCopyPasteHandler(ipTable)
     }
 
     private EventHandler<ActionEvent> copySelectedIpsHandler
@@ -161,5 +164,10 @@ class IssueTabController implements IssueTabView {
 
     void setClipboardContent(final ClipboardContent content) {
         Clipboard.systemClipboard.content = (content)
+    }
+
+    @Override
+    ObservableList<Finding> getSelectedFindingsList() {
+        return (findingsTable.selectionModel.selectedItems as ObservableList<Finding>)
     }
 }
