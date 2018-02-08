@@ -7,7 +7,7 @@
  *  License, or (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  but WITHOUT ANY WARRANTY without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero General Public License for more details.
  *
@@ -17,6 +17,8 @@
 
 package net.vdbaan.issuefinder.view.impl
 
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox
@@ -26,51 +28,52 @@ import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.view.SettingsDialogView
 
+
 class SettingsDialogController implements SettingsDialogView {
 
     @FXML
     // fx:id="filterList"
-    private ListView<?> filterList; // Value injected by FXMLLoader
+    private ListView<?> filterList // Value injected by FXMLLoader
 
     @FXML
     // fx:id="isCritical"
-    private CheckBox isCritical; // Value injected by FXMLLoader
+    private CheckBox isCritical // Value injected by FXMLLoader
 
     @FXML
     // fx:id="isHigh"
-    private CheckBox isHigh; // Value injected by FXMLLoader
+    private CheckBox isHigh // Value injected by FXMLLoader
 
     @FXML
     // fx:id="isMedium"
-    private CheckBox isMedium; // Value injected by FXMLLoader
+    private CheckBox isMedium // Value injected by FXMLLoader
 
     @FXML
     // fx:id="isLow"
-    private CheckBox isLow; // Value injected by FXMLLoader
+    private CheckBox isLow // Value injected by FXMLLoader
 
     @FXML
     // fx:id="isInfo"
-    private CheckBox isInfo; // Value injected by FXMLLoader
+    private CheckBox isInfo // Value injected by FXMLLoader
 
     @FXML
     // fx:id="batchSize"
-    private TextField batchSize; // Value injected by FXMLLoader
+    private TextField batchSize // Value injected by FXMLLoader
 
     @FXML
     // fx:id="maxRows"
-    private TextField maxRows; // Value injected by FXMLLoader
+    private TextField maxRows // Value injected by FXMLLoader
 
     @FXML
     // fx:id="filterText"
-    private TextField filterText; // Value injected by FXMLLoader
+    private TextField filterText // Value injected by FXMLLoader
 
     @FXML
     // fx:id="copyString"
-    private TextField copyString; // Value injected by FXMLLoader
+    private TextField copyString // Value injected by FXMLLoader
 
     @FXML
     // fx:id="coloredRows"
-    private CheckBox coloredRows; // Value injected by FXMLLoader
+    private CheckBox coloredRows // Value injected by FXMLLoader
 
     @FXML
     void addFilter(final ActionEvent event) {
@@ -83,9 +86,21 @@ class SettingsDialogController implements SettingsDialogView {
         filterList.items.remove(filterList.selectionModel.selectedItem)
     }
 
+    private boolean inEditMode
     @FXML
     void editFilter(final ActionEvent event) {
         filterText.text = (filterList.selectionModel.selectedItem as String)
+        inEditMode = true
+    }
+
+    private void focusListener(ObservableValue value, Boolean oldValue, Boolean newValue) {
+        if(inEditMode && newValue == false) { // in edit mode and element looses focus
+            String orig = filterList.selectionModel.selectedItem as String
+            int index = filterList.selectionModel.selectedIndices.get(0)
+            filterList.items.set(index,filterText.text)
+            inEditMode = false
+            filterText.text = ''
+        }
     }
 
     @FXML
@@ -100,6 +115,7 @@ class SettingsDialogController implements SettingsDialogView {
         isLow.selected = loadFilter[Finding.Severity.LOW]
         isInfo.selected = loadFilter[Finding.Severity.INFO]
         filterList.items.addAll(Config.instance.getProperty(Config.FILTERS))
+        filterText.focusedProperty().addListener(this.&focusListener as ChangeListener)
     }
 
     void storePreferences() {
