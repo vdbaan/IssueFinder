@@ -144,16 +144,29 @@ class ConfigImpl extends Config {
         final File configFile = new File(userDataDirectory, CONFIGFILE_NAME)
         if (configFile.exists()) {
             configObject = new ConfigSlurper().parse(configFile.text)
-            final Map<String, Boolean> preload_filter = (Map) instance.getProperty(PRELOAD_FILTER)
-            final Map<Finding.Severity, Boolean> parsed = new HashMap<>()
-            parsed[Finding.Severity.CRITICAL] = preload_filter[Finding.Severity.CRITICAL.toString()]
-            parsed[Finding.Severity.HIGH] = preload_filter[Finding.Severity.HIGH.toString()]
-            parsed[Finding.Severity.MEDIUM] = preload_filter[Finding.Severity.MEDIUM.toString()]
-            parsed[Finding.Severity.LOW] = preload_filter[Finding.Severity.LOW.toString()]
-            parsed[Finding.Severity.INFO] = preload_filter[Finding.Severity.INFO.toString()]
-            configObject.put(PRELOAD_FILTER, parsed)
-            // TODO Find a way to merge with original configObject
+        } else {
+            List filters = new ArrayList()
+            ConfigSlurper slurper = new ConfigSlurper()
+            (new File(userDataDirectory)).eachFile { config ->
+                ConfigObject cfg = slurper.parse(config.text)
+                // collect all predefined filters
+                filters.addAll(cfg.get(Config.FILTERS) as List)
+                // keep the (usually) last version
+                configObject = cfg
+
+                // not yet, maybe in one of the next versions
+//                config.deleteOnExit()
+            }
+            configObject.put(FILTERS, filters.unique())
         }
+        final Map<String, Boolean> preload_filter = (Map) instance.getProperty(PRELOAD_FILTER)
+        final Map<Finding.Severity, Boolean> parsed = new HashMap<>()
+        parsed[Finding.Severity.CRITICAL] = preload_filter[Finding.Severity.CRITICAL.toString()]
+        parsed[Finding.Severity.HIGH] = preload_filter[Finding.Severity.HIGH.toString()]
+        parsed[Finding.Severity.MEDIUM] = preload_filter[Finding.Severity.MEDIUM.toString()]
+        parsed[Finding.Severity.LOW] = preload_filter[Finding.Severity.LOW.toString()]
+        parsed[Finding.Severity.INFO] = preload_filter[Finding.Severity.INFO.toString()]
+        configObject.put(PRELOAD_FILTER, parsed)
     }
 
 
