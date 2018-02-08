@@ -19,14 +19,9 @@ package net.vdbaan.issuefinder.view.impl
 
 import javafx.fxml.FXML
 import javafx.scene.control.Label
-import javafx.scene.layout.AnchorPane
 import net.vdbaan.issuefinder.view.AboutDialogView
 
 class AboutDialogViewImpl implements AboutDialogView {
-
-    @FXML
-    // fx:id="root"
-    private AnchorPane root; // Value injected by FXMLLoader
 
     @FXML
     // fx:id="version"

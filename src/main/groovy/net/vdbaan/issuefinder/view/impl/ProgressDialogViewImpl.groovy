@@ -26,7 +26,6 @@ import javafx.concurrent.Service
 import javafx.concurrent.Worker
 import javafx.fxml.FXML
 import javafx.scene.control.ProgressBar
-import javafx.scene.layout.GridPane
 import net.vdbaan.issuefinder.db.DbHandler
 import net.vdbaan.issuefinder.db.DbHandlerImpl
 import net.vdbaan.issuefinder.model.Finding
@@ -36,9 +35,6 @@ import net.vdbaan.issuefinder.view.ProgressDialogView
 
 @Log
 class ProgressDialogViewImpl implements ProgressDialogView {
-    @FXML
-    // fx:id="root"
-    private GridPane root; // Value injected by FXMLLoader
     @FXML
     // fx:id="files"
     private ProgressBar files; // Value injected by FXMLLoader
@@ -75,7 +71,7 @@ class ProgressDialogViewImpl implements ProgressDialogView {
                     if (done == total) {
                         masterView.statusLabel = 'Done importing'
                         callable.call()
-                        root?.scene?.window?.hide()
+                        files?.scene?.window?.hide()
                     }
                 }
             } as InvalidationListener)

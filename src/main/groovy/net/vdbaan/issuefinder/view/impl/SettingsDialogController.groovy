@@ -22,15 +22,11 @@ import javafx.fxml.FXML
 import javafx.scene.control.CheckBox
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
-import javafx.scene.layout.GridPane
 import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.view.SettingsDialogView
 
 class SettingsDialogController implements SettingsDialogView {
-    @FXML
-    // fx:id="root"
-    private GridPane root; // Value injected by FXMLLoader
 
     @FXML
     // fx:id="filterList"

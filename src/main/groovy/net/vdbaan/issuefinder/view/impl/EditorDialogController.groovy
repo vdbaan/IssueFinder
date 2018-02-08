@@ -22,18 +22,12 @@ import javafx.collections.ObservableList
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.TextField
-import javafx.scene.layout.GridPane
 import net.vdbaan.issuefinder.db.DbHandler
 import net.vdbaan.issuefinder.db.DbHandlerImpl
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.view.EditorDialogView
 
 class EditorDialogController implements EditorDialogView {
-
-    @FXML
-    // fx:id="root"
-    private GridPane root; // Value injected by FXMLLoader
-
 
     @FXML
     // fx:id="editScanner"

@@ -17,7 +17,6 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!--<?import net.vdbaan.issuefinder.util.FormattedTableCellFactory?>-->
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.web.WebView?>
@@ -75,9 +74,6 @@
                 <cellValueFactory>
                     <PropertyValueFactory property="severity"/>
                 </cellValueFactory>
-                <!--<cellFactory>-->
-                <!--<net.vdbaan.issuefinder.util.FormattedTableCellFactory/>-->
-                <!--</cellFactory>-->
             </TableColumn>
         </columns>
         <contextMenu>
