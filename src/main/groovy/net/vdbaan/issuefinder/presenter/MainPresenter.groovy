@@ -164,6 +164,7 @@ class MainPresenter {
             settingsDialog.title = ('Preferences')
             settingsDialog.initModality(Modality.APPLICATION_MODAL)
             settingsDialog.dialogPane = (loader.load() as DialogPane)
+            settingsDialog.getDialogPane().getButtonTypes().add(new ButtonType('Save',ButtonBar.ButtonData.APPLY))
             final SettingsDialogView settingsController = loader.controller
 
             settingsDialog.resultConverter = { final buttonType ->

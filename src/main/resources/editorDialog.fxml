@@ -59,6 +59,5 @@
     </content>
     <buttonTypes>
         <ButtonType fx:constant="CANCEL"/>
-        <ButtonType fx:constant="APPLY"/>
     </buttonTypes>
 </DialogPane>

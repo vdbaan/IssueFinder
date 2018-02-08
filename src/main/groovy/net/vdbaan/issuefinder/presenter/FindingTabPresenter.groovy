@@ -113,6 +113,7 @@ class FindingTabPresenter {
             editorDialog.title = 'Edit Issue(s)'
             editorDialog.initModality(Modality.APPLICATION_MODAL)
             editorDialog.dialogPane = (loader.load() as DialogPane)
+            editorDialog.getDialogPane().getButtonTypes().add(new ButtonType('Save',ButtonBar.ButtonData.APPLY))
             editorController = loader.controller
             editorDialog.resultConverter = { final buttonType ->
                 if (buttonType == ButtonType.APPLY) {
