@@ -90,7 +90,6 @@ First of all, you need to run the jar file from the commandline:
 
 This will show some logging within the terminal. You can even increase the amount of logging my using the additional --debug flag.
 
-
 ## About
 IssueFinder takes some ideas for the definition of an issue from [IVIL xml](https://github.com/seccubus/ivil). 
 Currently it is able to parse the following formats:
