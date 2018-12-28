@@ -61,6 +61,8 @@ interface IssueTabView {
 
     void setCopySelectedPortsAndIpsHandler(EventHandler<ActionEvent> copySelectedPortsAndIpsHandler)
 
+    void setCreateIssueHandler(EventHandler<ActionEvent> createIssueHandler)
+
     void setTableCellFactory(Callback<TableColumn<Finding, String>, TableCell<Finding, String>> call)
 
     void setClipboardContent(ClipboardContent content)

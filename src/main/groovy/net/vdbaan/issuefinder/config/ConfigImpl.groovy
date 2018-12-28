@@ -37,6 +37,7 @@ abstract class Config {
     final static String DB_NAME = 'databaseName'
     final static String DATA_DIR = 'dataDirectory'
     final static String COLOURED_ROWS = 'colouredRows'
+    static final String ISSUE_LIST = 'issueList'
 
     static Config getInstance() {
 

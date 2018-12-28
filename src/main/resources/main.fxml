@@ -31,7 +31,7 @@
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>
             </MenuItem>
-            <MenuItem onAction="#loadReport" text="_Load Report">
+            <MenuItem onAction="#loadReport" text="_Load Report(s)">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                 </accelerator>

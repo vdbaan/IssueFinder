@@ -28,6 +28,7 @@ import javafx.scene.input.ClipboardContent
 import javafx.stage.Window
 import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
+import net.vdbaan.issuefinder.util.RetentionFileChooser
 
 interface FindingTabView {
     @FXML
@@ -63,6 +64,12 @@ interface FindingTabView {
     @FXML
     void editSelection(ActionEvent event)
 
+    @FXML
+    void exportToCSV(ActionEvent event)
+
+    @FXML
+    void exportToIvil(ActionEvent event)
+
     void setCopySelectedIpsHandler(EventHandler<ActionEvent> copySelectedIpsHandler)
 
     void setCopySelectedPortsAndIpsHandler(EventHandler<ActionEvent> copySelectedPortsAndIpsHandler)
@@ -84,6 +91,10 @@ interface FindingTabView {
     void setFilterOnServiceHandler(EventHandler<ActionEvent> filterOnServiceHandler)
 
     void setEditSelectionHandler(EventHandler<ActionEvent> editSelectionHandler)
+
+    void setExportToCSVHandler(EventHandler<ActionEvent> handler)
+
+    void setExportToIvilHandler(EventHandler<ActionEvent> handler)
 
     ReadOnlyObjectProperty<Comparator> getTableComparatorProperty()
 
@@ -109,6 +120,7 @@ interface FindingTabView {
 
     Window getWindow()
 
+    RetentionFileChooser getRetentionFileChooser()
 
     void refresh()
 

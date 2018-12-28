@@ -117,5 +117,13 @@ cvss: ${baseCVSS}
         return FindingHtmlViewer.asHtml(this)
     }
 
+    String toCSV() {
+        return String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"", scanner, ip,
+                hostName, port, portStatus, protocol, location, service, plugin, severity, baseCVSS
+        )
+    }
 
+    String toIvil() {
+
+    }
 }

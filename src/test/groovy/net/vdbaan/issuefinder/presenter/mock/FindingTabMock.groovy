@@ -28,6 +28,7 @@ import javafx.stage.Window
 import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.presenter.FindingTabPresenter
+import net.vdbaan.issuefinder.util.RetentionFileChooser
 import net.vdbaan.issuefinder.view.FindingTabView
 
 class FindingTabMock implements FindingTabView {
@@ -94,6 +95,16 @@ class FindingTabMock implements FindingTabView {
     }
 
     @Override
+    void exportToCSV(ActionEvent event) {
+
+    }
+
+    @Override
+    void exportToIvil(ActionEvent event) {
+
+    }
+
+    @Override
     void setCopySelectedIpsHandler(EventHandler<ActionEvent> copySelectedIpsHandler) {
 
     }
@@ -145,6 +156,16 @@ class FindingTabMock implements FindingTabView {
 
     @Override
     void setEditSelectionHandler(EventHandler<ActionEvent> editSelectionHandler) {
+
+    }
+
+    @Override
+    void setExportToCSVHandler(EventHandler<ActionEvent> handler) {
+
+    }
+
+    @Override
+    void setExportToIvilHandler(EventHandler<ActionEvent> handler) {
 
     }
 
@@ -205,6 +226,11 @@ class FindingTabMock implements FindingTabView {
 
     @Override
     Window getWindow() {
+        return null
+    }
+
+    @Override
+    RetentionFileChooser getRetentionFileChooser() {
         return null
     }
 

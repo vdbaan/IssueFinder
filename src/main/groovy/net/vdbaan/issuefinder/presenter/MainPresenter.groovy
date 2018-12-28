@@ -214,7 +214,7 @@ class MainPresenter {
     private Map<String, Container> buildSummary() {
         final Map<String, Container> summaryInfo = new HashMap()
         masterData.each { final finding ->
-            final Container c = summaryInfo[finding.ip] ?: new Container()
+            final Container c = (summaryInfo[finding.ip] ?: new Container()) as Container
             if (finding.portStatus == 'open') {
                 c.listedports << finding.port
                 c.listedservices << finding.service
