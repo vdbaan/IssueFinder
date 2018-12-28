@@ -118,4 +118,9 @@ class IssueTabMock implements IssueTabView {
     ObservableList<Finding> getSelectedFindingsList() {
         return null
     }
+
+    @Override
+    void setCreateIssueHandler(EventHandler<ActionEvent> createIssueHandler) {
+
+    }
 }

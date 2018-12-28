@@ -33,6 +33,7 @@ import javafx.stage.Window
 import javafx.util.Callback
 import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.presenter.FindingTabPresenter
+import net.vdbaan.issuefinder.util.RetentionFileChooser
 import net.vdbaan.issuefinder.view.FindingTabView
 import net.vdbaan.issuefinder.view.MainView
 
@@ -117,6 +118,18 @@ class FindingTabController implements FindingTabView {
         editSelectionHandler?.handle(event)
     }
 
+    @Override
+    @FXML
+    void exportToCSV(ActionEvent event) {
+        exportToCSVHandler?.handle(event)
+    }
+
+    @Override
+    @FXML
+    void exportToIvil(ActionEvent event) {
+        exportToIvilHandler?.handle(event)
+    }
+
     @FXML
     // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
@@ -137,6 +150,8 @@ class FindingTabController implements FindingTabView {
     private EventHandler<ActionEvent> filterOnScannerHandler
     private EventHandler<ActionEvent> filterOnServiceHandler
     private EventHandler<ActionEvent> editSelectionHandler
+    private EventHandler<ActionEvent> exportToCSVHandler
+    private EventHandler<ActionEvent> exportToIvilHandler
 
     void setCopySelectedIpsHandler(final EventHandler<ActionEvent> copySelectedIpsHandler) {
         this.copySelectedIpsHandler = copySelectedIpsHandler
@@ -184,6 +199,14 @@ class FindingTabController implements FindingTabView {
 
     void bindMasterData(final ObservableList<Finding> masterData) {
         presenter.bindMasterData(masterData)
+    }
+
+    void setExportToCSVHandler(final EventHandler<ActionEvent> exportToCSVHandler) {
+        this.exportToCSVHandler = exportToCSVHandler
+    }
+
+    void setExportToIvilHandler(final EventHandler<ActionEvent> exportToIvilHandler) {
+        this.exportToIvilHandler = exportToIvilHandler
     }
 
     @Override
@@ -249,6 +272,9 @@ class FindingTabController implements FindingTabView {
         return mainView.window
     }
 
+    RetentionFileChooser getRetentionFileChooser() {
+        return mainView.retentionFileChooser
+    }
     @Override
     void refresh() {
         mainView.refresh()

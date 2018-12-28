@@ -29,6 +29,8 @@ import javafx.scene.control.TableRow
 import javafx.scene.input.ClipboardContent
 import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Finding
+import net.vdbaan.issuefinder.model.FindingIdentifier
+import net.vdbaan.issuefinder.model.Issue
 import net.vdbaan.issuefinder.view.IssueTabView
 
 @CompileStatic
@@ -42,6 +44,9 @@ class IssueTabPresenter {
         view.tableSelectionMode = SelectionMode.MULTIPLE
         view.copySelectedIpsHandler = this.&copySelectedIps
         view.copySelectedPortsAndIpsHandler = this.&copySelectedPortsAndIps
+        view.createIssueHandler = this.&createIssue
+        view.selectItemPropertyListener = this.&showContent
+
         view.tableCellFactory = { final val ->
             return new TableCell<Finding, String>() {
                 List<String> cellStyles = ['cell', 'indexed-cell', 'table-cell', 'table-column']
@@ -73,14 +78,19 @@ class IssueTabPresenter {
 
     void bindMasterData(final ObservableList<Finding> mData) {
         this.masterData = mData
-        view.selectItemPropertyListener = this.&showContent
     }
 
 
     void dataListener(final ListChangeListener.Change<? extends Finding> c) {
         final HashMap<String, Finding> uniques = new HashMap<>()
+        List<Issue> savedIssues = (Config.instance.getProperty(Config.ISSUE_LIST) as List) ?: new ArrayList<Issue>()
         masterData.each { final finding ->
-            (uniques[finding.plugin] = finding)
+            Issue issue = savedIssues.find { it.checkFinding(finding)}
+            if (issue != null) {
+                uniques[issue.title] = new Finding(plugin: issue.title, description: issue.description, solution: issue.recommendations)
+            } else {
+                uniques[finding.plugin] = finding
+            }
         }
         final List findings = new ArrayList<Finding>()
         findings.addAll(uniques.values())
@@ -105,11 +115,12 @@ class IssueTabPresenter {
                 output << String.format('<pre>%s (%s)\n%s</pre>', result.ip, result.location, result.pluginOutput)
             }
             view.output = output.join('<hr/>')
-            view.ipList = FXCollections.observableList(locations.values() as List)
+            view.ipList = FXCollections.observableList(locations.values() as List) as ObservableList<Location>
         }
     }
 
     void changeTab() {
+        // delay reacting to the data, only needed when selecting this tab
         masterData.addListener(this.&dataListener as ListChangeListener)
         dataListener(null)
     }
@@ -120,6 +131,20 @@ class IssueTabPresenter {
 
     void copySelectedPortsAndIps(final ActionEvent e) {
         copyUniquePortAndIPs(findFindings(view.selectedFindingsList))
+    }
+
+    void createIssue(final ActionEvent event) {
+        Issue issue = new Issue()
+        StringBuilder sb = new StringBuilder()
+        issue.findings = view.selectedFindingsList.collect {
+            new FindingIdentifier(scanner: it.scanner, plugin: it.plugin)
+        }
+        issue.severity = view.selectedFindingsList.min { it.severity }.severity // CRITICAL is the first entry, so low
+        issue.title = view.selectedFindingsList.collect { String.format('%s:%s', it.scanner, it.plugin) }.join(',')
+        List savedIssues = (Config.instance.getProperty(Config.ISSUE_LIST) as List) ?: new ArrayList<Issue>()
+        savedIssues.add(issue)
+        Config.instance.setProperty(Config.ISSUE_LIST, savedIssues)
+        dataListener(null)
     }
 
     ObservableList<Finding> findFindings(ObservableList<Finding> selectedList) {
@@ -156,7 +181,7 @@ class IssueTabPresenter {
             final String port = f.port.split('/')[0]
             if (port.number && port != '0') {
                 if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
-                    ips[f.ip + ":" + port] = f.formatString(formatString)
+                    ips[f.ip + ":" + port] = f.formatString(formatString as String)
             }
         }
         final Map<String, String> sorted = ips.sort({ final Map.Entry a, final Map.Entry b ->

@@ -53,11 +53,13 @@ class FindingTabPresenter {
         view.selectItemPropertyListener = this.&showContent
         view.tableSelectionMode = SelectionMode.MULTIPLE
         view.setRiskColumnCellFactory(this.&riskCellFactory as Callback<TableColumn<Finding, Finding.Severity>, TableCell<Finding, Finding.Severity>>)
+        view.exportToCSVHandler = this.&exportToCSV
+        view.exportToIvilHandler = this.&exportToIvil
     }
 
     void bindMasterData(final ObservableList<Finding> masterData) {
         sortedData = new SortedList<>(masterData)
-        sortedData.comparatorProperty().bind(view.tableComparatorProperty)
+        sortedData.comparatorProperty().bind(view.tableComparatorProperty as ObservableValue<? extends Comparator<? super Finding>>)
         view.mainTableItems = sortedData
     }
 
@@ -101,6 +103,27 @@ class FindingTabPresenter {
         view.mainFilterText = String.format("SERVICE == '%s'", view.selectedFinding.service)
     }
 
+    void exportToCSV(final ActionEvent e) {
+        final File location = view.retentionFileChooser.showSaveDialog(view.window, 'Save to CSV')
+        if (location != null) {
+            location.withWriter { out ->
+                out.println '"Scanner", "Ip Address", "Host Name", "Port", "Port Status", "Protocol", "Location", "Service", "Plugin", "Severity", "Base CVSS Score"'
+                view.selectedFindingsList.each { final finding ->
+                    out.println finding.toCSV()
+                }
+            }
+        }
+    }
+
+    void exportToIvil(final ActionEvent e) {
+        final File location = view.retentionFileChooser.showSaveDialog(view.window, 'Save as XML')
+        if (location != null) {
+            view.selectedFindingsList.each { finding ->
+                location.write(finding.toIvil())
+            }
+        }
+    }
+
     private Dialog editorDialog
     private EditorDialogView editorController
 
@@ -113,7 +136,7 @@ class FindingTabPresenter {
             editorDialog.title = 'Edit Issue(s)'
             editorDialog.initModality(Modality.APPLICATION_MODAL)
             editorDialog.dialogPane = (loader.load() as DialogPane)
-            editorDialog.getDialogPane().getButtonTypes().add(new ButtonType('Save',ButtonBar.ButtonData.APPLY))
+            editorDialog.getDialogPane().getButtonTypes().add(new ButtonType('Save', ButtonBar.ButtonData.APPLY))
             editorController = loader.controller
             editorDialog.resultConverter = { final buttonType ->
                 if (buttonType == ButtonType.APPLY) {
@@ -155,7 +178,7 @@ class FindingTabPresenter {
             final String port = f.port.split('/')[0]
             if (port.number && port != '0') {
                 if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
-                    ips[f.ip + ":" + port] = f.formatString(formatString)
+                    ips[f.ip + ":" + port] = f.formatString(formatString as String)
             }
         }
         final Map<String, String> sorted = ips.sort({ final Map.Entry a, final Map.Entry b ->
