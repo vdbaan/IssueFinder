@@ -35,10 +35,12 @@ class H2Test {
     @Before
     void clean() {
         File outdir = new File('./out')
-        outdir.eachFile(FileType.FILES) { f ->
-            if (f.getAbsolutePath().endsWith('.db')) {
-                println 'Deleting ' + f.getAbsolutePath()
-                f.delete()
+        if(outdir.exists()) {
+            outdir.eachFile(FileType.FILES) { f ->
+                if (f.getAbsolutePath().endsWith('.db')) {
+                    println 'Deleting ' + f.getAbsolutePath()
+                    f.delete()
+                }
             }
         }
     }
