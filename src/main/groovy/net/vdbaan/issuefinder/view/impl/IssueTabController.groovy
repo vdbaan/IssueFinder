@@ -85,6 +85,11 @@ class IssueTabController implements IssueTabView {
     }
 
     @FXML
+    void copyIssueTable(ActionEvent event) {
+        copyIssueTableHandler?.handle(event)
+    }
+
+    @FXML
     // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         presenter = new IssueTabPresenter(this)
@@ -98,6 +103,7 @@ class IssueTabController implements IssueTabView {
     private EventHandler<ActionEvent> copySelectedIpsHandler
     private EventHandler<ActionEvent> copySelectedPortsAndIpsHandler
     private EventHandler<ActionEvent> createIssueHandler
+    private EventHandler<ActionEvent> copyIssueTableHandler
 
     void setCopySelectedIpsHandler(EventHandler<ActionEvent> copySelectedIpsHandler) {
         this.copySelectedIpsHandler = copySelectedIpsHandler
@@ -109,6 +115,10 @@ class IssueTabController implements IssueTabView {
 
     void setCreateIssueHandler(EventHandler<ActionEvent> createIssueHandler) {
         this.createIssueHandler = createIssueHandler
+    }
+
+    void setCopyIssueTableHandler(EventHandler<ActionEvent> copyIssueTableHandler) {
+        this.copyIssueTableHandler = copyIssueTableHandler
     }
 
     void bindMasterData(final ObservableList<Finding> masterData) {

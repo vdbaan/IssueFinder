@@ -45,6 +45,7 @@ class IssueTabPresenter {
         view.copySelectedIpsHandler = this.&copySelectedIps
         view.copySelectedPortsAndIpsHandler = this.&copySelectedPortsAndIps
         view.createIssueHandler = this.&createIssue
+        view.copyIssueTableHandler = this.&copyIssueTable
         view.selectItemPropertyListener = this.&showContent
 
         view.tableCellFactory = { final val ->
@@ -85,7 +86,7 @@ class IssueTabPresenter {
         final HashMap<String, Finding> uniques = new HashMap<>()
         List<Issue> savedIssues = (Config.instance.getProperty(Config.ISSUE_LIST) as List) ?: new ArrayList<Issue>()
         masterData.each { final finding ->
-            Issue issue = savedIssues.find { it.checkFinding(finding)}
+            Issue issue = savedIssues.find { it.checkFinding(finding) }
             if (issue != null) {
                 uniques[issue.title] = new Finding(plugin: issue.title, description: issue.description, solution: issue.recommendations)
             } else {
@@ -147,6 +148,68 @@ class IssueTabPresenter {
         dataListener(null)
     }
 
+
+    void copyIssueTable(final ActionEvent event) {
+        /*
+        table would look like:
+        | IP        | Hostname  | Port | <issue 1> | <issue 2> ...
+        | 127.0.0.1 | localhost | 80   | "X"       | ""
+        | 127.0.0.2 | localhost | 80   | ""        | "X"
+        | 127.0.0.3 | localhost | 80   | "X"       | "X"
+         */
+        Map<String, LocEntry> mapping = new HashMap()
+        List<String> issues = new ArrayList()
+        view.selectedFindingsList.each {
+            if (!issues.contains(it.plugin)) issues.add(it.plugin)
+            masterData.findAll { final finding -> finding.plugin == it.plugin }.each { final result ->
+                String location = String.format("%s:%s", result.ip, result.port)
+                LocEntry entry = mapping.get(location)
+                if (entry == null) entry = new LocEntry(ip: result.ip, location: result.hostName, port: result.port)
+                entry.addIssue(it.plugin)
+                mapping.put(location, entry)
+            }
+//            String location = String.format("%s:%s", it.ip, it.port)
+//            LocEntry entry = mapping.get(location)
+//            if (entry == null) entry = new LocEntry(ip: it.ip, location: it.hostName, port: it.port)
+//            if (!issues.contains(it.plugin)) issues.add(it.plugin)
+//            entry.addIssue(it.plugin)
+//            mapping.put(location, entry)
+        }
+        final Map<String, LocEntry> sorted = mapping.sort({ final Map.Entry a, final Map.Entry b ->
+            final def ip1 = a.key.toString().split(":")[0].split("\\.")
+            final def port1 = a.key.toString().split(":")[1]
+            final def ip2 = b.key.toString().split(":")[0].split("\\.")
+            final def port2 = b.key.toString().split(":")[1]
+            final
+            def uip1 = String.format("%03d.%03d.%03d.%03d.%05d", ip1[0] as int, ip1[1] as int, ip1[2] as int, ip1[3] as int, port1 as int)
+            final
+            def uip2 = String.format("%03d.%03d.%03d.%03d.%05d", ip2[0] as int, ip2[1] as int, ip2[2] as int, ip2[3] as int, port2 as int)
+            uip1 <=> uip2
+        })
+        StringBuffer csv = new StringBuffer('"IP","Hostname","Port"')
+        issues.each {
+            csv.append(String.format(',"%s"', it))
+        }
+
+        csv.append('\n')
+        sorted.keySet().each {
+            LocEntry entry = sorted.get(it)
+            csv.append(String.format('"%s","%s","%s"', entry.ip, entry.location, entry.port))
+            issues.each { issue ->
+                if (entry.hasIssue(issue)) {
+                    csv.append(',"X"')
+                } else {
+                    csv.append(',""')
+                }
+            }
+            csv.append('\n')
+        }
+
+        final ClipboardContent clipboardContent = new ClipboardContent()
+        clipboardContent.putString(csv.toString())
+        view.clipboardContent = clipboardContent
+    }
+
     ObservableList<Finding> findFindings(ObservableList<Finding> selectedList) {
         List<String> plugins = new ArrayList<>()
         List<Finding> result = new ArrayList<>()
@@ -203,4 +266,18 @@ class IssueTabPresenter {
 
 class Location {
     String ip, port, location
+}
+
+class LocEntry {
+    String ip, location, port
+
+    List<String> issues = new ArrayList()
+
+    void addIssue(String issue) {
+        issues.add(issue)
+    }
+
+    boolean hasIssue(String issue) {
+        return issues.contains(issue)
+    }
 }

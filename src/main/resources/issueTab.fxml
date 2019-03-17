@@ -28,6 +28,9 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#createIssue" text="Create issue from selected item(s)"/>
                         <SeparatorMenuItem/>
+                        <MenuItem mnemonicParsing="false" onAction="#copyIssueTable" text="Copy Issue table">
+                        </MenuItem>
+                        <SeparatorMenuItem/>
                         <Menu mnemonicParsing="false" text="Copy options">
                             <MenuItem mnemonicParsing="false" onAction="#copySelectedIps" text="Copy Selected IPs"/>
                             <MenuItem mnemonicParsing="false" onAction="#copySelectedPortsAndIps" text="Copy Selected Ports and IPs"/>

@@ -105,6 +105,11 @@ class IssueTabMock implements IssueTabView {
     }
 
     @Override
+    void setCopyIssueTableHandler(EventHandler<ActionEvent> copyIssueTableHandler) {
+
+    }
+
+    @Override
     void setTableCellFactory(Callback<TableColumn<Finding, String>, TableCell<Finding, String>> call) {
 
     }
