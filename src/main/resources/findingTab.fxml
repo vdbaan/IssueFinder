@@ -47,7 +47,7 @@
             </TableColumn>
             <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Status" visible="false">
                 <cellValueFactory>
-                    <PropertyValueFactory property="status"/>
+                    <PropertyValueFactory property="portStatus"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Protocol" visible="false">
