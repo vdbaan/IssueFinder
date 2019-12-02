@@ -1,5 +1,5 @@
 language: groovy
-
+use: Xenial
 services:
   - xvfb
 
