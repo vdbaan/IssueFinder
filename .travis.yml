@@ -2,3 +2,6 @@ language: groovy
 
 services:
   - xvfb
+
+jdk:
+  - oraclejdk8
