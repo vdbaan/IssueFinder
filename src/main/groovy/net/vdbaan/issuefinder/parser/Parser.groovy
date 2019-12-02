@@ -73,6 +73,7 @@ abstract class Parser {
             if (ZAPParser.identify(content)) return new ZAPParser(content)
             if (OpenVASParser.identify(content)) return new OpenVASParser(content)
             if (NexposeParser.identify(content)) return new NexposeParser(content)
+            if (QualysParser.identify(content)) return new QualysParser(content)
 
         } catch (final Exception e) {
             log.warning e.getMessage()

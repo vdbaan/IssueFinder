@@ -281,3 +281,19 @@ class BurpStateTest {
         }
     }
 }
+
+class QualysPArserTest {
+    @Test
+    void testQualysFile() {
+        File testFile = new File('testdata/Qualys-Scan_Results_nne5sv_20191201_scan_1575204492_96725.xml')
+        if (testFile.exists()) {
+            Parser p = Parser.getParser(testFile)
+            assert  p instanceof QualysParser
+            List result = p.parse()
+            assertFalse(result.isEmpty())
+            assert result[0] instanceof Finding
+            result.each { println it}
+            assertTrue(result.size() == 269)
+        }
+    }
+}
