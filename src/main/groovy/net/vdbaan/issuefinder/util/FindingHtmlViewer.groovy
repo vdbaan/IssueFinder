@@ -23,8 +23,9 @@ class FindingHtmlViewer {
     static String asHtml(final Finding finding) {
         if (finding.scanner.equalsIgnoreCase(NessusParser.scanner)) {
             return nessusHTMLDescription(finding)
-        } else
+        } else {
             return otherHTMLDescription(finding)
+        }
     }
 
     static String nessusHTMLDescription(final Finding finding) {

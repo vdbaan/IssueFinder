@@ -51,8 +51,7 @@
                         <WebView fx:id="remediationView" prefHeight="-1.0" prefWidth="-1.0"/>
                     </content>
                 </TitledPane>
-                <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="200.0"
-                            text="Plugin output">
+                <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="200.0" text="Plugin output">
                     <content>
                         <WebView fx:id="outputView" prefHeight="-1.0" prefWidth="-1.0"/>
                     </content>

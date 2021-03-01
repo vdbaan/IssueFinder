@@ -29,10 +29,11 @@ class ZAPParser extends Parser {
             site.alerts.alertitem.each { final issue ->
                 final String plugin = issue.pluginid + ':' + issue.name
                 final Finding.Severity severity = calc(issue.riskcode)
-                if (allowed(severity))
+                if (allowed(severity)) {
                     result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', hostName: host,
                                            service : service, plugin: plugin,
                                            severity: severity, summary: buildSummary(issue)])
+                }
 
             }
         }

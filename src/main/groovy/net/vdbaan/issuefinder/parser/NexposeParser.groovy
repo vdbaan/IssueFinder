@@ -69,16 +69,19 @@ class NexposeParser extends Parser {
                             final def pluginName = v.title
                             final def cvssVector = v.cvssVector
                             String cvssval = v.cvss ?: '0.0'
-                            if (cvssval == '') cvssval = '0.0'
+                            if (cvssval == '') {
+                                cvssval = '0.0'
+                            }
                             final BigDecimal cvss = new BigDecimal(cvssval)
                             final Finding.Severity severity = calcSeverity(cvss)
-                            if (allowed(severity))
+                            if (allowed(severity)) {
                                 result << new Finding([scanner     : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
                                                        service     : serviceName,
                                                        plugin      : pluginId + ":" + pluginName,
                                                        exploitable : issue == 'true', baseCVSS: cvss, cvssVector: cvssVector,
                                                        severity    : severity, summary: buildSummary(v), description: v.description, reference: v.refs,
                                                        pluginOutput: reformat(contentAsText(issue)), solution: v.solution])
+                            }
                         }
                     }
                 }

@@ -40,18 +40,24 @@ class SSLyzeParser extends Parser {
 
         // for a weird reason, content.result.target.each barfs out with an Exception
         for (def i = 0; i < content.results.target.size(); i++) {
-            if (allowed(Finding.Severity.HIGH))
+            if (allowed(Finding.Severity.HIGH)) {
                 result << reportSSLv2(content.results.target[i])
-            if (allowed(Finding.Severity.HIGH))
+            }
+            if (allowed(Finding.Severity.HIGH)) {
                 result << reportSSLv3(content.results.target[i])
-            if (allowed(Finding.Severity.MEDIUM))
+            }
+            if (allowed(Finding.Severity.MEDIUM)) {
                 result << reportTLSv1(content.results.target[i])
-            if (allowed(Finding.Severity.INFO))
+            }
+            if (allowed(Finding.Severity.INFO)) {
                 result << reportTLSv1_1(content.results.target[i])
-            if (allowed(Finding.Severity.INFO))
+            }
+            if (allowed(Finding.Severity.INFO)) {
                 result << reportTLSv1_2(content.results.target[i])
-            if (allowed(Finding.Severity.INFO))
+            }
+            if (allowed(Finding.Severity.INFO)) {
                 reportOther(result, content.results.target[i])
+            }
         }
 
         return result

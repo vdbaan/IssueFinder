@@ -18,6 +18,20 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'distribution'
+apply plugin: 'codenarc'
+apply plugin: 'jacoco'
+apply plugin: 'net.saliman.cobertura'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        // The next repo is only needed while using SNAPSHOT versions
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:4.0.0"
+    }
+}
 
 def getVersionName = { ->
     try {
@@ -37,7 +51,7 @@ def getVersionName = { ->
         } else {
             // Adding the branch name to the version
             def ver = stdout.toString().trim()
-            return tag+'-' + ver.substring(ver.indexOf('/')+1)
+            return tag + '-' + ver.substring(ver.indexOf('/') + 1)
         }
     }
     catch (ignored) {
@@ -51,12 +65,15 @@ repositories {
     jcenter()
 }
 
-
+// compileGroovy.groovyOptions.keepStubs = true
+// compileGroovy.groovyOptions.listFiles = true
+// compileGroovy.groovyOptions.verbose = true
+// compileGroovy.groovyOptions.stubDir = file('build/generated/groovy')
 
 dependencies {
     compile 'org.antlr:antlr4-runtime:4.7'
 
-    compile 'org.codehaus.groovy:groovy-all:2.4.12'
+    compile 'org.codehaus.groovy:groovy-all:2.5.14' // was 2.4.12
 // perhaps as improvement?
 //    compileOnly 'org.controlsfx:controlsfx:8.40.13'
     compile 'org.apache.commons:commons-pool2:2.4.2'
@@ -96,4 +113,38 @@ jar {
 test {
     // Until generic (Metasploitable) test are uploaded
 //    exclude '**/*Test*'
+
+    jacoco {
+        // Exclude the interface package for reporting code coverage
+        excludes = ['**/*view*', '**/*presenter*', '**/*$*_closure*']
+
+    }
+}
+test.finalizedBy(project.tasks.jacocoTestReport)
+
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    // Exclude the interface package for reporting code coverage
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/*view**', '**/*presenter*', '**/*$*_closure*', '**/*Tmp*'])
+        }))
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+codenarc {
+    toolVersion = '2.0.0'
+    configFile = file("${rootProject.projectDir}/config/codenarc/rules.groovy")
+    reportFormat = 'html'
+    ignoreFailures = true
+}
+
+cobertura {
+    coverageFormats = ['html', 'xml']
 }

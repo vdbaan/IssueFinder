@@ -17,7 +17,7 @@
 
 package net.vdbaan.issuefinder.presenter
 
-import groovy.transform.CompileStatic
+
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.collections.transformation.SortedList
@@ -32,7 +32,6 @@ import net.vdbaan.issuefinder.model.Finding
 import net.vdbaan.issuefinder.view.EditorDialogView
 import net.vdbaan.issuefinder.view.FindingTabView
 
-@CompileStatic
 class FindingTabPresenter {
     FindingTabView view
     SortedList<Finding> sortedData
@@ -177,8 +176,10 @@ class FindingTabPresenter {
         data.each { final f ->
             final String port = f.port.split('/')[0]
             if (port.number && port != '0') {
-                if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
+                if (!f.ip.equalsIgnoreCase('none')) { // FIXME due to NetSparkerParser
+
                     ips[f.ip + ":" + port] = f.formatString(formatString as String)
+                }
             }
         }
         final Map<String, String> sorted = ips.sort({ final Map.Entry a, final Map.Entry b ->
@@ -213,10 +214,11 @@ class FindingTabPresenter {
                 row.getStyleClass().addAll(rowStyles)
                 if (item != null) {
                     setText(item.toString())
-                    if (Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean)
+                    if (Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean) {
                         row.getStyleClass().add(item.toString() + 'ROW')
-                    else
+                    } else {
                         getStyleClass().add(item.toString())
+                    }
                 }
             }
         }

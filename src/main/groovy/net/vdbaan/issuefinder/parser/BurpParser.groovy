@@ -35,8 +35,9 @@ class BurpParser extends Parser {
         final String version = content.@burpVersion
         if (version.compareTo("1.7.27") >= 0) {
             return parse1727()
-        } else
+        } else {
             return parseOther()
+        }
     }
 
     List<Finding> parseOther() {
@@ -79,7 +80,9 @@ class BurpParser extends Parser {
 
             final def service = url.protocol.toUpperCase()
             final def plugin = String.format("(%s) %s", issue.type, issue.name)
-            if (port == '-1') port = (service == 'HTTPS') ? '443' : '80'
+            if (port == '-1') {
+                port = (service == 'HTTPS') ? '443' : '80'
+            }
             final String location = String.format("%s%s", issue.host, issue.location)
             final String response = issue.requestresponse.response
             final String description = issue.issueBackground ?: ''

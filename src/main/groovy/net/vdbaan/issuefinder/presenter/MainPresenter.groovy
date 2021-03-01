@@ -98,10 +98,12 @@ class MainPresenter {
         view.mainFilter.converter = new StringConverter<String>() {
             @Override
             String toString(String object) {
-                if (object == BUILD_FILTER)
+                if (object == BUILD_FILTER) {
                     return ''
-                else
+                }
+                else {
                     return object
+                }
             }
 
             @Override
@@ -128,7 +130,7 @@ class MainPresenter {
 
     void newAction(final ActionEvent event) {
         db.deleteAll()
-        masterData.removeAll(masterData)
+        masterData.clear()
         view.selectSelectIssueTab()
         view.disableFindingsTab()
         view.statusLabel = ('Reset')
@@ -256,7 +258,7 @@ class MainPresenter {
             final Manifest manifest = new Manifest(inputStream)
 
             return manifest.mainAttributes.getValue('version') ?: 'DEVELOPMENT'
-        } catch (final Exception exception) {
+        } catch (final NullPointerException exception) {
             return "DEVELOPMENT"
         }
     }
@@ -272,15 +274,15 @@ class MainPresenter {
             try {
                 findingPredicate.value = findingPredicateParser.parse(value)
                 if (findingPredicate.value != null) {
-                    masterData.removeAll(masterData)
+                    masterData.clear()
                     masterData.addAll(db.getAllFinding(findingPredicate.value.toString()))
                     testSize()
                     final List<String> list = view.filterTextItems
                     if (!list.contains(value)) {
-                        final List templist = new ArrayList()
+                        List templist = new ArrayList()
                         templist.add(BUILD_FILTER)
                         templist.add(value)
-                        list.each { if (!templist.contains(it)) templist += it }
+                        list.each { if (!templist.contains(it)) { templist += it } }
 //                        templist.addAll(list)
                         view.filterTextItems = (templist)
                         view.mainFilter.selectionModel.select(value)
@@ -297,7 +299,7 @@ class MainPresenter {
                 view.filterTextStyleClass.add('text-input-wrong')
             }
         } else {
-            masterData.removeAll(masterData)
+            masterData.clear()
             masterData.addAll(db.getAllFinding(null))
         }
     }
@@ -337,7 +339,9 @@ class MainPresenter {
             progressController.fileList = (files)
 
             progressDialog.showAndWait()
-        } else log.info('No files to process')
+        } else {
+            log.info('No files to process')
+        }
     }
 
     void testSize() {
@@ -354,7 +358,7 @@ class MainPresenter {
 
     void loadAll() {
         log.fine('Loading All')
-        masterData.removeAll(masterData)
+        masterData.clear()
         masterData.addAll(db.getAllFinding(null))
         testSize()
         // trigger findings
@@ -403,8 +407,9 @@ class MainPresenter {
             // the values from this action
             predicateController.resetElements()
             predicateDialog.show()
-        } else
+        } else {
             doFilter(null)
+        }
     }
 
     void handleReturn(final ObservableValue observable, final Object oldValue, final Object newValue) {
@@ -412,8 +417,9 @@ class MainPresenter {
             // after list[0] has been changed, this will be triggered again, but then with the new value
             // we need to check if BUID_FILTER is still an option
             final List<String> list = view.filterTextItems
-            if (!list.contains(BUILD_FILTER))
+            if (!list.contains(BUILD_FILTER)) {
                 list.add(0, BUILD_FILTER)
+            }
         }
         if (newValue == BUILD_FILTER) {
 
@@ -468,9 +474,10 @@ class MainPresenter {
     List<String> buildItems(List<String> items, String value = '') {
         List<String> result = new ArrayList<>()
         result += BUILD_FILTER
-        if (value != '' && !items.contains(value))
+        if (value != '' && !items.contains(value)) {
             result.add(value)
-        items.each { if (it != BUILD_FILTER) result += it }
+        }
+        items.each { if (it != BUILD_FILTER) { result += it }}
         return result
     }
 }

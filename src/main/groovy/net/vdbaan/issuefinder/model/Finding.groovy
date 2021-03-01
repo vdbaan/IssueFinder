@@ -123,7 +123,4 @@ cvss: ${baseCVSS}
         )
     }
 
-    String toIvil() {
-
-    }
 }

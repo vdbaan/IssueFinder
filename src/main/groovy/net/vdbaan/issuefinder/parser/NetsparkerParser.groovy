@@ -68,7 +68,7 @@ class NetsparkerParser extends Parser {
     }
 
     private Finding.Severity calcSeverity(final String risk) {
-        final Finding.Severity result
+        Finding.Severity result
         try {
             result = Finding.Severity.valueOf(Finding.Severity, risk.toUpperCase())
         } catch (final IllegalArgumentException e) {

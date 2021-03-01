@@ -49,12 +49,15 @@ class NMapParser extends Parser {
             }
             hostName = hostName ?: hostIp
             String protocol = content.scaninfo.@protocol
-            if (allowed(Finding.Severity.INFO))
+            if (allowed(Finding.Severity.INFO)) {
                 result += scanInfo(content, hostIp, hostName, protocol)
-            if (allowed(Finding.Severity.INFO))
+            }
+            if (allowed(Finding.Severity.INFO)) {
                 result += runStats(content, hostIp, hostName, protocol)
-            if (allowed(Finding.Severity.INFO))
+            }
+            if (allowed(Finding.Severity.INFO)) {
                 result += summary(content, hostIp, hostName, protocol)
+            }
             if (host.ports?.extraports?.@state == 'closed') {
                 final String summary = "Amount of closed ports: " + host.ports.extraports.@count
 
@@ -67,7 +70,9 @@ class NMapParser extends Parser {
                 final String state = port.state.@state
                 final String service = port.service.@name
                 String product = port.service.@product
-                if (product != "") product = ' (' + product + ')'
+                if (product != "") {
+                    product = ' (' + product + ')'
+                }
                 String summary = ""
 
                 port.script.each { final script ->
@@ -79,10 +84,11 @@ class NMapParser extends Parser {
                     summary += script
                     summary += '\n\n'
                 }
-                if (allowed(Finding.Severity.INFO))
+                if (allowed(Finding.Severity.INFO)) {
                     result << new Finding([scanner : scanner, ip: hostIp, port: portnr, portStatus: state, protocol: protocol, hostName: hostName,
                                            service : service + product, plugin: "NMap port (" + portnr + ") information",
                                            severity: (state == 'closed') ? Finding.Severity.LOW : Finding.Severity.INFO, summary: summary])
+                }
             }
         }
         return result

@@ -87,18 +87,42 @@ class PredicateDialogController implements PredicateDialogView {
     @Override
     String buildPredicate() {
         List<String> result = new ArrayList<>()
-        if (scanner.text != '') result.add(String.format("SCANNER == '%s'", scanner.text))
-        if (service.text != '') result.add(String.format("SERVICE == '%s'", service.text))
-        if (hostname.text != '') result.add(String.format("HOSTNAME == '%s'", hostname.text))
-        if (ip.text != '') result.add(String.format("IP == '%s'", ip.text))
-        if (port.text != '') result.add(String.format("PORT == '%s'", port.text))
-        if (status.text != '') result.add(String.format("STATUS == '%s'", status.text))
-        if (description.text != '') result.add(String.format("DESCRIPTION == '%s'", description.text))
-        if (plugin.text != '') result.add(String.format("PLUGIN == '%s'", plugin.text))
-        if (cvss.text != '') result.add(String.format("CVSS == '%s'", cvss.text))
-        if (protocol.text != '') result.add(String.format("PROTOCOL == '%s'", protocol.text))
-        if (exploitabe.selected) result.add('EXPLOITABLE')
-        if (risk.value != null) result.add(String.format("RISK == '%s'", risk.value))
+        if (scanner.text != '') {
+            result.add(String.format("SCANNER == '%s'", scanner.text))
+        }
+        if (service.text != '') {
+            result.add(String.format("SERVICE == '%s'", service.text))
+        }
+        if (hostname.text != '') {
+            result.add(String.format("HOSTNAME == '%s'", hostname.text))
+        }
+        if (ip.text != '') {
+            result.add(String.format("IP == '%s'", ip.text))
+        }
+        if (port.text != '') {
+            result.add(String.format("PORT == '%s'", port.text))
+        }
+        if (status.text != '') {
+            result.add(String.format("STATUS == '%s'", status.text))
+        }
+        if (description.text != '') {
+            result.add(String.format("DESCRIPTION == '%s'", description.text))
+        }
+        if (plugin.text != '') {
+            result.add(String.format("PLUGIN == '%s'", plugin.text))
+        }
+        if (cvss.text != '') {
+            result.add(String.format("CVSS == '%s'", cvss.text))
+        }
+        if (protocol.text != '') {
+            result.add(String.format("PROTOCOL == '%s'", protocol.text))
+        }
+        if (exploitabe.selected) {
+            result.add('EXPLOITABLE')
+        }
+        if (risk.value != null) {
+            result.add(String.format("RISK == '%s'", risk.value))
+        }
         if (result.size() > 1) {
             StringBuffer sb = new StringBuffer()
             sb.append('(')

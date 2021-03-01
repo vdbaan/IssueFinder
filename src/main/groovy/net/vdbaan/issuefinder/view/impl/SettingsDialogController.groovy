@@ -77,8 +77,9 @@ class SettingsDialogController implements SettingsDialogView {
 
     @FXML
     void addFilter(final ActionEvent event) {
-        if (filterText.text != '')
+        if (filterText.text != '') {
             filterList.items.add(filterText.text)
+        }
     }
 
     @FXML

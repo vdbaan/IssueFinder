@@ -25,13 +25,19 @@ class Wrapper {
     SimpleStringProperty value
 
     def setKey(final String key) {
-        if (this.key == null) this.key = new SimpleStringProperty(key)
-        else this.key.set(key)
+        if (this.key == null) {
+            this.key = new SimpleStringProperty(key)
+        } else {
+            this.key.set(key)
+        }
     }
 
     def setValue(final String value) {
-        if (this.value == null) this.value = new SimpleStringProperty(value)
-        else this.value.set(value)
+        if (this.value == null) {
+            this.value = new SimpleStringProperty(value)
+        } else {
+            this.value.set(value)
+        }
     }
 
     String getKey() {

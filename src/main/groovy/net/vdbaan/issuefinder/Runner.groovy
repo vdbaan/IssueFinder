@@ -25,37 +25,40 @@ import java.util.logging.Logger
 
 @CompileStatic
 class Runner {
-    private final static Logger logger = Logger.getLogger(Runner.class.getCanonicalName())
+
+    private final static Logger logger = Logger.getLogger(Runner.canonicalName)
 
     static void main(final String... args) {
         IssueLogger.setup(args)
         logger.info('starting')
-        final Map<String, String> sortedMap = new TreeMap(System.getProperties())
+        final Map<String, String> sortedMap = new TreeMap(System.properties)
         for (final String key : sortedMap.keySet()) {
-            logger.info(key + "=" + sortedMap[key])
+            logger.info(key + '=' + sortedMap[key])
         }
         // Show OS, JAVA_HOME, java impl and version ( for debugging
         testJavaFX()
-        Config.getInstance().attachShutDownHook()
+        Config.instance.attachShutDownHook()
         if (!args.contains('--reset-config')) {
             logger.info('Resetting the config')
-            Config.getInstance().loadConfig()
+            Config.instance.loadConfig()
         }
-        Config.getInstance().checkDataDirectory()
+        Config.instance.checkDataDirectory()
         Main2.startup(args)
     }
 
+    @SuppressWarnings('ClassForName') // Is used to test is javafx is used
     static void testJavaFX() {
         logger.info('testing availability of JavaFX')
         try {
             Class.forName('javafx.stage.Stage')
             Class.forName('javafx.scene.control.Alert')
         } catch (final ClassNotFoundException e) {
-            logger.severe 'JavaFX8 Missing'
-            logger.severe 'Please install JavaFX, for example:'
-            logger.severe '- sudo apt-get install openjfx'
+            logger.severe('JavaFX8 Missing')
+            logger.severe('Please install JavaFX, for example:')
+            logger.severe('- sudo apt-get install openjfx')
             logger.log(Level.FINE, 'Got exception', e)
             System.exit(1)
         }
     }
+
 }

@@ -52,7 +52,9 @@ class NessusParser extends Parser {
                 String risk = item.@severity
 
                 String cvssval = item.cvss_base_score ?: '0.0'
-                if (cvssval == '') cvssval = '0.0'
+                if (cvssval == '') {
+                    cvssval = '0.0'
+                }
                 BigDecimal cvss = new BigDecimal(cvssval)
                 Finding.Severity severity = Finding.Severity.UNKNOWN
                 switch (risk.toInteger()) {
@@ -79,12 +81,13 @@ class NessusParser extends Parser {
                 references << "BID references  : ${(item.bid.collect { it }).join(", ")}\n"
                 references << "Other references: ${(item.xref.collect { it }).join(", ")}\n"
 
-                if (allowed(severity))
+                if (allowed(severity)) {
                     result << new Finding([scanner     : scanner, ip: hostIp, port: portnr, portStatus: 'open', protocol: protocol, hostName: hostName,
                                            service     : service, plugin: plugin + ":" + pluginName,
                                            exploitable : item.exploit_available == 'true', baseCVSS: cvss, cvssVector: cvssVector,
                                            severity    : severity, summary: buildSummary(item), description: description, reference: references,
                                            pluginOutput: pluginOutput, solution: solution])
+                }
             }
         }
         log.info(String.format("Returning %d issues", result.size()))

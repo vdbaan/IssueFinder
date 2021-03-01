@@ -45,10 +45,13 @@ class BurpStateParser extends Parser {
                     result << process(tmp.newBuffer(start, end))
 
                     tmp.delete(0, end)
-                } else search = false
+                } else {
+                    search = false
+                }
             }
-            if (i < 0)
+            if (i < 0) {
                 break
+            }
 
         }
         is.close()
@@ -70,7 +73,9 @@ class BurpStateParser extends Parser {
             int valpos = input.indexOf('<value>')
             if (valpos == 0) {
                 byte[] v = getBytes(input, '<value>', '</value>')
-                for (int i = 0; i < 5; i++) v[i] = 0
+                for (int i = 0; i < 5; i++) {
+                    v[i] = 0
+                }
                 String val = new String(v).trim()
                 kv.put(key, val)
                 input.delete(0, input.indexOf('</value>') + 8)
@@ -200,7 +205,9 @@ class BurpByteBuffer {
                     break
                 }
             }
-            if (found) return i
+            if (found) {
+                return i
+            }
         }
         return -1
     }

@@ -37,8 +37,9 @@ class NiktoParser extends Parser {
         final String ip = content.scandetails.@targetip
         final String hostName = content.scandetails.@targethostname
         final String port = content.scandetails.@targetport
-        if (allowed(Finding.Severity.INFO))
+        if (allowed(Finding.Severity.INFO)) {
             result += scanInfo(content, ip, hostName, port)
+        }
 
         content.scandetails.item.each { final item ->
             final String desc = item.description.toString()
@@ -48,9 +49,10 @@ class NiktoParser extends Parser {
             summary += "\nOSVDB-" + item.@osvdbid
             summary += "\nURI: " + item.uri
 
-            if (allowed(Finding.Severity.INFO))
+            if (allowed(Finding.Severity.INFO)) {
                 result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', service: "web", plugin: plugin, hostName: hostName,
                                        severity: Finding.Severity.INFO, summary: summary])
+            }
         }
         return result
     }

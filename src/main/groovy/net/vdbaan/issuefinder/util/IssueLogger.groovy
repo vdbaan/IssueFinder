@@ -16,7 +16,6 @@
  */
 package net.vdbaan.issuefinder.util
 
-
 import java.util.logging.*
 
 import static java.lang.Thread.currentThread
@@ -36,8 +35,9 @@ class IssueLogger {
         rootLogger.addHandler(consoleHandler)
         if (args.contains('--debug')) {
             rootLogger.level = Level.FINER
-        } else
+        } else {
             rootLogger.level = Level.INFO
+        }
     }
 }
 
@@ -70,14 +70,17 @@ class IssueFormatter extends SimpleFormatter {
     String getSource() {
         final def st = currentThread().stackTrace
         int pos = 0
-        while (!st[pos].declaringClass.equals('java.util.logging.Logger') && !st[pos].methodName.equals('doLog'))
+        while (!st[pos].declaringClass.equals('java.util.logging.Logger') && !st[pos].methodName.equals('doLog')) {
             pos += 1
+        }
         pos += 4
-        if (!st[pos].declaringClass.startsWith('java_util_logging_Logger$'))
+        if (!st[pos].declaringClass.startsWith('java_util_logging_Logger$')) {
             return String.format("%s:%d", st[pos].methodName, st[pos].lineNumber)
+        }
         pos += 1
-        while (!st[pos].declaringClass.equals('org.codehaus.groovy.runtime.callsite.AbstractCallSite') && !st[pos].methodName.equals('call') && st[pos].lineNumber != 125)
+        while (!st[pos].declaringClass.equals('org.codehaus.groovy.runtime.callsite.AbstractCallSite') && !st[pos].methodName.equals('call') && st[pos].lineNumber != 125) {
             pos += 1
+        }
         pos += 2
         return String.format("%s:%d", st[pos].methodName, st[pos].lineNumber)
     }

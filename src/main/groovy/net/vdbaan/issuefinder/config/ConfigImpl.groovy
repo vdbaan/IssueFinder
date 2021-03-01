@@ -23,6 +23,7 @@ import net.vdbaan.issuefinder.model.Finding
 import java.util.jar.Attributes
 import java.util.jar.Manifest
 
+@CompileStatic
 abstract class Config {
 
     static private Config configInstance = null
@@ -32,15 +33,16 @@ abstract class Config {
     final static String PRELOAD_FILTER = 'preloadFilter'
     final static String BATCH_SIZE = 'batchSize'
     final static String IP_PORT_FORMAT_STRING = 'ipPortFormatString'
-    static String CONFIGFILE_NAME = "issueFinder-VERSION.config"
+    static String CONFIGFILE_NAME = 'issueFinder-VERSION.config'
     final static String DATA_SOURCE = 'datasource'
     final static String DB_NAME = 'databaseName'
     final static String DATA_DIR = 'dataDirectory'
     final static String COLOURED_ROWS = 'colouredRows'
     static final String ISSUE_LIST = 'issueList'
 
-    static Config getInstance() {
+    final static String user_home = System.getProperty('user.home')
 
+    static Config getInstance() {
         if (configInstance == null) {
             configInstance = new ConfigImpl()
         }
@@ -68,8 +70,8 @@ abstract class Config {
     abstract String getUserDataDirectory()
 
     abstract void checkDataDirectory()
-}
 
+}
 
 @Log
 @CompileStatic
@@ -81,13 +83,13 @@ class ConfigImpl extends Config {
     ConfigImpl() {
         CONFIGFILE_NAME = CONFIGFILE_NAME.replace('VERSION', applicationVersionString)
         configObject[MAX_ROWS] = 5000
-        configObject[FILTERS] = ['IP == "127.0.0.1"', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE']
+        configObject[FILTERS] = ['IP == \'127.0.0.1\'', 'SCANNER == \'nmap\'', 'SERVICE LIKE \'http\'', 'PORT LIKE 443', '!EXPLOITABLE', '(SERVICE LIKE \'SMB\') && EXPLOITABLE']
         configObject.put(PRELOAD_FILTER, [(Finding.Severity.CRITICAL): true, (Finding.Severity.HIGH): true,
-                                          (Finding.Severity.MEDIUM)  : true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true])
+                                          (Finding.Severity.MEDIUM): true, (Finding.Severity.LOW): true, (Finding.Severity.INFO): true,])
         configObject[BATCH_SIZE] = 100
         configObject[IP_PORT_FORMAT_STRING] = '$ip:$port'
         configObject[COLOURED_ROWS] = true
-        configObject[DATA_DIR] = System.getProperty("user.home") + '/.issuefinder/data/'
+        configObject[DATA_DIR] = user_home + '/.issuefinder/data/'
         configObject[DB_NAME] = 'issueDB'
 
         configObject.put(DATA_SOURCE, [database: 'jdbc:h2:' + configObject.get(DATA_DIR) + configObject.get(DB_NAME), user: 'sa', password: ''])
@@ -115,10 +117,12 @@ class ConfigImpl extends Config {
     @Override
     void attachShutDownHook() {
         Runtime.runtime.addShutdownHook(new Thread() {
+
             @Override
             void run() {
                 instance.saveConfig()
             }
+
         })
     }
 
@@ -162,18 +166,17 @@ class ConfigImpl extends Config {
         }
         final Map<String, Boolean> preload_filter = (Map) instance.getProperty(PRELOAD_FILTER)
         final Map<Finding.Severity, Boolean> parsed = new HashMap<>()
-        parsed[Finding.Severity.CRITICAL] = preload_filter[Finding.Severity.CRITICAL.toString()]
-        parsed[Finding.Severity.HIGH] = preload_filter[Finding.Severity.HIGH.toString()]
-        parsed[Finding.Severity.MEDIUM] = preload_filter[Finding.Severity.MEDIUM.toString()]
-        parsed[Finding.Severity.LOW] = preload_filter[Finding.Severity.LOW.toString()]
-        parsed[Finding.Severity.INFO] = preload_filter[Finding.Severity.INFO.toString()]
+        parsed[Finding.Severity.CRITICAL] = preload_filter[Finding.Severity.CRITICAL.toString()] as Boolean
+        parsed[Finding.Severity.HIGH] = preload_filter[Finding.Severity.HIGH.toString()] as Boolean
+        parsed[Finding.Severity.MEDIUM] = preload_filter[Finding.Severity.MEDIUM.toString()] as Boolean
+        parsed[Finding.Severity.LOW] = preload_filter[Finding.Severity.LOW.toString()] as Boolean
+        parsed[Finding.Severity.INFO] = preload_filter[Finding.Severity.INFO.toString()] as Boolean
         configObject.put(PRELOAD_FILTER, parsed)
     }
 
-
     String getApplicationVersionString() {
         final Manifest manifest = new Manifest()
-        manifest.read(Thread.currentThread().contextClassLoader.getResourceAsStream("META-INF/MANIFEST.MF"))
+        manifest.read(Thread.currentThread().contextClassLoader.getResourceAsStream('META-INF/MANIFEST.MF'))
         final Attributes attributes = manifest.mainAttributes
         configVersion = attributes['Version'] ?: 'DEVELOPMENT'
         log.fine('Version: ' + configVersion)
@@ -181,7 +184,7 @@ class ConfigImpl extends Config {
     }
 
     String getUserDataDirectory() {
-        return System.getProperty("user.home") + File.separator + ".issuefinder" + File.separator + 'config' + File.separator
+        return  user_home + File.separator + '.issuefinder' + File.separator + 'config' + File.separator
     }
 
     @Override
@@ -192,4 +195,5 @@ class ConfigImpl extends Config {
             directory.mkdirs()
         }
     }
+
 }

@@ -22,7 +22,10 @@ import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
-import javafx.scene.control.*
+import javafx.scene.control.ButtonType
+import javafx.scene.control.Dialog
+import javafx.scene.control.DialogPane
+import javafx.scene.control.ListView
 import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Issue
 
@@ -39,7 +42,7 @@ class IssueEditorDialogController {
         buildDialog()
         issueDialog.resultConverter = { final buttonType ->
             if (buttonType == ButtonType.APPLY) {
-
+                // W.I.P.
             }
         }
         controller.setIssue()
@@ -58,7 +61,7 @@ class IssueEditorDialogController {
         buildDialog()
         issueDialog.resultConverter = { final buttonType ->
             if (buttonType == ButtonType.APPLY) {
-
+                // W.I.P.
             }
         }
         controller.setIssue(issueList.selectionModel.selectedItem)

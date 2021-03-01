@@ -20,5 +20,6 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 interface DbListener {
+    
     void dbUpdated()
 }

@@ -58,8 +58,8 @@ class FindingPredicateParser {
             return fp
         } catch (final FindingPredicateParserRuntimeException r) {
             log.log(Level.FINE, 'Got an exception', r)
-            return null
         }
+        return null
     }
 }
 
@@ -116,8 +116,9 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
     Object visitOperator(final PredicateParser.OperatorContext ctx) {
         if (ctx.childCount == 2) {
             return FindingPredicate.LogicalOperation.NLIKE
-        } else
+        } else {
             return FindingPredicate.LogicalOperation.get(ctx.text.toUpperCase())
+        }
     }
 
     @Override
@@ -131,7 +132,9 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
     }
 
     protected Object aggregateResult(final Object aggregate, final Object nextResult) {
-        if (nextResult == null) return aggregate
+        if (nextResult == null) {
+            return aggregate
+        }
         return super.aggregateResult(aggregate, nextResult)
     }
 
@@ -139,7 +142,9 @@ class FindingPredicateVisitor extends PredicateBaseVisitor {
         if (text.startsWith('"') || text.startsWith("'")) {
             final def len = text.length()
             return text.substring(1, len - 1)
-        } else return text
+        } else {
+            return text
+        }
     }
 
     private List buildList(final String list) {

@@ -27,6 +27,7 @@ import org.apache.commons.pool2.PooledObject
 import org.apache.commons.pool2.impl.DefaultPooledObject
 import org.apache.commons.pool2.impl.GenericObjectPool
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig
+import org.xml.sax.SAXException
 
 import javax.xml.parsers.SAXParserFactory
 
@@ -51,8 +52,12 @@ abstract class Parser {
         try {
             return getParser(file.getText())
         } catch (final Exception e) {
-            if (BurpStateParser.identify(file)) return new BurpStateParser(file)
-            else return null
+            if (BurpStateParser.identify(file)) {
+                return new BurpStateParser(file)
+            }
+            else {
+                return null
+            }
         }
     }
 
@@ -63,24 +68,48 @@ abstract class Parser {
             final def content = new XmlSlurper(parser).parseText(text)
 
             parserPool.returnObject(parser)
-            if (NessusParser.identify(content)) return new NessusParser(content)
-            if (NMapParser.identify(content)) return new NMapParser(content)
-            if (NetsparkerParser.identify(content)) return new NetsparkerParser(content)
-            if (NiktoParser.identify(content)) return new NiktoParser(content)
-            if (ArachniParser.identify(content)) return new ArachniParser(content)
-            if (BurpParser.identify(content)) return new BurpParser(content)
-            if (SSLyzeParser.identify(content)) return new SSLyzeParser(content)
-            if (ZAPParser.identify(content)) return new ZAPParser(content)
-            if (OpenVASParser.identify(content)) return new OpenVASParser(content)
-            if (NexposeParser.identify(content)) return new NexposeParser(content)
-            if (QualysParser.identify(content)) return new QualysParser(content)
+            if (NessusParser.identify(content)) {
+                return new NessusParser(content)
+            }
+            if (NMapParser.identify(content)) {
+                return new NMapParser(content)
+            }
+            if (NetsparkerParser.identify(content)) {
+                return new NetsparkerParser(content)
+            }
+            if (NiktoParser.identify(content)) {
+                return new NiktoParser(content)
+            }
+            if (ArachniParser.identify(content)) {
+                return new ArachniParser(content)
+            }
+            if (BurpParser.identify(content)) {
+                return new BurpParser(content)
+            }
+            if (SSLyzeParser.identify(content)) {
+                return new SSLyzeParser(content)
+            }
+            if (ZAPParser.identify(content)) {
+                return new ZAPParser(content)
+            }
+            if (OpenVASParser.identify(content)) {
+                return new OpenVASParser(content)
+            }
+            if (NexposeParser.identify(content)) {
+                return new NexposeParser(content)
+            }
+            if (QualysParser.identify(content)) {
+                return new QualysParser(content)
+            }
 
-        } catch (final Exception e) {
+        } catch (final IOException |  SAXException e) {
             log.warning e.getMessage()
             try {
                 final def json = jsonSlurper.parseText(text)
-                if (TestSSLParser.identify(json)) return new TestSSLParser(json)
-            } catch (final Exception e2) {
+                if (TestSSLParser.identify(json)) {
+                    return new TestSSLParser(json)
+                }
+            } catch (final IllegalArgumentException e2) {
                 log.warning e2.getMessage()
                 throw e2
             }
@@ -91,7 +120,7 @@ abstract class Parser {
 
     abstract List<Finding> parse()
 
-    static boolean identify(final content) { throw RuntimeException('Need to implement this') }
+    static boolean identify(final content) { throw new RuntimeException('Need to implement this') }
 
     static Map preload = (Map) Config.getInstance().getProperty(Config.PRELOAD_FILTER)
 
@@ -101,7 +130,7 @@ abstract class Parser {
 }
 
 class XmlParserPoolableObjectFactory extends BasePooledObjectFactory {
-    private SAXParserFactory parserFactory
+    final private SAXParserFactory parserFactory
 
     XmlParserPoolableObjectFactory() {
         parserFactory = SAXParserFactory.newInstance()

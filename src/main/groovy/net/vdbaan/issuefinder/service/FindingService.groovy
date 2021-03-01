@@ -39,7 +39,8 @@ class FindingService extends Service<List<Finding>> {
                 try {
                     Parser p = Parser.getParser(file)
                     answer.addAll(p.parse())
-                } finally {
+                    return answer
+                } catch (Exception e) {
                     return answer
                 }
             }

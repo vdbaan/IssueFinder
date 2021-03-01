@@ -16,7 +16,7 @@
  */
 package net.vdbaan.issuefinder.util
 
-import groovy.transform.CompileStatic
+
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableRow
@@ -24,7 +24,7 @@ import javafx.util.Callback
 import net.vdbaan.issuefinder.config.Config
 import net.vdbaan.issuefinder.model.Finding
 
-@CompileStatic
+// @CompileStatic
 class FormattedTableCellFactory<S, T> implements Callback<TableColumn<Finding, Finding.Severity>, TableCell<Finding, Finding.Severity>> {
     @Override
     TableCell<S, T> call(final TableColumn<Finding, Finding.Severity> param) {
@@ -43,10 +43,12 @@ class FormattedTableCellFactory<S, T> implements Callback<TableColumn<Finding, F
                 row.getStyleClass().addAll(rowStyles)
                 if (item != null) {
                     setText(item.toString())
-                    if (Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean)
+                    if (Config.getInstance().getProperty(Config.COLOURED_ROWS) as boolean) {
                         row.getStyleClass().add(item.toString() + 'ROW')
-                    else
+                    }
+                    else {
                         getStyleClass().add(item.toString())
+                    }
                 }
             }
         }

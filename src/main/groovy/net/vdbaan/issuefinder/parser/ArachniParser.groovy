@@ -31,7 +31,7 @@ class ArachniParser extends Parser {
 
     static boolean identify(final GPathResult contents) {
         boolean hasIssues = false
-        contents.'**'.each { if ('issues'.equals(it.name())) hasIssues = true }
+        contents.'**'.each { if ('issues'.equals(it.name())) { hasIssues = true } }
         return IDENTIFIER.equalsIgnoreCase(contents.name()) && hasIssues
     }
 
@@ -49,10 +49,11 @@ class ArachniParser extends Parser {
             // scanner, ip, port, service, plugin, severity, summary
             final def ip = issue.referring_page.response.ip_address
             final Finding.Severity severity = calc(issue.severity)
-            if (allowed(severity))
+            if (allowed(severity)) {
                 result << new Finding([scanner : scanner, ip: ip, port: port, portStatus: 'open', protocol: 'tcp', hostName: hostname,
                                        service : service, plugin: issue.check.name + " v" + issue.check.version,
                                        severity: severity, summary: buildSummary(issue)])
+            }
         }
         return result
     }
@@ -72,8 +73,9 @@ class ArachniParser extends Parser {
         String summary = "Name: " + issue.name
         summary += "\nDescription:\n " + issue.description
         summary += "\nRemedy:\n" + issue.remedy_guidance
-        if (issue.cwe)
+        if (issue.cwe) {
             summary += "\ncwe: " + issue.cwe
+        }
         summary += "\nReferences:"
         issue?.references?.reference?.each { final ref ->
             summary += "- " + ref.url

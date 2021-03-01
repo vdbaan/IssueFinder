@@ -17,7 +17,7 @@
 
 package net.vdbaan.issuefinder.presenter
 
-import groovy.transform.CompileStatic
+
 import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
@@ -33,7 +33,7 @@ import net.vdbaan.issuefinder.model.FindingIdentifier
 import net.vdbaan.issuefinder.model.Issue
 import net.vdbaan.issuefinder.view.IssueTabView
 
-@CompileStatic
+// @CompileStatic
 class IssueTabPresenter {
 
     IssueTabView view
@@ -66,10 +66,12 @@ class IssueTabPresenter {
                         text = item.toString()
                         if (f != null) {
                             final Finding.Severity sev = f.severity
-                            if (Config.instance.getProperty(Config.COLOURED_ROWS) as boolean)
+                            if (Config.instance.getProperty(Config.COLOURED_ROWS) as boolean) {
                                 row.styleClass.add(sev.toString() + 'ROW')
-                            else
+                            }
+                            else {
                                 styleClass.add(sev.toString())
+                            }
                         }
                     }
                 }
@@ -160,11 +162,15 @@ class IssueTabPresenter {
         Map<String, LocEntry> mapping = new HashMap()
         List<String> issues = new ArrayList()
         view.selectedFindingsList.each {
-            if (!issues.contains(it.plugin)) issues.add(it.plugin)
+            if (!issues.contains(it.plugin)) {
+                issues.add(it.plugin)
+            }
             masterData.findAll { final finding -> finding.plugin == it.plugin }.each { final result ->
                 String location = String.format("%s:%s", result.ip, result.port)
                 LocEntry entry = mapping.get(location)
-                if (entry == null) entry = new LocEntry(ip: result.ip, location: result.hostName, port: result.port)
+                if (entry == null) {
+                    entry = new LocEntry(ip: result.ip, location: result.hostName, port: result.port)
+                }
                 entry.addIssue(it.plugin)
                 mapping.put(location, entry)
             }
@@ -243,8 +249,9 @@ class IssueTabPresenter {
         data.each { final f ->
             final String port = f.port.split('/')[0]
             if (port.number && port != '0') {
-                if (!f.ip.equalsIgnoreCase('none')) // FIXME due to NetSparkerParser
+                if (!f.ip.equalsIgnoreCase('none')) {// FIXME due to NetSparkerParser
                     ips[f.ip + ":" + port] = f.formatString(formatString as String)
+                }
             }
         }
         final Map<String, String> sorted = ips.sort({ final Map.Entry a, final Map.Entry b ->

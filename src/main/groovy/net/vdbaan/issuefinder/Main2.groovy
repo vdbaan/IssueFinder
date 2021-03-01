@@ -14,9 +14,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package net.vdbaan.issuefinder
 
+import groovy.transform.CompileStatic
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.fxml.FXMLLoader
@@ -25,37 +25,41 @@ import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 
+@CompileStatic
 class Main2 extends Application {
 
+    @SuppressWarnings('PrivateFieldCouldBeFinal')
     private static Main2 instance
 
     Main2() {
         instance = this
     }
 
+    @SuppressWarnings('UnusedMethodParameter') // Is used by the Application
     static void startup(String[] args) {
-        Application.launch(Main2.class)
+        Application.launch(Main2)
     }
 
     synchronized static Main2 getInstance() {
         if (!instance) {
             Thread.start {
-                Application.launch(Main2.class)
+                Application.launch(Main2)
             }
-            while (!instance)
+            while (!instance) {
                 Thread.sleep(100)
+            }
         }
         return instance
     }
 
     @Override
     void start(final Stage primaryStage) throws Exception {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/main.fxml"))
+        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource('/main.fxml'))
         final Scene mainScene = new Scene(fxmlLoader.load() as Parent)
-        primaryStage.title = "Issue Finder"
+        primaryStage.title = 'Issue Finder'
         primaryStage.maximized = true
         primaryStage.scene = mainScene
-        primaryStage.icons.add(new Image(getClass().getResourceAsStream("/539822430.jpg")))
+        primaryStage.icons.add(new Image(getClass().getResourceAsStream('/539822430.jpg')))
         primaryStage.onHidden = { final exit -> Platform.exit() }
         primaryStage.show()
     }

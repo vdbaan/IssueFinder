@@ -20,8 +20,6 @@ package net.vdbaan.issuefinder.parser
 import groovy.util.logging.Log
 import net.vdbaan.issuefinder.model.Finding
 
-import java.util.logging.Level
-
 @Log
 class TestSSLParser extends Parser {
     static String scanner = "TestSSL"
@@ -31,20 +29,21 @@ class TestSSLParser extends Parser {
     }
 
     static boolean identify(final contents) {
-        try {
+//        try {
             if (contents instanceof List) {
-                if (contents[0] instanceof Map) {
+                if (contents.size() > 0 && contents[0] instanceof Map) {
                     final Map m = contents[0]
                     if (m.size() == 5 && m.containsKey('finding') && m.containsKey('ip')
-                            && m.containsKey('port') && m.containsKey('severity') && m.containsKey('finding'))
+                            && m.containsKey('port') && m.containsKey('severity') && m.containsKey('finding')) {
                         return true
+                    }
                 }
             }
             return false
-        } catch (final Exception e) {
-            log.log(Level.FINE, 'Got an exception', e)
-            return false
-        }
+//        } catch (final Exception e) {
+//            log.log(Level.FINE, 'Got an exception', e)
+//            return false
+//        }
     }
 
     @Override
@@ -52,25 +51,36 @@ class TestSSLParser extends Parser {
         final List<Finding> result = new ArrayList<>()
         boolean doClients = false, doCiphers = false, doOrder = false
         content.each { final issue ->
-            if (issue.id.startsWith('order')) doOrder = true
-            if (issue.id.startsWith('client_')) doClients = true
-            if (issue.id.startsWith('cipher_')) doCiphers = true
+            if (issue.id.startsWith('order')) {
+                doOrder = true
+            }
+            if (issue.id.startsWith('client_')) {
+                doClients = true
+            }
+            if (issue.id.startsWith('cipher_')) {
+                doCiphers = true
+            }
         }
-        if (doClients && allowed(Finding.Severity.INFO))
+        if (doClients && allowed(Finding.Severity.INFO)) {
             result.add(buildClients())
-        if (doCiphers && allowed(Finding.Severity.INFO))
+        }
+        if (doCiphers && allowed(Finding.Severity.INFO)) {
             result.add(buildCiphers())
-        if (doOrder && allowed(Finding.Severity.INFO))
+        }
+        if (doOrder && allowed(Finding.Severity.INFO)) {
             result.add(order())
+        }
         content.each { final issue ->
             String ip, hostName
             (hostName, ip) = issue.ip.split('/')
             if (!issue.id.startsWith('order') && !issue.id.startsWith('client_') && !issue.id.startsWith('cipher_')) {
-                if (allowed(calcRisk(issue.severity)))
+                if (allowed(calcRisk(issue.severity))) {
 //                    result << new Finding([scanner : scanner, ip: ip, hostName: hostName, port: issue.port, portStatus: 'open', protocol: 'tcp', service: "none", plugin: issue.id,
 //                                           severity: calcRisk(issue.severity), summary: issue.finding])
+
                     result << new Finding([scanner : scanner, ip: ip, hostName: hostName, port: issue.port, portStatus: 'open', protocol: 'tcp', service: "none", plugin: issue.finding,
                                            severity: calcRisk(issue.severity), summary: issue.id])
+                }
             }
         }
         return result
