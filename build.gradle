@@ -20,16 +20,12 @@ apply plugin: 'groovy'
 apply plugin: 'distribution'
 apply plugin: 'codenarc'
 apply plugin: 'jacoco'
-apply plugin: 'net.saliman.cobertura'
 
 buildscript {
     repositories {
         mavenCentral()
         // The next repo is only needed while using SNAPSHOT versions
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    }
-    dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:4.0.0"
     }
 }
 
@@ -143,8 +139,4 @@ codenarc {
     configFile = file("${rootProject.projectDir}/config/codenarc/rules.groovy")
     reportFormat = 'html'
     ignoreFailures = true
-}
-
-cobertura {
-    coverageFormats = ['html', 'xml']
 }

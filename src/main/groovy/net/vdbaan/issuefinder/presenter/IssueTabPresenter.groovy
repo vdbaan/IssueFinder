@@ -86,6 +86,7 @@ class IssueTabPresenter {
 
     void dataListener(final ListChangeListener.Change<? extends Finding> c) {
         final HashMap<String, Finding> uniques = new HashMap<>()
+        // TODO: This is where the prepared issue list should be included
         List<Issue> savedIssues = (Config.instance.getProperty(Config.ISSUE_LIST) as List) ?: new ArrayList<Issue>()
         masterData.each { final finding ->
             Issue issue = savedIssues.find { it.checkFinding(finding) }
