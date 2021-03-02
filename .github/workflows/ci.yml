@@ -26,6 +26,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Check Gradle version
+      run: gradle -v
     - name: Build with Gradle
       run: gradle build
       
